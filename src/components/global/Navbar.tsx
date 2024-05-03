@@ -77,7 +77,7 @@ export default function Navbar() {
 						<DropdownMenuLabel>내 계정</DropdownMenuLabel>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem>
-							<Link href="/account">설정</Link>
+							<Link href="/setting">설정</Link>
 						</DropdownMenuItem>
 						<DropdownMenuItem>고객지원</DropdownMenuItem>
 						<DropdownMenuSeparator />
