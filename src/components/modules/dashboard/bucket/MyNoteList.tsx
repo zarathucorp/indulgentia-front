@@ -6,12 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import Link from "next/link";
-export default function MyProjectList() {
+
+export default function MyNoteList() {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>내 프로젝트</CardTitle>
+				<CardTitle>내 Bucket</CardTitle>
 				<CardDescription>Manage your products and view their sales performance.</CardDescription>
 			</CardHeader>
 			<CardContent>
@@ -22,7 +22,7 @@ export default function MyProjectList() {
 							<TableHead className="hidden w-[100px] sm:table-cell">
 								<span className="sr-only">이미지</span>
 							</TableHead>
-							<TableHead>프로젝트 이름</TableHead>
+							<TableHead>내 Bucket</TableHead>
 							<TableHead>상태</TableHead>
 							<TableHead className="hidden md:table-cell">연구책임자</TableHead>
 							<TableHead className="hidden md:table-cell">참여 연구원 수</TableHead>
@@ -45,9 +45,7 @@ export default function MyProjectList() {
 							<TableCell className="hidden md:table-cell">25</TableCell>
 							<TableCell className="hidden md:table-cell">2023-07-12 10:42 AM</TableCell>
 							<TableCell>
-								<Button>
-									<Link href="/dashboard/bucket/uuid">관리</Link>
-								</Button>
+								<Button>관리</Button>
 								{/* <DropdownMenu>
 									<DropdownMenuTrigger asChild>
 										<Button aria-haspopup="true" size="icon" variant="ghost">
