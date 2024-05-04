@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import MyProjectList from "@/components/modules/dashboard/MyProjectList";
+import { redirect } from "next/navigation";
 import ProjectType from "@/types/ProjectType";
 const exampleProjectList: ProjectType[] = [
 	{
@@ -19,7 +20,18 @@ const exampleProjectList: ProjectType[] = [
 		project_uuid: "f2321525-6ee9-4604-a52c-45d8d9e8614f",
 	},
 ];
-export default function Dashboard() {
+import { createClient } from "@/utils/supabase/server";
+
+export default async function Dashboard() {
+	const supabase = createClient();
+
+	const {
+		data: { user },
+	} = await supabase.auth.getUser();
+
+	if (!user) {
+		return redirect("/auth/login/supabase");
+	}
 	return (
 		<div className="flex min-h-screen max-w-screen-xl flex-col mx-auto">
 			<MyProjectList projectList={exampleProjectList} />

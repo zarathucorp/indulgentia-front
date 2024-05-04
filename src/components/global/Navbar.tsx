@@ -1,9 +1,9 @@
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { CircleUser, Menu, Package2, Search } from "lucide-react";
+import { Menu, Package2, Search } from "lucide-react";
 import Link from "next/link";
+import UserBadge from "./Navbar/UserBadge";
 export default function Navbar() {
 	return (
 		<header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
@@ -66,24 +66,7 @@ export default function Navbar() {
 						<Input type="search" placeholder="연구노트 검색" className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]" />
 					</div>
 				</form>
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<Button variant="secondary" size="icon" className="rounded-full">
-							<CircleUser className="h-5 w-5" />
-							<span className="sr-only">유저 메뉴 열기</span>
-						</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent align="end">
-						<DropdownMenuLabel>내 계정</DropdownMenuLabel>
-						<DropdownMenuSeparator />
-						<DropdownMenuItem>
-							<Link href="/setting">설정</Link>
-						</DropdownMenuItem>
-						<DropdownMenuItem>고객지원</DropdownMenuItem>
-						<DropdownMenuSeparator />
-						<DropdownMenuItem>로그아웃</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
+				<UserBadge />
 			</div>
 		</header>
 	);
