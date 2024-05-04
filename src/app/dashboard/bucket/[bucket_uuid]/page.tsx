@@ -6,6 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { useState } from "react";
 import { MoreHorizontal } from "lucide-react";
 import { DateRange } from "react-day-picker";
+import FileUploader from "@/components/global/FileUploader";
 export default function Component() {
 	const defaultSelected: DateRange = {
 		from: new Date(2024, 5, 1),
@@ -69,7 +70,12 @@ export default function Component() {
 				</div>
 			</div>
 			<div className="space-y-4">
-				<Button className="w-full">Manual Upload</Button>
+				<div>
+					<FileUploader />
+					<Button type="submit" className="w-full">
+						Manual Upload
+					</Button>
+				</div>
 				<Popover>
 					<PopoverTrigger asChild>
 						<Button className="w-full justify-start text-left font-normal" variant="outline">
