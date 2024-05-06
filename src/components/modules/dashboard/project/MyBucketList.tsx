@@ -32,10 +32,10 @@ export default function MyBucketList({ bucketList }: { bucketList: BucketType[] 
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{bucketList.map((bucket: BucketType) => {
+						{bucketList.map((bucket: BucketType, index: number) => {
 							return (
 								<>
-									<TableRow>
+									<TableRow key={index}>
 										<TableCell className="font-medium">{bucket.bucket_name}</TableCell>
 										<TableCell>
 											<Badge variant="outline">{bucket.bucket_status}</Badge>
