@@ -14,7 +14,15 @@ export default function NoteBreadcrumb() {
 				</BreadcrumbItem>
 				<BreadcrumbSeparator />
 				<BreadcrumbItem>
-					<BreadcrumbPage>이 Commit</BreadcrumbPage>
+					<BreadcrumbLink href="/dashboard/project/dd">Project 이름</BreadcrumbLink>
+				</BreadcrumbItem>
+				<BreadcrumbSeparator />
+				<BreadcrumbItem>
+					<BreadcrumbLink href="/dashboard/bucket/dd">Bucket 이름</BreadcrumbLink>
+				</BreadcrumbItem>
+				<BreadcrumbSeparator />
+				<BreadcrumbItem>
+					<BreadcrumbPage>이 Note</BreadcrumbPage>
 				</BreadcrumbItem>
 			</BreadcrumbList>
 		</Breadcrumb>
