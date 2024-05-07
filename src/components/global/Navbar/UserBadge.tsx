@@ -17,7 +17,7 @@ export default async function UserBadge() {
 
 		const supabase = createClient();
 		await supabase.auth.signOut();
-		return redirect("/auth/login/supabase");
+		return redirect("/auth/login");
 	};
 	return user ? (
 		<>
@@ -55,7 +55,7 @@ export default async function UserBadge() {
 			</DropdownMenu>
 		</>
 	) : (
-		<Link href="/auth/login/supabase" className="py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover">
+		<Link href="/auth/login" className="py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover">
 			Login
 		</Link>
 	);

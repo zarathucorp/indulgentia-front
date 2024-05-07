@@ -2,9 +2,9 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import SubmitButton from "./submit-button";
-import GoogleLoginButton from "./google-login";
-import KakaoLoginButton from "./kakao-login";
+import SubmitButton from "../submit-button";
+import GoogleLoginButton from "../google-login";
+import KakaoLoginButton from "../kakao-login";
 export default function Login({ searchParams }: { searchParams: { message: string } }) {
 	const signIn = async (formData: FormData) => {
 		"use server";
@@ -19,7 +19,7 @@ export default function Login({ searchParams }: { searchParams: { message: strin
 		});
 
 		if (error) {
-			return redirect("/auth/login/supabase?message=Could not authenticate user");
+			return redirect("/auth/login?message=Could not authenticate user");
 		}
 
 		return redirect("/dashboard");
@@ -42,10 +42,10 @@ export default function Login({ searchParams }: { searchParams: { message: strin
 		});
 
 		if (error) {
-			return redirect("/auth/login/supabase?message=Could not authenticate user");
+			return redirect("/auth/login?message=Could not authenticate user");
 		}
 
-		return redirect("/auth/login/supabase?message=Check email to continue sign in process");
+		return redirect("/auth/login?message=Check email to continue sign in process");
 	};
 
 	return (
