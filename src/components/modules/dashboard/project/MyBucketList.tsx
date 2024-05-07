@@ -13,7 +13,12 @@ export default function MyBucketList({ bucketList }: { bucketList: BucketType[] 
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>내 Bucket</CardTitle>
+				<CardTitle className="grid grid-cols-6">
+					<div className="col-start-1 col-span-2">내 Bucket</div>
+					<Button className="col-start-6 col-span-1">
+						<Link href="/dashboard/bucket/create">새 Bucket</Link>
+					</Button>
+				</CardTitle>
 				<CardDescription>Manage your products and view their sales performance.</CardDescription>
 			</CardHeader>
 			<CardContent>
@@ -34,21 +39,19 @@ export default function MyBucketList({ bucketList }: { bucketList: BucketType[] 
 					<TableBody>
 						{bucketList.map((bucket: BucketType, index: number) => {
 							return (
-								<>
-									<TableRow key={index}>
-										<TableCell className="font-medium">{bucket.bucket_name}</TableCell>
-										<TableCell>
-											<Badge variant="outline">{bucket.bucket_status}</Badge>
-										</TableCell>
-										<TableCell className="hidden md:table-cell">{bucket.bucket_owner}</TableCell>
-										<TableCell className="hidden md:table-cell">{bucket.has_github ? <Link href={bucket.github_link}>예</Link> : "아니오"}</TableCell>
-										<TableCell>
-											<Button>
-												<Link href={`/dashboard/bucket/${bucket.bucket_uuid}`}>관리</Link>
-											</Button>
-										</TableCell>
-									</TableRow>
-								</>
+								<TableRow key={index}>
+									<TableCell className="font-medium">{bucket.bucket_name}</TableCell>
+									<TableCell>
+										<Badge variant="outline">{bucket.bucket_status}</Badge>
+									</TableCell>
+									<TableCell className="hidden md:table-cell">{bucket.bucket_owner}</TableCell>
+									<TableCell className="hidden md:table-cell">{bucket.has_github ? <Link href={bucket.github_link}>예</Link> : "아니오"}</TableCell>
+									<TableCell>
+										<Button>
+											<Link href={`/dashboard/bucket/${bucket.bucket_uuid}`}>관리</Link>
+										</Button>
+									</TableCell>
+								</TableRow>
 							);
 						})}
 					</TableBody>

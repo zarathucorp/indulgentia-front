@@ -12,7 +12,12 @@ export default function MyProjectList({ projectList }: { projectList: ProjectTyp
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>내 프로젝트</CardTitle>
+				<CardTitle className="grid grid-cols-6">
+					<div className="col-start-1 col-span-2">내 프로젝트</div>
+					<Button className="col-start-6 col-span-1">
+						<Link href="/dashboard/project/create">새 프로젝트</Link>
+					</Button>
+				</CardTitle>
 				<CardDescription>Manage your products and view their sales performance.</CardDescription>
 			</CardHeader>
 			<CardContent>
@@ -32,27 +37,25 @@ export default function MyProjectList({ projectList }: { projectList: ProjectTyp
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						<TableRow>
-							{projectList.map((project: ProjectType) => {
-								return (
-									<>
-										<TableCell className="font-medium">{project.project_name}</TableCell>
-										<TableCell>
-											<Badge variant="outline">{project.project_status}</Badge>
-										</TableCell>
-										<TableCell className="hidden md:table-cell">{project.project_leader}</TableCell>
-										<TableCell className="hidden md:table-cell">{project.project_members}</TableCell>
-										<TableCell className="hidden md:table-cell">{project.project_peroid_start.toDateString()}</TableCell>
-										<TableCell className="hidden md:table-cell">{project.project_peroid_end.toDateString()}</TableCell>
-										<TableCell>
-											<Button>
-												<Link href={`/dashboard/project/${project.project_uuid}`}>관리</Link>
-											</Button>
-										</TableCell>
-									</>
-								);
-							})}
-						</TableRow>
+						{projectList.map((project: ProjectType, index) => {
+							return (
+								<TableRow key={index}>
+									<TableCell className="font-medium">{project.project_name}</TableCell>
+									<TableCell>
+										<Badge variant="outline">{project.project_status}</Badge>
+									</TableCell>
+									<TableCell className="hidden md:table-cell">{project.project_leader}</TableCell>
+									<TableCell className="hidden md:table-cell">{project.project_members}</TableCell>
+									<TableCell className="hidden md:table-cell">{project.project_peroid_start.toDateString()}</TableCell>
+									<TableCell className="hidden md:table-cell">{project.project_peroid_end.toDateString()}</TableCell>
+									<TableCell>
+										<Button>
+											<Link href={`/dashboard/project/${project.project_uuid}`}>관리</Link>
+										</Button>
+									</TableCell>
+								</TableRow>
+							);
+						})}
 					</TableBody>
 				</Table>
 			</CardContent>
