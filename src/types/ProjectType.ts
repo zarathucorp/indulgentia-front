@@ -1,9 +1,11 @@
+import { UUID } from "crypto";
+
 export default interface ProjectType {
-	project_name: string;
-	project_status: string;
+	id: UUID;
 	project_leader: string;
-	project_members: number;
-	project_peroid_start: Date;
-	project_peroid_end: Date;
-	project_uuid: string;
+	title: string;
+	grant_number: string;
+	status: string;
+	start_date: Date;
+	end_date: Date;
 }
