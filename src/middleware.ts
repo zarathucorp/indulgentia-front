@@ -1,7 +1,19 @@
-import { type NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { updateSession } from "@/utils/supabase/middleware";
+import { createClient } from "@/utils/supabase/server";
 
-export async function middleware(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
+	const supabase = createClient();
+	// Dashboard로 접근하는 경우
+	if (request.nextUrl.pathname.startsWith("/dashboard")) {
+		// 세션을 업데이트합니다.
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
+		if (!user) {
+			return NextResponse.redirect(new URL("/auth/login", request.url));
+		}
+	}
 	return await updateSession(request);
 }
 
