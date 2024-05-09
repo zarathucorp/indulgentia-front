@@ -6,7 +6,6 @@ export default async function middleware(request: NextRequest) {
 	const supabase = createClient();
 	// Dashboard로 접근하는 경우
 	if (request.nextUrl.pathname.startsWith("/dashboard")) {
-		// 세션을 업데이트합니다.
 		const {
 			data: { user },
 		} = await supabase.auth.getUser();
