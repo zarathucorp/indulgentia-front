@@ -38,8 +38,8 @@ export default function SigninPage({ searchParams }: { searchParams: { message: 
 		const origin = headers().get("origin");
 		const email = formData.get("email") as string;
 		const password = formData.get("password") as string;
-		const supabase = createClient();
 
+		const supabase = createClient();
 		const { error } = await supabase.auth.signUp({
 			email,
 			password,
@@ -49,6 +49,7 @@ export default function SigninPage({ searchParams }: { searchParams: { message: 
 		});
 
 		if (error) {
+			console.log(error);
 			return redirect("/auth/login?message=Could not authenticate user");
 		}
 

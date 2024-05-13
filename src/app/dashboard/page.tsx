@@ -7,11 +7,12 @@ import ProjectType from "@/types/ProjectType";
 
 const projectListFetcher = async (url: string) => {
 	const result = await axios.get(url, { withCredentials: true });
+	console.log(result.data.data);
 	if (result.status !== 200) {
 		const error = new Error("An error occurred while fetching the data.");
 		throw error;
 	}
-	return result.data.project_list;
+	return result.data.data;
 };
 
 // const exampleProjectList: ProjectType[] = [

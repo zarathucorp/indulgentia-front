@@ -40,16 +40,16 @@ export default function MyBucketList({ bucketList }: { bucketList: BucketType[] 
 						{bucketList.map((bucket: BucketType, index: number) => {
 							return (
 								<TableRow key={index}>
-									<TableCell className="font-medium">{bucket.bucket_name}</TableCell>
+									<TableCell className="font-medium">{bucket.title}</TableCell>
 									<TableCell>
 										<Badge variant="outline">{bucket.bucket_status}</Badge>
 									</TableCell>
 									<TableCell className="hidden md:table-cell">{bucket.bucket_owner}</TableCell>
-									<TableCell className="hidden md:table-cell">{bucket.has_github ? <Link href={bucket.github_link}>예</Link> : "아니오"}</TableCell>
+									<TableCell className="hidden md:table-cell">{bucket.has_github ? <Link href={bucket.has_github && "https://www.zarathu.com"}>예</Link> : "아니오"}</TableCell>
 									<TableCell>
-										<Button>
-											<Link href={`/dashboard/bucket/${bucket.bucket_uuid}`}>관리</Link>
-										</Button>
+										<Link href={`/dashboard/bucket/${bucket.id}`}>
+											<Button>관리</Button>
+										</Link>
 									</TableCell>
 								</TableRow>
 							);

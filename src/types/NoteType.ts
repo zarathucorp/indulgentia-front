@@ -1,9 +1,11 @@
+import { UUID } from "crypto";
+
 export interface BaseNoteType {
-	note_name: string;
-	note_status: string;
-	note_owner: string;
-	note_uuid: string;
+	id: UUID;
+	title: string;
+	username: UUID;
 	created_at: Date;
+	file_name: string;
 	// GitHub 연동된 항목인지 체크
 	is_github: boolean;
 }

@@ -13,10 +13,10 @@ import dynamic from "next/dynamic";
 
 const exampleNoteList: NoteType[] = [
 	{
-		note_name: "Chore: fix typo",
-		note_status: "Active",
-		note_owner: "Lee",
-		note_uuid: "b0421525-6ee9-4604-a52c-4539285768bb",
+		id: "b0421525-6ee9-4604-a52c-4539285768bb",
+		title: "Chore: fix typo",
+		username: "b0421525-6ee9-4604-a52c-4539285768bb",
+		file_name: "dd",
 		is_github: true,
 		created_at: new Date(2024, 5, 1),
 		github_type: "Commit",
@@ -24,10 +24,10 @@ const exampleNoteList: NoteType[] = [
 		github_link: "https://github.com",
 	},
 	{
-		note_name: "Chore: fix typo2",
-		note_status: "Active",
-		note_owner: "Lee",
-		note_uuid: "b0421525-6ee9-4604-a52c-4539285768db",
+		id: "b0421525-6ee9-4604-a52c-4539285768bb",
+		title: "Chore: fix typo2",
+		username: "b0421525-6ee9-4604-a52c-4539285768bb",
+		file_name: "dd",
 		is_github: true,
 		created_at: new Date(2024, 5, 1),
 		github_type: "Commit",
@@ -54,8 +54,8 @@ export default function Note() {
 					<div className="grid gap-2">
 						{exampleNoteList.map((note: NoteType, index: number) => (
 							<div key={index} className="flex items-center justify-between rounded-md bg-gray-100 px-4 py-3 dark:bg-gray-800">
-								<div>{note.note_name}</div>
-								<div>{note.note_owner}</div>
+								<div>{note.title}</div>
+								<div>{note.username}</div>
 								<div>{note.is_github ? note.github_hash : null}</div>
 								<div>{note.created_at.toLocaleString()}</div>
 								<div>
@@ -69,7 +69,7 @@ export default function Note() {
 										<DropdownMenuContent align="end">
 											<DropdownMenuLabel>Actions</DropdownMenuLabel>
 											<DropdownMenuItem>
-												<Link href={`/dashboard/note/${note.note_uuid}`}>파일 보기</Link>
+												<Link href={`/dashboard/note/${note.id}`}>파일 보기</Link>
 											</DropdownMenuItem>
 											<DropdownMenuItem>Edit</DropdownMenuItem>
 											<DropdownMenuItem>Delete</DropdownMenuItem>

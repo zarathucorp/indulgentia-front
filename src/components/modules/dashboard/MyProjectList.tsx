@@ -41,13 +41,11 @@ export default function MyProjectList({ projectList }: { projectList: ProjectTyp
 							return (
 								<TableRow key={index}>
 									<TableCell className="font-medium">{project.title && project.title}</TableCell>
-									<TableCell>
-										<Badge variant="outline">{project.title && project.status}</Badge>
-									</TableCell>
+									<TableCell>{project.status && <Badge variant="outline">{project.status}</Badge>}</TableCell>
 									<TableCell className="hidden md:table-cell">{project.project_leader && project.project_leader}</TableCell>
 									<TableCell className="hidden md:table-cell">{project.grant_number && project.grant_number}</TableCell>
-									<TableCell className="hidden md:table-cell">{project.start_date && project.start_date?.toDateString()}</TableCell>
-									<TableCell className="hidden md:table-cell">{project.end_date && project.end_date?.toDateString()}</TableCell>
+									<TableCell className="hidden md:table-cell">{typeof project.start_date === "string" ? project.start_date : null}</TableCell>
+									<TableCell className="hidden md:table-cell">{typeof project.end_date === "string" ? project.end_date : null}</TableCell>
 									<TableCell>
 										<Link href={`/dashboard/project/${project.id}`}>
 											<Button>관리</Button>
