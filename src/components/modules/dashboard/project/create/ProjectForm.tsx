@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import DatePicker from "@/components/global/DatePicker";
 import useSWRImmutable from "swr/immutable";
 import { KeyedMutator } from "swr";
-
+import RemoveModal from "@/components/global/RemoveModal";
 const ProjectSchema = z
 	.object({
 		title: z.string().min(1, "프로젝트 이름은 1자보다 길어야 합니다.").max(1000, "프로젝트 이름은 1,000자보다 짧아야 합니다."),
@@ -56,6 +56,20 @@ const ProjectForm = ({ isNew = true, mutator, values }: { isNew?: boolean; mutat
 		} catch (error) {
 			console.error(error);
 		}
+	};
+
+	const removeProject = async () => {
+		if (isNew === false && values) {
+			try {
+				const result = await axios.delete(process.env.NEXT_PUBLIC_API_URL + `/dashboard/project/${values.id}`, { withCredentials: true });
+				console.log(result);
+				return;
+			} catch (error) {
+				console.error(error);
+				throw new Error("Cannot remove project: Axios 에러:" + error);
+			}
+		}
+		throw new Error("Cannot remove project");
 	};
 
 	return (
@@ -131,6 +145,8 @@ const ProjectForm = ({ isNew = true, mutator, values }: { isNew?: boolean; mutat
 					<Button type="submit">{isNew ? "새 프로젝트 생성" : "프로젝트 업데이트"}</Button>
 				</form>
 			</Form>
+
+			{values && <RemoveModal targetEntity={values.title} removeType="프로젝트" onRemoveConfirmed={removeProject} />}
 		</div>
 	);
 };

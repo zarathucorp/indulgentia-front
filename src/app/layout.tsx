@@ -4,7 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/global/Navbar";
 // const inter = Inter({ subsets: ["latin"] });
 import localFont from "next/font/local";
-
+import { Toaster } from "@/components/ui/toaster";
 const pretendard = localFont({
 	src: "./fonts/PretendardVariable.woff2",
 	display: "swap",
@@ -26,6 +26,7 @@ export default function RootLayout({
 			<body className={pretendard.className}>
 				<Navbar />
 				{children}
+				<Toaster />
 			</body>
 		</html>
 	);
