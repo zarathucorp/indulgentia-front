@@ -1,24 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-import { format } from "date-fns";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import axios from "axios";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useToast } from "@/components/ui/use-toast";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import DatePickerDemo from "@/components/global/DatePicker";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Link from "next/link";
-import DatePicker from "@/components/global/DatePicker";
 import useSWR from "swr";
 import { redirect, useSearchParams } from "next/navigation";
 import { TeamUserType } from "@/types/TeamUserType";
@@ -60,7 +50,7 @@ export default function NewBucketForm() {
 		}
 	}
 
-	const { data: teamUserList, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + "/user/team", async (url) => {
+	const { data: teamUserList, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + "/user/team/list", async (url) => {
 		const result = await axios.get(url, { withCredentials: true });
 		console.log(result.data.data);
 		return result.data.data as TeamUserType[];
@@ -105,14 +95,9 @@ export default function NewBucketForm() {
 														{user.id}
 													</SelectItem>
 											  ))}
-										{/* <SelectItem value="m@example.com">m@example.com</SelectItem>
-										<SelectItem value="m@google.com">m@google.com</SelectItem>
-										<SelectItem value="m@support.com">m@support.com</SelectItem> */}
 									</SelectContent>
 								</Select>
-								<FormDescription>
-									You can manage email addresses in your <Link href="/examples/forms">email settings</Link>.
-								</FormDescription>
+								<FormDescription>버킷 관리자를 선택하세요.</FormDescription>
 								<FormMessage />
 							</FormItem>
 						)}
@@ -131,44 +116,6 @@ export default function NewBucketForm() {
 							</FormItem>
 						)}
 					/>
-					{/* <FormField
-						control={form.control}
-						name="grant_number"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>과제 번호</FormLabel>
-								<FormControl>
-									<Input placeholder="과제 번호" {...field} />
-								</FormControl>
-								<FormDescription>과제 번호를 입력합니다.</FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="start_date"
-						render={({ field }) => (
-							<FormItem className="flex flex-col">
-								<FormLabel>연구 시작일</FormLabel>
-								<DatePicker field={field} />
-								<FormDescription>연구 시작일을 선택하세요.</FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="end_date"
-						render={({ field }) => (
-							<FormItem className="flex flex-col">
-								<FormLabel>연구 종료일</FormLabel>
-								<DatePicker field={field} />
-								<FormDescription>연구 종료일을 선택하세요.</FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/> */}
 					<Button type="submit">새 프로젝트 생성</Button>
 				</form>
 			</Form>

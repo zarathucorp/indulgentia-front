@@ -10,33 +10,9 @@ import FileUploader from "@/components/global/FileUploader";
 import NoteType from "@/types/NoteType";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import dynamic from "next/dynamic";
 import useSWR from "swr";
 import axios from "axios";
-const exampleNoteList: NoteType[] = [
-	{
-		id: "b0421525-6ee9-4604-a52c-4539285768bb",
-		title: "Chore: fix typo",
-		username: "b0421525-6ee9-4604-a52c-4539285768bb",
-		file_name: "dd",
-		is_github: true,
-		created_at: new Date(2024, 5, 1),
-		github_type: "Commit",
-		github_hash: "70b211ef66eaaf30c402818f607b5f95a6cb7eca",
-		github_link: "https://github.com",
-	},
-	{
-		id: "b0421525-6ee9-4604-a52c-4539285768bb",
-		title: "Chore: fix typo2",
-		username: "b0421525-6ee9-4604-a52c-4539285768bb",
-		file_name: "dd",
-		is_github: true,
-		created_at: new Date(2024, 5, 1),
-		github_type: "Commit",
-		github_hash: "70b211ef66eaaf30c402818f607b5f95a6cb7eca",
-		github_link: "https://github.com",
-	},
-];
+
 const noteListFetcher = async (url: string) => {
 	const result = await axios.get(url, { withCredentials: true });
 	console.log(result.data.data);
@@ -108,6 +84,9 @@ export default function Note() {
 					<Button type="submit" className="w-full">
 						Manual Upload
 					</Button>
+					<Link href={`/dashboard/note/create?bucket=${params.bucket_uuid}`}>
+						<Button className="w-full">노트 생성</Button>
+					</Link>
 				</div>
 				<Popover>
 					<PopoverTrigger asChild>

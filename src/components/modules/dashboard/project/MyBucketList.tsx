@@ -15,9 +15,16 @@ export default function MyBucketList({ bucketList, projectId }: { bucketList: Bu
 			<CardHeader>
 				<CardTitle className="grid grid-cols-6">
 					<div className="col-start-1 col-span-2">내 Bucket</div>
-					<Link href={`/dashboard/bucket/create?project=${projectId}`}>
-						<Button className="col-start-6 col-span-1">새 Bucket</Button>
-					</Link>
+					<div className="col-start-5 col-span-1">
+						<Link href={`/dashboard/bucket/create?project=${projectId}`}>
+							<Button>새 Bucket</Button>
+						</Link>
+					</div>
+					<div className="col-start-6 col-span-1">
+						<Link href={`/dashboard/project/${projectId}/setting`}>
+							<Button>프로젝트 설정</Button>
+						</Link>
+					</div>
 				</CardTitle>
 				<CardDescription>Manage your products and view their sales performance.</CardDescription>
 			</CardHeader>
