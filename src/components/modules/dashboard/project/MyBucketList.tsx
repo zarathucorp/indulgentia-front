@@ -9,15 +9,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import BucketType from "@/types/BucketType";
 import Link from "next/link";
 
-export default function MyBucketList({ bucketList }: { bucketList: BucketType[] }) {
+export default function MyBucketList({ bucketList, projectId }: { bucketList: BucketType[]; projectId: string }) {
 	return (
 		<Card>
 			<CardHeader>
 				<CardTitle className="grid grid-cols-6">
 					<div className="col-start-1 col-span-2">내 Bucket</div>
-					<Button className="col-start-6 col-span-1">
-						<Link href="/dashboard/bucket/create">새 Bucket</Link>
-					</Button>
+					<Link href={`/dashboard/bucket/create?project=${projectId}`}>
+						<Button className="col-start-6 col-span-1">새 Bucket</Button>
+					</Link>
 				</CardTitle>
 				<CardDescription>Manage your products and view their sales performance.</CardDescription>
 			</CardHeader>

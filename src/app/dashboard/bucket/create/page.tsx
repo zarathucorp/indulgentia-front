@@ -14,11 +14,19 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useToast } from "@/components/ui/use-toast";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import DatePickerDemo from "@/components/global/DatePicker";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Link from "next/link";
 import DatePicker from "@/components/global/DatePicker";
+import useSWR from "swr";
+import { redirect, useSearchParams } from "next/navigation";
+import { TeamUserType } from "@/types/TeamUserType";
+export default function NewBucketForm() {
+	const searchParams = useSearchParams();
 
-const BucketSchema = z
-	.object({
+	const projectUUID: string = searchParams.get("project") as string;
+	const BucketSchema = z.object({
 		title: z
 			.string()
 			.min(1, {
@@ -27,46 +35,36 @@ const BucketSchema = z
 			.max(1000, {
 				message: "Bucket 이름은 1,000자보다 짧아야 합니다.",
 			}),
-		bucket_leader: z.string().min(1, { message: "연구책임자 이름은 1자보다 길어야 합니다." }).max(1000, { message: "연구책임자 이름은 1,000자보다 짧아야 합니다." }).optional(),
-		grant_number: z.string().min(1, { message: "과제 번호는 1자보다 길어야 합니다." }).max(1000, { message: "과제 번호는 1,000자보다 짧아야 합니다." }).optional(),
-		start_date: z.date({}).optional(),
-		end_date: z.date({}).optional(),
-	})
-	.refine(
-		(data) => {
-			if (data.start_date && data.end_date) {
-				return data.start_date <= data.end_date;
-			}
-			return true;
-		},
-		{
-			message: "연구 종료일은 연구 시작일보다 나중이어야 합니다.",
-			path: ["end_date"],
-		}
-	);
+		manager_id: z.string().min(1, { message: "Bucket 매니저 이름은 1자보다 길어야 합니다." }).max(1000, { message: "Bucket 매니저 이름은 1,000자보다 짧아야 합니다." }).optional(),
+		project_id: z.string().uuid(),
+	});
 
-type CreateBucketFormValues = z.infer<typeof BucketSchema>;
+	type CreateBucketFormValues = z.infer<typeof BucketSchema>;
 
-// This can come from your database or API. 여기서는 사용하지 않고 나중에 수정창에서 사용하면 됨.
-const defaultValues: Partial<CreateBucketFormValues> = {
-	// name: "Your name",
-	// dob: new Date("2023-01-23"),
-};
+	// This can come from your database or API. 여기서는 사용하지 않고 나중에 수정창에서 사용하면 됨.
+	const defaultValues: Partial<CreateBucketFormValues> = {
+		project_id: projectUUID,
+	};
 
-export default function NewBucketForm() {
+	if (projectUUID === "" || projectUUID === null) redirect("/dashboard");
 	const form = useForm<CreateBucketFormValues>({
 		resolver: zodResolver(BucketSchema),
 		defaultValues,
 	});
 
 	async function onSubmit(data: CreateBucketFormValues) {
-		console.log({ team_id: "33b361f3-a030-4624-afdd-d3b40e3f43dd", ...data });
 		try {
-			await axios.post(process.env.NEXT_PUBLIC_API_URL + "/dashboard/bucket/", { team_id: "33b361f3-a030-4624-afdd-d3b40e3f43dd", ...data }, { withCredentials: true });
+			await axios.post(process.env.NEXT_PUBLIC_API_URL + "/dashboard/bucket/", { ...data }, { withCredentials: true });
 		} catch (error) {
 			console.error(error);
 		}
 	}
+
+	const { data: teamUserList, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + "/user/team", async (url) => {
+		const result = await axios.get(url, { withCredentials: true });
+		console.log(result.data.data);
+		return result.data.data as TeamUserType[];
+	});
 
 	return (
 		<>
@@ -77,30 +75,63 @@ export default function NewBucketForm() {
 						name="title"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>프로젝트 이름</FormLabel>
+								<FormLabel>Bucket 이름</FormLabel>
 								<FormControl>
-									<Input placeholder="프로젝트 이름" {...field} />
+									<Input placeholder="Bucket 이름" {...field} />
 								</FormControl>
-								<FormDescription>프로젝트 이름을 입력합니다.</FormDescription>
+								<FormDescription>Bucket 이름을 입력합니다.</FormDescription>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
 					<FormField
 						control={form.control}
-						name="bucket_leader"
+						name="manager_id"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>연구책임자</FormLabel>
-								<FormControl>
-									<Input placeholder="연구책임자" {...field} />
-								</FormControl>
-								<FormDescription>연구책임자의 이름을 입력합니다.</FormDescription>
+								<FormLabel>Bucket 매니저</FormLabel>
+								<Select onValueChange={field.onChange} defaultValue={field.value}>
+									<FormControl>
+										<SelectTrigger>
+											<SelectValue placeholder="Bucket 매니저를 선택하세요." />
+										</SelectTrigger>
+									</FormControl>
+									<SelectContent>
+										{isLoading
+											? null
+											: teamUserList &&
+											  teamUserList.map((user: TeamUserType, index: number) => (
+													<SelectItem key={index} value={user.id}>
+														{user.id}
+													</SelectItem>
+											  ))}
+										{/* <SelectItem value="m@example.com">m@example.com</SelectItem>
+										<SelectItem value="m@google.com">m@google.com</SelectItem>
+										<SelectItem value="m@support.com">m@support.com</SelectItem> */}
+									</SelectContent>
+								</Select>
+								<FormDescription>
+									You can manage email addresses in your <Link href="/examples/forms">email settings</Link>.
+								</FormDescription>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
 					<FormField
+						control={form.control}
+						name="project_id"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>프로젝트 UUID</FormLabel>
+								<FormControl>
+									<Input disabled {...field} />
+								</FormControl>
+								<FormDescription>Project UUID입니다.</FormDescription>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					{/* <FormField
 						control={form.control}
 						name="grant_number"
 						render={({ field }) => (
@@ -137,7 +168,7 @@ export default function NewBucketForm() {
 								<FormMessage />
 							</FormItem>
 						)}
-					/>
+					/> */}
 					<Button type="submit">새 프로젝트 생성</Button>
 				</form>
 			</Form>

@@ -6,9 +6,9 @@ export default function Home() {
 		<main className="flex min-h-screen flex-col items-center justify-between p-24">
 			<div className="">
 				<div className="text-5xl">Indulgentia - ELN</div>
-				<Button>
-					<Link href="/dashboard">시작하기</Link>
-				</Button>
+				<Link href="/dashboard">
+					<Button>시작하기</Button>
+				</Link>
 			</div>
 		</main>
 	);

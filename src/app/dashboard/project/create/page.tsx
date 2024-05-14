@@ -70,77 +70,79 @@ export default function NewProjectForm() {
 
 	return (
 		<>
-			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-					<FormField
-						control={form.control}
-						name="title"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>프로젝트 이름</FormLabel>
-								<FormControl>
-									<Input placeholder="프로젝트 이름" {...field} />
-								</FormControl>
-								<FormDescription>프로젝트 이름을 입력합니다.</FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="project_leader"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>연구책임자</FormLabel>
-								<FormControl>
-									<Input placeholder="연구책임자" {...field} />
-								</FormControl>
-								<FormDescription>연구책임자의 이름을 입력합니다.</FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="grant_number"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>과제 번호</FormLabel>
-								<FormControl>
-									<Input placeholder="과제 번호" {...field} />
-								</FormControl>
-								<FormDescription>과제 번호를 입력합니다.</FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="start_date"
-						render={({ field }) => (
-							<FormItem className="flex flex-col">
-								<FormLabel>연구 시작일</FormLabel>
-								<DatePicker field={field} />
-								<FormDescription>연구 시작일을 선택하세요.</FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="end_date"
-						render={({ field }) => (
-							<FormItem className="flex flex-col">
-								<FormLabel>연구 종료일</FormLabel>
-								<DatePicker field={field} />
-								<FormDescription>연구 종료일을 선택하세요.</FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<Button type="submit">새 프로젝트 생성</Button>
-				</form>
-			</Form>
+			<div className="w-3/4 justify-items-center">
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+						<FormField
+							control={form.control}
+							name="title"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>프로젝트 이름</FormLabel>
+									<FormControl>
+										<Input placeholder="프로젝트 이름" {...field} />
+									</FormControl>
+									<FormDescription>프로젝트 이름을 입력합니다.</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="project_leader"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>연구책임자</FormLabel>
+									<FormControl>
+										<Input placeholder="연구책임자" {...field} />
+									</FormControl>
+									<FormDescription>연구책임자의 이름을 입력합니다.</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="grant_number"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>과제 번호</FormLabel>
+									<FormControl>
+										<Input placeholder="과제 번호" {...field} />
+									</FormControl>
+									<FormDescription>과제 번호를 입력합니다.</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="start_date"
+							render={({ field }) => (
+								<FormItem className="flex flex-col">
+									<FormLabel>연구 시작일</FormLabel>
+									<DatePicker field={field} />
+									<FormDescription>연구 시작일을 선택하세요.</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="end_date"
+							render={({ field }) => (
+								<FormItem className="flex flex-col">
+									<FormLabel>연구 종료일</FormLabel>
+									<DatePicker field={field} />
+									<FormDescription>연구 종료일을 선택하세요.</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<Button type="submit">새 프로젝트 생성</Button>
+					</form>
+				</Form>
+			</div>
 		</>
 	);
 }

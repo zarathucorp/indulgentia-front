@@ -30,7 +30,7 @@ export default function Project() {
 	if (error) return <div>{JSON.stringify(error)}</div>;
 	return (
 		<>
-			<div className="flex min-h-screen max-w-screen-xl flex-col mx-auto">{isLoading ? <p>loading</p> : <>{data && <MyBucketList bucketList={data} />}</>}</div>
+			<div className="flex min-h-screen max-w-screen-xl flex-col mx-auto">{isLoading ? <p>loading</p> : <>{data && <MyBucketList bucketList={data} projectId={params.project_uuid} />}</>}</div>
 		</>
 	);
 }
