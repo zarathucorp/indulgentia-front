@@ -13,7 +13,6 @@ type FormData = {
 
 const SettingsPage: React.FC = () => {
 	const { register, handleSubmit, setValue } = useForm<FormData>();
-	const router = useRouter();
 	return <AccountForm />;
 };
 

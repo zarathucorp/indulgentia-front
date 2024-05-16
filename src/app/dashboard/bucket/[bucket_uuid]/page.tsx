@@ -87,6 +87,9 @@ export default function Note() {
 					<Link href={`/dashboard/note/create?bucket=${params.bucket_uuid}`}>
 						<Button className="w-full">노트 생성</Button>
 					</Link>
+					<Link href={`/dashboard/bucket/${params.bucket_uuid}/setting`}>
+						<Button className="w-full">버킷 설정</Button>
+					</Link>
 				</div>
 				<Popover>
 					<PopoverTrigger asChild>
