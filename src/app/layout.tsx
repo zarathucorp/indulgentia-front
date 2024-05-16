@@ -12,8 +12,8 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
-	title: "Indulgentia - Zarathu Corporation",
-	description: "Indulgentia - 연구노트 플랫폼",
+	title: "연구실록 - Zarathu Corporation",
+	description: "연구실록 - 연구노트 플랫폼",
 };
 
 export default function RootLayout({
