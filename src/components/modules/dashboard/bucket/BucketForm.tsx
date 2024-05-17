@@ -28,7 +28,7 @@ const BucketSchema = z.object({
 	project_id: z.string().uuid(),
 });
 
-type CreateBucketFormValues = z.infer<typeof BucketSchema>;
+export type CreateBucketFormValues = z.infer<typeof BucketSchema>;
 
 export default function NewBucketForm() {
 	const searchParams = useSearchParams();
@@ -72,9 +72,9 @@ export default function NewBucketForm() {
 }
 
 export function EditBucketForm({ bucketInfo, mutate }: { bucketInfo: CreateBucketFormValues & { id: UUID }; mutate: KeyedMutator<any> }) {
-	const params = useParams<{ bucket_uuid: UUID }>();
-	// if (projectUUID === null || projectUUID === undefined) redirect("/dashboard");
-	if (bucketInfo.id === null || bucketInfo.id === undefined) console.log(bucketInfo.id);
+	// const params = useParams<{ bucket_uuid: UUID }>();
+	if (bucketInfo.id === null || bucketInfo.id === undefined) redirect("/dashboard");
+	// if (bucketInfo.id === null || bucketInfo.id === undefined) console.log(bucketInfo.id);
 
 	const defaultValues: Partial<CreateBucketFormValues> = {
 		project_id: bucketInfo.id,
