@@ -14,13 +14,13 @@ export default function Navbar() {
 					<div className="flex items-center gap-4">
 						<Link href="/" className="flex items-center md:hidden">
 							<Image src="/logo.png" alt="Logo" width={40} height={40} />
-							<span className="sr-only">Indulgentia Home</span>
+							<span className="sr-only">RnDSillog Home</span>
 						</Link>
 					</div>
 					<div className="hidden md:flex items-center gap-4">
-						<Link href="/" className="flex items-center">
+						<Link href="/" className="flex-none items-center">
 							<Image src="/logo.png" alt="Logo" width={40} height={40} />
-							<span className="sr-only">Indulgentia Home</span>
+							<span className="sr-only">RnDSillog Home</span>
 						</Link>
 						&nbsp;
 						<Link href="/dashboard" className="nav-link flex items-center gap-1">
@@ -33,7 +33,7 @@ export default function Navbar() {
 							<BadgeDollarSign className="h-5 w-5" /> Pricing
 						</Link>
 						<Link href="/qna" className="nav-link flex items-center gap-1">
-							<FaRegQuestionCircle className="h-5 w-5" /> QNA
+							<FaRegQuestionCircle className="h-5 w-5" /> Q&A
 						</Link>
 					</div>
 				</div>
@@ -67,7 +67,7 @@ export default function Navbar() {
 								</Link>
 								<Link href="/qna" className="flex items-center gap-1">
 									<FaRegQuestionCircle className="h-5 w-5" />
-									QNA
+									Q&A
 								</Link>
 							</nav>
 						</SheetContent>

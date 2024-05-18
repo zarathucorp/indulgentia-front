@@ -63,7 +63,7 @@ export default function Component() {
 					<p className="mt-3 text-lg text-gray-500 dark:text-gray-400">아래 정보를 남겨주시면 빠르게 회신 드리겠습니다.</p>
 				</div>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
 						<FormField
 							control={form.control}
 							name="name"
@@ -75,7 +75,7 @@ export default function Component() {
 									<FormControl>
 										<Input placeholder="이름을 입력하여 주십시오." {...field} />
 									</FormControl>
-									<FormDescription>이름을 입력하여 주십시오.</FormDescription>
+
 									<FormMessage />
 								</FormItem>
 							)}
@@ -91,7 +91,7 @@ export default function Component() {
 									<FormControl>
 										<Input placeholder="이메일을 입력하여 주십시오." {...field} />
 									</FormControl>
-									<FormDescription>연락받으실 이메일 주소를 입력하여 주십시오.</FormDescription>
+
 									<FormMessage />
 								</FormItem>
 							)}
@@ -105,7 +105,7 @@ export default function Component() {
 									<FormControl>
 										<Input placeholder="전화번호를 입력하여 주십시오." {...field} />
 									</FormControl>
-									<FormDescription>연락받으실 전화번호를 입력하여 주십시오.</FormDescription>
+
 									<FormMessage />
 								</FormItem>
 							)}
@@ -117,9 +117,8 @@ export default function Component() {
 								<FormItem>
 									<FormLabel>남기실 말씀</FormLabel>
 									<FormControl>
-										<Input placeholder="이메일을 입력하여 주십시오." {...field} />
+										<Textarea placeholder="남기실 말씀을 입력하여 주십시오." {...field} />
 									</FormControl>
-									<FormDescription>연락받으실 이메일 주소를 입력하여 주십시오.</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -149,7 +148,7 @@ export default function Component() {
 								</FormItem>
 							)}
 						/>
-						<Button type="submit">Submit</Button>
+						<Button type="submit">제출하기</Button>
 					</form>
 				</Form>
 			</div>
