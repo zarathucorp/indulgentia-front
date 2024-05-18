@@ -165,7 +165,7 @@ const ProjectForm = ({ isNew = true, mutator, values }: { isNew?: boolean; mutat
 				</form>
 			</Form>
 
-			{values && <RemoveModal targetEntity={values.title} removeType="프로젝트" onRemoveConfirmed={() => handleRemove(isNew, values)} />}
+			{values && <RemoveModal targetEntity={values.title} removeType="Project" onRemoveConfirmed={() => handleRemove(isNew, values)} />}
 		</div>
 	);
 };
