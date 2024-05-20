@@ -3,9 +3,10 @@ import { updateSession } from "@/utils/supabase/middleware";
 import { createClient } from "@/utils/supabase/server";
 
 export default async function middleware(request: NextRequest) {
-	const supabase = createClient();
 	// Dashboard로 접근하는 경우
 	if (request.nextUrl.pathname.startsWith("/dashboard")) {
+		const supabase = createClient();
+
 		const {
 			data: { user },
 		} = await supabase.auth.getUser();
