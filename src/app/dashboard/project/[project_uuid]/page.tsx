@@ -19,7 +19,7 @@ import useSWRImmutable from "swr/immutable";
 import { DashboardBreadCrumb } from "@/components/modules/dashboard/DashboardBreadCrumb";
 const projectListFetcher = async (url: string) => {
 	const result = await axios.get(url, { withCredentials: true });
-	console.log(result.data.data);
+	// console.log(result.data.data);
 	if (result.status !== 200) {
 		const error = new Error("An error occurred while fetching the data.");
 		throw error;
@@ -29,18 +29,19 @@ const projectListFetcher = async (url: string) => {
 export default function Project() {
 	const params = useParams<{ project_uuid: string }>();
 	const { data, isValidating, error, mutate, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/list/${params.project_uuid}`, projectListFetcher);
-	const { data: breadcrumbData } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + `/dashboard/breadcrumb/bucket/${params.project_uuid}`, async (url) => {
+	const { data: breadcrumbData } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + `/dashboard/project/${params.project_uuid}`, async (url) => {
 		const result = await axios.get(url, { withCredentials: true });
 		if (result.status !== 200) {
 			const error = new Error("An error occurred while fetching the data.");
 			throw error;
 		}
-		return result.data.data;
+		console.log(result.data.data.title);
+		return { project_title: result.data.data.title };
 	});
 	if (error) return <div>{JSON.stringify(error)}</div>;
 	return (
 		<>
-			<DashboardBreadCrumb breadcrumbData={{ level: "Project", project_id: params.project_uuid, ...breadcrumbData }} />
+			{breadcrumbData && <DashboardBreadCrumb breadcrumbData={{ level: "Project", project_id: params.project_uuid, ...breadcrumbData }} />}
 			<div className="flex min-h-screen max-w-screen-xl flex-col mx-auto">{isLoading ? <p>loading</p> : <>{data && <MyBucketList bucketList={data} projectId={params.project_uuid} />}</>}</div>
 		</>
 	);
