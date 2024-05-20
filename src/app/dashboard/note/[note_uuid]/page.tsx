@@ -10,6 +10,17 @@ import useSWRImmutable from "swr/immutable";
 import { DashboardBreadCrumb } from "@/components/modules/dashboard/DashboardBreadCrumb";
 import { useParams } from "next/navigation";
 import { useState } from "react";
+import RemoveModal from "@/components/global/RemoveModal";
+
+const handleRemove = async (id: string) => {
+	try {
+		await axios.delete(process.env.NEXT_PUBLIC_API_URL + `/dashboard/note/${id}`, { withCredentials: true });
+		return;
+	} catch (error) {
+		console.error(error);
+	}
+};
+
 export default function ViewNote() {
 	const params = useParams<{ note_uuid: string }>();
 	// const [downloadURL, setDownloadURL] = useState<string>("");
@@ -23,7 +34,7 @@ export default function ViewNote() {
 		return result.data.url;
 	});
 
-	const { data: breadcrumbData } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + `/dashboard/breadcrumb/note/${params.note_uuid}`, async (url) => {
+	const { data: breadcrumbData } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + `/dashboard/note/${params.note_uuid}/breadcrumb`, async (url) => {
 		const result = await axios.get(url, { withCredentials: true });
 		if (result.status !== 200) {
 			const error = new Error("An error occurred while fetching the data.");
@@ -44,6 +55,7 @@ export default function ViewNote() {
 						<Button className="py-2">다운로드</Button>
 					</Link>
 					<Button className="bg-red-600 ">삭제</Button>
+					{breadcrumbData && <RemoveModal targetEntity={breadcrumbData.note_title} removeType="Note" onRemoveConfirmed={() => handleRemove(params.note_uuid)} parentUUID={breadcrumbData.bucket_id} />}
 					<NoteAuditLog />
 				</div>
 			</div>
