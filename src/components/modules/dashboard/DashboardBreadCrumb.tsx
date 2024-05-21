@@ -39,14 +39,12 @@ export function DashboardBreadCrumb({ breadcrumbData }: { breadcrumbData: Dashbo
 					<BreadcrumbLink href="/dashboard">대시보드</BreadcrumbLink>
 				</BreadcrumbItem>
 				<BreadcrumbSeparator />
-				<BreadcrumbItem>
-					{/* 프로젝트 */}
-					{breadcrumbData.level === "Project" ? (
-						<BreadcrumbItem>{breadcrumbData.project_title}</BreadcrumbItem>
-					) : (
-						<BreadcrumbLink href={`/dashboard/project/${breadcrumbData.project_id}`}>{breadcrumbData.project_title}</BreadcrumbLink>
-					)}
-				</BreadcrumbItem>
+				{/* 프로젝트 */}
+				{breadcrumbData.level === "Project" ? (
+					<BreadcrumbItem>{breadcrumbData.project_title}</BreadcrumbItem>
+				) : (
+					<BreadcrumbLink href={`/dashboard/project/${breadcrumbData.project_id}`}>{breadcrumbData.project_title}</BreadcrumbLink>
+				)}
 				{(breadcrumbData.level === "Bucket" || breadcrumbData.level === "Note") && (
 					<>
 						<BreadcrumbSeparator />
