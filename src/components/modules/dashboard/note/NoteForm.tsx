@@ -32,20 +32,20 @@ export type CreateNoteFormValues = z.infer<typeof NoteSchema>;
 export default function NewNoteForm() {
 	const [userUUID, setUserUUID] = useState<string | null>(null);
 
-	useEffect(() => {
-		const supabase = createClient();
-		const getUserUUID = async () => {
-			const {
-				data: { user },
-			} = await supabase.auth.getUser();
-			if (user) {
-				setUserUUID(user.id);
-			} else {
-				console.log("No user is logged in");
-			}
-		};
-		getUserUUID();
-	}, []);
+	// useEffect(() => {
+	// 	const supabase = createClient();
+	// 	const getUserUUID = async () => {
+	// 		const {
+	// 			data: { user },
+	// 		} = await supabase.auth.getUser();
+	// 		if (user) {
+	// 			setUserUUID(user.id);
+	// 		} else {
+	// 			console.log("No user is logged in");
+	// 		}
+	// 	};
+	// 	getUserUUID();
+	// }, []);
 
 	const searchParams = useSearchParams();
 	const bucketUUID: string = searchParams.get("bucket") as string;
@@ -93,16 +93,20 @@ export default function NewNoteForm() {
 	}
 
 	return (
-		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-				<NoteTitleField form={form} />
-				<NoteDescriptionField form={form} />
-				<NoteTagField form={form} />
-				<NoteFileField form={form} />
-				<BucketUUIDField form={form} />
-				<Button type="submit">새 Note 생성</Button>
-			</form>
-		</Form>
+		<div className="w-full lg:w-1/2 mx-auto">
+			<Form {...form}>
+				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+					<NoteTitleField form={form} />
+					<NoteDescriptionField form={form} />
+					<NoteTagField form={form} />
+					<NoteFileField form={form} />
+					<BucketUUIDField form={form} />
+					<div className="flex justify-center">
+						<Button type="submit">새 Note 생성</Button>
+					</div>
+				</form>
+			</Form>
+		</div>
 	);
 }
 

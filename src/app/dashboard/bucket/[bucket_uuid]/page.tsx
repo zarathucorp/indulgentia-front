@@ -23,6 +23,21 @@ const noteListFetcher = async (url: string) => {
 	}
 	return result.data.data;
 };
+const convertKST = (date: Date) => {
+	const utcDate = date;
+
+	const kstDate = new Date(utcDate.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
+
+	const year = kstDate.getFullYear();
+	const month = String(kstDate.getMonth() + 1).padStart(2, "0");
+	const day = String(kstDate.getDate()).padStart(2, "0");
+	const hours = String(kstDate.getHours()).padStart(2, "0");
+	const minutes = String(kstDate.getMinutes()).padStart(2, "0");
+	const seconds = String(kstDate.getSeconds()).padStart(2, "0");
+
+	return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
+
 export default function Note() {
 	const params = useParams<{ bucket_uuid: string }>();
 	const { data, isValidating, error, mutate, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + `/dashboard/note/list/${params.bucket_uuid}`, noteListFetcher);
@@ -52,19 +67,19 @@ export default function Note() {
 				<div className="space-y-4">
 					<div className="grid gap-2">
 						<div className="flex items-center justify-between">
-							<div className="font-medium">Commit / Log name</div>
-							<div className="text-sm text-gray-500 dark:text-gray-400">Author</div>
-							<div className="text-sm text-gray-500 dark:text-gray-400">Git Hash</div>
-							<div className="text-sm text-gray-500 dark:text-gray-400">Date</div>
+							<div className="font-medium">노트 이름</div>
+							<div className="text-sm text-gray-500 dark:text-gray-400">작성자</div>
+							<div className="text-sm text-gray-500 dark:text-gray-400">작성 날짜</div>
+							<div className="text-sm text-gray-500 dark:text-gray-400"></div>
 						</div>
 						<div className="grid gap-2">
 							{data &&
 								data.map((note: NoteType, index: number) => (
 									<div key={index} className="flex items-center justify-between rounded-md bg-gray-100 px-4 py-3 dark:bg-gray-800">
 										<div>{note.title}</div>
-										<div>{note.username}</div>
+										<div>{note.user_id}</div>
+										<div>{convertKST(note.created_at)}</div>
 										<div>{note.is_github ? note.github_type : null}</div>
-										<div>{note.created_at.toLocaleString()}</div>
 										<div>
 											<DropdownMenu>
 												<DropdownMenuTrigger asChild>

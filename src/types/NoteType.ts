@@ -3,7 +3,7 @@ import { UUID } from "crypto";
 export interface BaseNoteType {
 	id: UUID;
 	title: string;
-	username: UUID;
+	user_id: UUID;
 	created_at: Date;
 	file_name: string;
 	// GitHub 연동된 항목인지 체크

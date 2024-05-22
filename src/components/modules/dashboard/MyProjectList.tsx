@@ -14,11 +14,11 @@ export default function MyProjectList({ projectList }: { projectList: ProjectTyp
 			<CardHeader>
 				<CardTitle className="grid grid-cols-6">
 					<div className="col-start-1 col-span-2">내 프로젝트</div>
-					<Link href="/dashboard/project/create">
-						<Button className="col-start-6 col-span-1">새 프로젝트</Button>
+					<Link href="/dashboard/project/create" className="col-start-6 col-span-1">
+						<Button>새 프로젝트</Button>
 					</Link>
 				</CardTitle>
-				<CardDescription>Manage your products and view their sales performance.</CardDescription>
+				<CardDescription>프로젝트 목록입니다.</CardDescription>
 			</CardHeader>
 			<CardContent>
 				{/* 나중에 서버에서 데이터 받아서 map으로 */}

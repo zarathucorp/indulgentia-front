@@ -13,9 +13,9 @@ import useSWR from "swr";
 import { redirect, useSearchParams } from "next/navigation";
 import { TeamUserType } from "@/types/TeamUserType";
 import { UUID } from "crypto";
-import { useParams } from "next/navigation";
 import RemoveModal from "@/components/global/RemoveModal";
 import { KeyedMutator } from "swr";
+
 const BucketSchema = z.object({
 	title: z
 		.string()
@@ -61,14 +61,18 @@ export default function NewBucketForm() {
 	}
 
 	return (
-		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-				<BucketTitleField form={form} />
-				<BucketManagerField form={form} teamUserList={teamUserList || []} isLoading={isLoading} />
-				<ProjectUUIDField form={form} />
-				<Button type="submit">새 Bucket 생성</Button>
-			</form>
-		</Form>
+		<div className="w-full lg:w-1/2 mx-auto">
+			<Form {...form}>
+				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+					<BucketTitleField form={form} />
+					<BucketManagerField form={form} teamUserList={teamUserList || []} isLoading={isLoading} />
+					<ProjectUUIDField form={form} />
+					<div className="flex justify-center">
+						<Button type="submit">새 Bucket 생성</Button>
+					</div>
+				</form>
+			</Form>
+		</div>
 	);
 }
 
@@ -85,9 +89,7 @@ const handleRemove = async (values: (CreateBucketFormValues & { id: string }) | 
 };
 
 export function EditBucketForm({ bucketInfo, mutate }: { bucketInfo: CreateBucketFormValues & { id: UUID }; mutate: KeyedMutator<any> }) {
-	// const params = useParams<{ bucket_uuid: UUID }>();
 	if (bucketInfo.id === null || bucketInfo.id === undefined) redirect("/dashboard");
-	// if (bucketInfo.id === null || bucketInfo.id === undefined) console.log(bucketInfo.id);
 
 	const defaultValues: Partial<CreateBucketFormValues> = {
 		project_id: bucketInfo.id,
@@ -96,7 +98,6 @@ export function EditBucketForm({ bucketInfo, mutate }: { bucketInfo: CreateBucke
 	const form = useForm<CreateBucketFormValues>({
 		resolver: zodResolver(BucketSchema),
 		defaultValues: bucketInfo,
-		// defaultValues
 	});
 
 	const { data: teamUserList, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + "/user/team/list", async (url) => {
@@ -115,15 +116,19 @@ export function EditBucketForm({ bucketInfo, mutate }: { bucketInfo: CreateBucke
 	}
 
 	return (
-		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-				<BucketTitleField form={form} />
-				<BucketManagerField form={form} teamUserList={teamUserList || []} isLoading={isLoading} />
-				<ProjectUUIDField form={form} />
-				<Button type="submit">Bucket 수정</Button>
-				<RemoveModal targetEntity={bucketInfo.title} removeType="Bucket" onRemoveConfirmed={() => handleRemove(bucketInfo)} parentUUID={bucketInfo.project_id} />
-			</form>
-		</Form>
+		<div className="w-full lg:w-1/2 mx-auto">
+			<Form {...form}>
+				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+					<BucketTitleField form={form} />
+					<BucketManagerField form={form} teamUserList={teamUserList || []} isLoading={isLoading} />
+					<ProjectUUIDField form={form} />
+					<div className="flex justify-center">
+						<Button type="submit">Bucket 수정</Button>
+					</div>
+					<RemoveModal targetEntity={bucketInfo.title} removeType="Bucket" onRemoveConfirmed={() => handleRemove(bucketInfo)} parentUUID={bucketInfo.project_id} />
+				</form>
+			</Form>
+		</div>
 	);
 }
 

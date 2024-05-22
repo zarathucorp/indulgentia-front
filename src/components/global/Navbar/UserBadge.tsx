@@ -36,27 +36,38 @@ export default async function UserBadge() {
 					</Link>
 					<DropdownMenuItem>고객지원</DropdownMenuItem>
 					<DropdownMenuSeparator />
-					{/* <form action={signOut}> */}
 					<form action={signOut}>
-						<button>Logout</button>
+						<button type="submit">
+							<DropdownMenuItem>로그아웃</DropdownMenuItem>
+						</button>
 					</form>
-					{/* <DropdownMenuItem
-						onClick={async () => {
-							"use server";
-							const supabase = createClient();
-							await supabase.auth.signOut();
-							return redirect("/auth/login/supabase");
-						}}
-					>
-						로그아웃
-					</DropdownMenuItem> */}
-					{/* </form> */}
 				</DropdownMenuContent>
 			</DropdownMenu>
 		</>
 	) : (
-		<Link href="/auth/login" className="py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover">
-			Login
-		</Link>
+		<DropdownMenu>
+			<DropdownMenuTrigger asChild>
+				<Button variant="secondary" size="icon" className="rounded-full">
+					<CircleUser className="h-5 w-5" />
+					<span className="sr-only">유저 메뉴 열기</span>
+				</Button>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent align="end">
+				<Link href="/auth/login" className="py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover">
+					<DropdownMenuItem>로그인</DropdownMenuItem>
+				</Link>
+				{/* <DropdownMenuItem
+				onClick={async () => {
+					"use server";
+					const supabase = createClient();
+					await supabase.auth.signOut();
+					return redirect("/auth/login/supabase");
+				}}
+			>
+				로그아웃
+			</DropdownMenuItem> */}
+				{/* </form> */}
+			</DropdownMenuContent>
+		</DropdownMenu>
 	);
 }

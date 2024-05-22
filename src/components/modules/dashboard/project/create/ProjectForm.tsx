@@ -157,11 +157,13 @@ const ProjectForm = ({ isNew = true, mutator, values }: { isNew?: boolean; mutat
 	const form = useProjectForm(isNew, values);
 
 	return (
-		<div className="w-3/4 justify-items-center">
+		<div className="w-full lg:w-1/2 mx-auto">
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit((data) => handleSubmit(isNew, data, teamId, values, mutator))} className="space-y-8">
 					<ProjectFormFields form={form} />
-					<Button type="submit">{isNew ? "새 프로젝트 생성" : "프로젝트 업데이트"}</Button>
+					<div className="flex justify-center">
+						<Button type="submit">{isNew ? "새 프로젝트 생성" : "프로젝트 업데이트"}</Button>
+					</div>
 				</form>
 			</Form>
 
