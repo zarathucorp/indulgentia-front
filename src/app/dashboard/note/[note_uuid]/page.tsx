@@ -11,6 +11,7 @@ import { DashboardBreadCrumb } from "@/components/modules/dashboard/DashboardBre
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import RemoveModal from "@/components/global/RemoveModal";
+import ErrorPage from "@/app/error/page";
 
 const handleRemove = async (id: string) => {
 	try {
@@ -42,6 +43,11 @@ export default function ViewNote() {
 		}
 		return result.data.data;
 	});
+	if (error) return (
+		<>
+			<ErrorPage error={error} reset={() => mutate()} />
+		</>
+	);
 	return (
 		<>
 			<div className="py-3 pl-4">
