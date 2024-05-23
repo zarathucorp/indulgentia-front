@@ -8,20 +8,20 @@ import UserBadge from "./Navbar/UserBadge";
 import Image from "next/image";
 export default function Navbar() {
 	return (
-		<header className="sticky top-0 flex h-16 items-center gap-4 bg-[#051f20] text-white px-4 md:px-6 z-50">
+		<header className="sticky top-0 flex h-16 items-center gap-4 bg-[#051f20] text-white px-6 z-50">
 			<nav className="flex flex-grow items-center justify-between">
-				<div className="flex items-center gap-4">
-					<div className="flex items-center gap-4">
-						<Link href="/" className="flex items-center md:hidden">
+				<div className="flex items-center">
+					<div className="flex items-center">
+						<Link href="/" className="">
 							<Image src="/logo.png" alt="Logo" width={40} height={40} />
 							<span className="sr-only">RnDSillog Home</span>
 						</Link>
 					</div>
 					<div className="hidden md:flex items-center gap-4">
-						<Link href="/" className="flex-none items-center">
+						{/* <Link href="/" className="flex-none items-center">
 							<Image src="/logo.png" alt="Logo" width={40} height={40} />
 							<span className="sr-only">RnDSillog Home</span>
-						</Link>
+						</Link> */}
 						&nbsp;
 						<Link href="/dashboard" className="nav-link flex items-center gap-1">
 							<LayoutDashboard className="h-5 w-5" /> Dashboard
@@ -50,12 +50,12 @@ export default function Navbar() {
 								<span className="sr-only">메뉴 열기</span>
 							</Button>
 						</SheetTrigger>
-						<SheetContent side="left">
+						<SheetContent side="right">
 							<nav className="grid gap-6 text-lg font-medium">
-								<Link href="/" className="flex items-center">
+								{/* <Link href="/" className="flex items-center">
 									<Image src="/logo.png" alt="Logo" width={40} height={40} />
-									<span className="sr-only">Indulgentia Home</span>
-								</Link>
+									<span className="sr-only">연구실록 홈</span>
+								</Link> */}
 								<Link href="/dashboard" className="flex items-center gap-1">
 									<LayoutDashboard className="h-5 w-5" /> Dashboard
 								</Link>
