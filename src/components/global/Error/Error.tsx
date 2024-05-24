@@ -3,7 +3,11 @@
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
-export default function ErrorPage({ error, reset }: { error: Error & { digest?: string; response: { data: { detail: string }; status: number; statusText: string } }; reset: () => void }) {
+export default function ErrorDefault() {
+	return null;
+}
+
+export function ErrorPage({ error, reset }: { error: Error & { digest?: string; response: { data: { detail: string }; status: number; statusText: string } }; reset: () => void }) {
 	useEffect(() => {
 		// Log the error to an error reporting service
 		// console.error(error)
