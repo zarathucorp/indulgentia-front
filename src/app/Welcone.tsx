@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
+import { Divide } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 export default function WelcomePage() {
 	return (
 		<main className="flex flex-col">
-			<section className="bg-[#4b0082] text-white py-20 md:py-32 lg:py-40">
+			<section className="text-black py-20 md:py-32 lg:py-40">
 				<div className="container mx-auto px-4 md:px-6 lg:px-8">
 					<div className="max-w-3xl mx-auto text-center space-y-6">
 						<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold">깃허브로 완성하는 연구실록</h1>
@@ -13,6 +15,7 @@ export default function WelcomePage() {
 					</div>
 				</div>
 			</section>
+			<Separator />
 			<section className="py-16 md:py-24 lg:py-32">
 				<div className="container mx-auto px-4 md:px-6 lg:px-8">
 					<div className="max-w-3xl mx-auto text-center space-y-6">
@@ -22,8 +25,8 @@ export default function WelcomePage() {
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
 						<div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 space-y-4">
 							<PenIcon className="w-10 h-10 text-[#4b0082]" />
-							<h3 className="text-xl font-bold">Intuitive Note-Taking</h3>
-							<p className="text-gray-600 dark:text-gray-400">Capture your ideas and research with ease using our intuitive note-taking tools.</p>
+							<h3 className="text-xl font-bold">GitHub 데이터를 자동으로 연구노트로 전환</h3>
+							<p className="text-gray-600 dark:text-gray-400">GitHub 등 Git에서의 활동만으로 정부에서 인정하는 전자연구노트 자동작성</p>
 						</div>
 						<div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 space-y-4">
 							<SearchIcon className="w-10 h-10 text-[#4b0082]" />
