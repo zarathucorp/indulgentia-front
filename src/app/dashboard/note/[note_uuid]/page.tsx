@@ -10,10 +10,10 @@ import useSWRImmutable from "swr/immutable";
 import { DashboardBreadCrumb } from "@/components/modules/dashboard/DashboardBreadCrumb";
 import { DashboardBreadCrumbLoading } from "@/components/global/Loading/BreadCrumb";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import RemoveModal from "@/components/global/RemoveModal";
 import ErrorPage from "@/app/error/page";
-// import { NoteLoading } from "@/components/global/Loading/Note";
+import { NoteLoading } from "@/components/global/Loading/Note";
 
 const handleRemove = async (id: string) => {
 	try {
@@ -24,9 +24,18 @@ const handleRemove = async (id: string) => {
 	}
 };
 
+const getDownloadURL = async (url: string): Promise<string> => {
+	const res = await fetch(url);
+	const blob = await res.blob();
+	const downloadUrl = window.URL.createObjectURL(blob);
+
+	return downloadUrl;
+};
+
 export default function ViewNote() {
 	const params = useParams<{ note_uuid: string }>();
-	// const [downloadURL, setDownloadURL] = useState<string>("");
+	const [downloadURL, setDownloadURL] = useState<string>("");
+
 	const { data, isValidating, error, mutate, isLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + `/dashboard/note/file/${params.note_uuid}`, async (url) => {
 		const result = await axios.get(url, { withCredentials: true });
 		if (result.status !== 200) {
@@ -51,6 +60,16 @@ export default function ViewNote() {
 				<ErrorPage error={error} reset={() => mutate()} />
 			</>
 		);
+
+	// 파일 다운로드용 URL 생성
+	useEffect(() => {
+		const fetchDownloadUrl = async () => {
+			const url = await getDownloadURL(data);
+			setDownloadURL(url);
+		};
+		fetchDownloadUrl();
+	}, [data]);
+
 	return (
 		<>
 			<div className="py-3 pl-4">
@@ -58,11 +77,11 @@ export default function ViewNote() {
 				{isBreadcrumbLoading ? <DashboardBreadCrumbLoading type="Note" /> : <DashboardBreadCrumb breadcrumbData={{ level: "Note", note_id: params.note_uuid, ...breadcrumbData }} />}
 			</div>
 			<div className="grid grid-cols-[3fr_1fr]">
-				{/* <div className="px-2">{isLoading ? <NoteLoading /> : <>{<PDFViewer fileUrl={data} />}</>}</div> */}
+				<div className="px-2">{isLoading ? <NoteLoading /> : <>{<PDFViewer fileUrl={data} />}</>}</div>
 				<div className="flex flex-col">
-					<Link href={data || "#"} download="결과.pdf">
+					<a href={downloadURL || "#"} download={`Report_${params.note_uuid}.pdf`}>
 						<Button className="py-2">다운로드</Button>
-					</Link>
+					</a>
 					<Button className="bg-red-600 ">삭제</Button>
 					{breadcrumbData && <RemoveModal targetEntity={breadcrumbData.note_title} removeType="Note" onRemoveConfirmed={() => handleRemove(params.note_uuid)} parentUUID={breadcrumbData.bucket_id} />}
 					<NoteAuditLog />
