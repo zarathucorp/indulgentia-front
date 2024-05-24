@@ -5,6 +5,7 @@ import axios from "axios";
 import MyProjectList from "@/components/modules/dashboard/MyProjectList";
 import ProjectType from "@/types/ProjectType";
 import ErrorPage from "@/app/error/page";
+import { DashboardBreadCrumb } from "@/components/modules/dashboard/DashboardBreadCrumb";
 import { DashboardLoading } from "@/components/global/Loading/Dashboard";
 const projectListFetcher = async (url: string) => {
 	const result = await axios.get(url, { withCredentials: true });
@@ -25,5 +26,12 @@ export default function Dashboard() {
 			</>
 		);
 	}
-	return <div className="flex max-w-screen-xl flex-col mx-auto">{isLoading ? <DashboardLoading /> : <>{data && <MyProjectList projectList={data} />}</>}</div>;
+	return (
+		<>
+			<div className="py-3 pl-4">
+				<DashboardBreadCrumb breadcrumbData={{ level: "Dashboard" }} />
+			</div>
+			<div className="flex max-w-screen-xl flex-col mx-auto">{isLoading ? <DashboardLoading /> : <>{data && <MyProjectList projectList={data} />}</>}</div>;
+		</>
+	);
 }
