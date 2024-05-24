@@ -1,8 +1,4 @@
-"use client";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import axios from "axios";
-import { useEffect } from "react";
-import useSWRImmutable from "swr/immutable";
 
 type ProjectLevel = {
 	level: "Project";

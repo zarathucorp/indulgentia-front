@@ -14,6 +14,7 @@ import useSWR from "swr";
 import axios from "axios";
 import useSWRImmutable from "swr/immutable";
 import { DashboardBreadCrumb } from "@/components/modules/dashboard/DashboardBreadCrumb";
+import { DashboardBreadCrumbLoading } from "@/components/global/Loading/BreadCrumb";
 import ErrorPage from "@/app/error/page";
 const noteListFetcher = async (url: string) => {
 	const result = await axios.get(url, { withCredentials: true });
@@ -42,7 +43,7 @@ const convertKST = (date: Date) => {
 export default function Note() {
 	const params = useParams<{ bucket_uuid: string }>();
 	const { data, isValidating, error, mutate, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + `/dashboard/note/list/${params.bucket_uuid}`, noteListFetcher);
-	const { data: breadcrumbData } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/${params.bucket_uuid}/breadcrumb`, async (url) => {
+	const { data: breadcrumbData, isLoading: isBreadcrumbLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/${params.bucket_uuid}/breadcrumb`, async (url) => {
 		const result = await axios.get(url, { withCredentials: true });
 		if (result.status !== 200) {
 			const error = new Error("An error occurred while fetching the data.");
@@ -64,7 +65,7 @@ export default function Note() {
 	return (
 		<>
 			<div className="py-3 pl-4">
-				<DashboardBreadCrumb breadcrumbData={{ level: "Bucket", bucket_id: params.bucket_uuid, ...breadcrumbData }} />
+				{isBreadcrumbLoading ? <DashboardBreadCrumbLoading type="Bucket" /> : <DashboardBreadCrumb breadcrumbData={{ level: "Bucket", bucket_id: params.bucket_uuid, ...breadcrumbData }} />}
 			</div>
 			<div className="grid xs:grid-cols-1 sm:grid-cols-[3fr_1fr] gap-6 p-6 sm:p-10 ">
 				{/* <div>

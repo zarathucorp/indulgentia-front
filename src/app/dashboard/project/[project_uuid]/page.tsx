@@ -18,7 +18,8 @@ import axios from "axios";
 import useSWRImmutable from "swr/immutable";
 import { DashboardBreadCrumb } from "@/components/modules/dashboard/DashboardBreadCrumb";
 import ErrorPage from "@/app/error/page";
-
+import { DashboardLoading } from "@/components/global/Loading/Dashboard";
+import { DashboardBreadCrumbLoading } from "@/components/global/Loading/BreadCrumb";
 const projectListFetcher = async (url: string) => {
 	const result = await axios.get(url, { withCredentials: true });
 	// console.log(result.data.data);
@@ -31,7 +32,7 @@ const projectListFetcher = async (url: string) => {
 export default function Project() {
 	const params = useParams<{ project_uuid: string }>();
 	const { data, isValidating, error, mutate, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/list/${params.project_uuid}`, projectListFetcher);
-	const { data: breadcrumbData } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + `/dashboard/project/${params.project_uuid}`, async (url) => {
+	const { data: breadcrumbData, isLoading: isBreadcrumbLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + `/dashboard/project/${params.project_uuid}`, async (url) => {
 		const result = await axios.get(url, { withCredentials: true });
 		if (result.status !== 200) {
 			const error = new Error("An error occurred while fetching the data.");
@@ -48,8 +49,15 @@ export default function Project() {
 		);
 	return (
 		<>
-			<div className="py-3 pl-4">{breadcrumbData && <DashboardBreadCrumb breadcrumbData={{ level: "Project", project_id: params.project_uuid, ...breadcrumbData }} />}</div>
-			<div className="flex min-h-screen max-w-screen-xl flex-col mx-auto">{isLoading ? <p>loading</p> : <>{data && <MyBucketList bucketList={data} projectId={params.project_uuid} />}</>}</div>
+			<div className="py-3 pl-4">
+				{isBreadcrumbLoading ? (
+					<DashboardBreadCrumbLoading type="Project" />
+				) : (
+					breadcrumbData && <DashboardBreadCrumb breadcrumbData={{ level: "Project", project_id: params.project_uuid, ...breadcrumbData }} />
+				)}
+			</div>
+
+			<div className="flex min-h-screen max-w-screen-xl flex-col mx-auto">{isLoading ? <DashboardLoading /> : <>{data && <MyBucketList bucketList={data} projectId={params.project_uuid} />}</>}</div>
 		</>
 	);
 }

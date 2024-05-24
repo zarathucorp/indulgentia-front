@@ -5,7 +5,7 @@ import axios from "axios";
 import MyProjectList from "@/components/modules/dashboard/MyProjectList";
 import ProjectType from "@/types/ProjectType";
 import ErrorPage from "@/app/error/page";
-
+import { DashboardLoading } from "@/components/global/Loading/Dashboard";
 const projectListFetcher = async (url: string) => {
 	const result = await axios.get(url, { withCredentials: true });
 	console.log(result.data.data);
@@ -25,5 +25,5 @@ export default function Dashboard() {
 			</>
 		);
 	}
-	return <div className="flex max-w-screen-xl flex-col mx-auto">{isLoading ? <p>loading</p> : <>{data && <MyProjectList projectList={data} />}</>}</div>;
+	return <div className="flex max-w-screen-xl flex-col mx-auto">{isLoading ? <DashboardLoading /> : <>{data && <MyProjectList projectList={data} />}</>}</div>;
 }

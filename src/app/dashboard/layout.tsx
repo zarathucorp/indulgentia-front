@@ -5,7 +5,7 @@ export default function DashboardLayout({
 }>) {
 	return (
 		<>
-			<div className="pt-5">{children}</div>
+			<div className="h-screen">{children}</div>
 		</>
 	);
 }

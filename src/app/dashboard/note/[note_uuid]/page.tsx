@@ -8,10 +8,12 @@ import axios from "axios";
 // import useSWR from "swr";
 import useSWRImmutable from "swr/immutable";
 import { DashboardBreadCrumb } from "@/components/modules/dashboard/DashboardBreadCrumb";
+import { DashboardBreadCrumbLoading } from "@/components/global/Loading/BreadCrumb";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import RemoveModal from "@/components/global/RemoveModal";
 import ErrorPage from "@/app/error/page";
+// import { NoteLoading } from "@/components/global/Loading/Note";
 
 const handleRemove = async (id: string) => {
 	try {
@@ -35,7 +37,7 @@ export default function ViewNote() {
 		return result.data.url;
 	});
 
-	const { data: breadcrumbData } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + `/dashboard/note/${params.note_uuid}/breadcrumb`, async (url) => {
+	const { data: breadcrumbData, isLoading: isBreadcrumbLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + `/dashboard/note/${params.note_uuid}/breadcrumb`, async (url) => {
 		const result = await axios.get(url, { withCredentials: true });
 		if (result.status !== 200) {
 			const error = new Error("An error occurred while fetching the data.");
@@ -43,19 +45,20 @@ export default function ViewNote() {
 		}
 		return result.data.data;
 	});
-	if (error) return (
-		<>
-			<ErrorPage error={error} reset={() => mutate()} />
-		</>
-	);
+	if (error)
+		return (
+			<>
+				<ErrorPage error={error} reset={() => mutate()} />
+			</>
+		);
 	return (
 		<>
 			<div className="py-3 pl-4">
 				{/* <NoteBreadcrumb /> */}
-				<DashboardBreadCrumb breadcrumbData={{ level: "Note", note_id: params.note_uuid, ...breadcrumbData }} />
+				{isBreadcrumbLoading ? <DashboardBreadCrumbLoading type="Note" /> : <DashboardBreadCrumb breadcrumbData={{ level: "Note", note_id: params.note_uuid, ...breadcrumbData }} />}
 			</div>
 			<div className="grid grid-cols-[3fr_1fr]">
-				{isLoading ? <p>loading</p> : <>{<PDFViewer fileUrl={data} className="px-2" />}</>}
+				{/* <div className="px-2">{isLoading ? <NoteLoading /> : <>{<PDFViewer fileUrl={data} />}</>}</div> */}
 				<div className="flex flex-col">
 					<Link href={data || "#"} download="결과.pdf">
 						<Button className="py-2">다운로드</Button>
