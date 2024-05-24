@@ -12,7 +12,7 @@ import { DashboardBreadCrumbLoading } from "@/components/global/Loading/BreadCru
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import RemoveModal from "@/components/global/RemoveModal";
-import ErrorPage from "@/app/error/page";
+import { ErrorPage } from "@/components/global/Error/Error";
 import { NoteLoading } from "@/components/global/Loading/Note";
 
 const handleRemove = async (id: string) => {
@@ -42,7 +42,7 @@ export default function ViewNote() {
 			const error = new Error("An error occurred while fetching the data.");
 			throw error;
 		}
-		console.log(result.data.url);
+		setDownloadURL(await getDownloadURL(result.data.url));
 		return result.data.url;
 	});
 
@@ -61,14 +61,10 @@ export default function ViewNote() {
 			</>
 		);
 
-	// 파일 다운로드용 URL 생성
-	useEffect(() => {
-		const fetchDownloadUrl = async () => {
-			const url = await getDownloadURL(data);
-			setDownloadURL(url);
-		};
-		fetchDownloadUrl();
-	}, [data]);
+	// // 파일 다운로드용 URL 생성
+	// useEffect(() => {
+	// 	fetchDownloadUrl();
+	// }, [data]);
 
 	return (
 		<>

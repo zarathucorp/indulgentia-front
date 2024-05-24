@@ -3,7 +3,7 @@ import axios from "axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
+import Image from "next/image";
 interface Payment {
 	orderName: string;
 	approvedAt: string;
@@ -58,7 +58,7 @@ export default function SuccessPage() {
 	return (
 		<div className="flex flex-col items-center p-6">
 			<div className="box_section w-full max-w-xl p-6 bg-white shadow-md rounded-lg">
-				<img width="100px" src="https://static.toss.im/illusts/check-blue-spot-ending-frame.png" alt="결제 완료" />
+				<Image width={100} src="https://static.toss.im/illusts/check-blue-spot-ending-frame.png" alt="결제 완료" />
 				<h2 className="text-2xl font-semibold mt-4">결제를 완료했어요</h2>
 				<div className="grid grid-cols-2 gap-4 mt-8 text-lg">
 					<div className="text-left font-medium">결제금액</div>

@@ -15,7 +15,7 @@ import axios from "axios";
 import useSWRImmutable from "swr/immutable";
 import { DashboardBreadCrumb } from "@/components/modules/dashboard/DashboardBreadCrumb";
 import { DashboardBreadCrumbLoading } from "@/components/global/Loading/BreadCrumb";
-import ErrorPage from "@/app/error/page";
+import { ErrorPage } from "@/components/global/Error/Error";
 const noteListFetcher = async (url: string) => {
 	const result = await axios.get(url, { withCredentials: true });
 	console.log(result.data.data);

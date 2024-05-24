@@ -17,7 +17,7 @@ import useSWR from "swr";
 import axios from "axios";
 import useSWRImmutable from "swr/immutable";
 import { DashboardBreadCrumb } from "@/components/modules/dashboard/DashboardBreadCrumb";
-import ErrorPage from "@/app/error/page";
+import { ErrorPage } from "@/components/global/Error/Error";
 import { DashboardLoading } from "@/components/global/Loading/Dashboard";
 import { DashboardBreadCrumbLoading } from "@/components/global/Loading/BreadCrumb";
 const projectListFetcher = async (url: string) => {

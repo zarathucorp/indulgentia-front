@@ -4,7 +4,7 @@ import axios from "axios";
 
 import MyProjectList from "@/components/modules/dashboard/MyProjectList";
 import ProjectType from "@/types/ProjectType";
-import ErrorPage from "@/app/error/page";
+import { ErrorPage } from "@/components/global/Error/Error";
 import { DashboardBreadCrumb } from "@/components/modules/dashboard/DashboardBreadCrumb";
 import { DashboardLoading } from "@/components/global/Loading/Dashboard";
 const projectListFetcher = async (url: string) => {

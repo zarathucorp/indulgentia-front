@@ -74,7 +74,7 @@ export default function WelcomePage() {
 					</div>
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
 						<div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 space-y-4">
-							<blockquote className="text-lg font-medium">"This electronic research note has been a game-changer for my workflow. It's intuitive, powerful, and has saved me so much time."</blockquote>
+							<blockquote className="text-lg font-medium">This electronic research note has been a game-changer for my workflow. Its intuitive, powerful, and has saved me so much time.</blockquote>
 							<div className="flex items-center space-x-4">
 								<Avatar>
 									<AvatarImage src="/avatar1.jpg" />
@@ -88,7 +88,7 @@ export default function WelcomePage() {
 						</div>
 						<div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 space-y-4">
 							<blockquote className="text-lg font-medium">
-								"I've tried countless note-taking apps, but this electronic research note is by far the best. The features and functionality are unparalleled."
+								Ive tried countless note-taking apps, but this electronic research note is by far the best. The features and functionality are unparalleled.
 							</blockquote>
 							<div className="flex items-center space-x-4">
 								<Avatar>
@@ -103,7 +103,7 @@ export default function WelcomePage() {
 						</div>
 						<div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 space-y-4">
 							<blockquote className="text-lg font-medium">
-								"I've been using this electronic research note for months, and it has completely transformed the way I manage my research projects. Highly recommended!"
+								Ive been using this electronic research note for months, and it has completely transformed the way I manage my research projects. Highly recommended!
 							</blockquote>
 							<div className="flex items-center space-x-4">
 								<Avatar>
