@@ -4,6 +4,7 @@ import axios from "axios";
 
 import MyProjectList from "@/components/modules/dashboard/MyProjectList";
 import ProjectType from "@/types/ProjectType";
+import ErrorPage from "@/app/error/page";
 
 const projectListFetcher = async (url: string) => {
 	const result = await axios.get(url, { withCredentials: true });
@@ -29,6 +30,10 @@ const projectListFetcher = async (url: string) => {
 
 export default function Dashboard() {
 	const { data, isValidating, error, mutate, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + "/dashboard/project/list", projectListFetcher);
-	if (error) return <div>{JSON.stringify(error)}</div>;
+	if (error) return (
+		<>
+			<ErrorPage error={error} reset={() => mutate()} />
+		</>
+	);
 	return <div className="flex min-h-screen max-w-screen-xl flex-col mx-auto">{isLoading ? <p>loading</p> : <>{data && <MyProjectList projectList={data} />}</>}</div>;
 }

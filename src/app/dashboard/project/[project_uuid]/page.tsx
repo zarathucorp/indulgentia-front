@@ -17,6 +17,8 @@ import useSWR from "swr";
 import axios from "axios";
 import useSWRImmutable from "swr/immutable";
 import { DashboardBreadCrumb } from "@/components/modules/dashboard/DashboardBreadCrumb";
+import ErrorPage from "@/app/error/page";
+
 const projectListFetcher = async (url: string) => {
 	const result = await axios.get(url, { withCredentials: true });
 	// console.log(result.data.data);
@@ -38,7 +40,9 @@ export default function Project() {
 		console.log(result.data.data.title);
 		return { project_title: result.data.data.title };
 	});
-	if (error) return <div>{JSON.stringify(error)}</div>;
+	if (error) return <>
+		<ErrorPage error={error} reset={() => mutate()} />
+	</>;
 	return (
 		<>
 			{breadcrumbData && <DashboardBreadCrumb breadcrumbData={{ level: "Project", project_id: params.project_uuid, ...breadcrumbData }} />}

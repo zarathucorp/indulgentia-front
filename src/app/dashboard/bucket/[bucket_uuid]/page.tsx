@@ -14,6 +14,7 @@ import useSWR from "swr";
 import axios from "axios";
 import useSWRImmutable from "swr/immutable";
 import { DashboardBreadCrumb } from "@/components/modules/dashboard/DashboardBreadCrumb";
+import ErrorPage from "@/app/error/page";
 const noteListFetcher = async (url: string) => {
 	const result = await axios.get(url, { withCredentials: true });
 	console.log(result.data.data);
@@ -54,6 +55,11 @@ export default function Note() {
 		to: new Date(),
 	};
 	const [dateRange, setDateRange] = useState<DateRange | undefined>(defaultSelected);
+	if (error) return (
+		<>
+			<ErrorPage error={error} reset={() => mutate()} />
+		</>
+	);
 	return (
 		<>
 			<DashboardBreadCrumb breadcrumbData={{ level: "Bucket", bucket_id: params.bucket_uuid, ...breadcrumbData }} />
