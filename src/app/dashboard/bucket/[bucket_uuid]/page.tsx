@@ -115,10 +115,7 @@ export default function Note() {
 				</div>
 				<div className="space-y-4">
 					<div>
-						<FileUploader />
-						<Button type="submit" className="w-full">
-							Manual Upload
-						</Button>
+						{/* <FileUploader /> */}
 						<Link href={`/dashboard/note/create?bucket=${params.bucket_uuid}`}>
 							<Button className="w-full">노트 생성</Button>
 						</Link>

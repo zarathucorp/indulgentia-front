@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useSearchParams } from "next/navigation";
-
+import FileUploader from "@/components/global/FileUploader";
 const NoteSchema = z.object({
 	title: z
 		.string()
@@ -168,6 +168,21 @@ function NoteTagField({ form }: { form: any }) {
 }
 
 function NoteFileField({ form }: { form: any }) {
+	const [isFileSelected, setIsFileSelected] = useState<boolean>(false);
+
+	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const files = event.target.files;
+		if (files) {
+			form.setValue("files", Array.from(files));
+			setIsFileSelected(true);
+		}
+	};
+
+	const handleFileUnselect = () => {
+		form.setValue("files", []);
+		setIsFileSelected(false);
+	};
+
 	return (
 		<FormField
 			control={form.control}
@@ -176,17 +191,7 @@ function NoteFileField({ form }: { form: any }) {
 				<FormItem>
 					<FormLabel>노트 파일</FormLabel>
 					<FormControl>
-						<input
-							type="file"
-							multiple
-							onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-								const files = event.target.files;
-								if (files) {
-									field.onChange(Array.from(files));
-								}
-							}}
-							placeholder="노트 파일"
-						/>
+						<FileUploader typeString="" multiple onChange={handleFileChange} isFileSelected={isFileSelected} fileUnselectHandling={handleFileUnselect} />
 					</FormControl>
 					<FormDescription>노트 파일을 업로드합니다.</FormDescription>
 					<FormMessage />
