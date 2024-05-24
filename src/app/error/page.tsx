@@ -16,7 +16,7 @@ export default function ErrorPage({
     // console.error(error)
   }, [error])
   return (
-		<div className="flex h-[100dvh] flex-col items-center justify-center bg-gray-100 px-4 dark:bg-gray-900">
+		<div className="flex flex-col h-screen items-center justify-center px-4 dark:bg-gray-900">
 			<div className="mx-auto max-w-md space-y-4 text-center">
 				<h1 className="text-4xl font-bold tracking-tighter text-gray-900 dark:text-gray-50">{error.response.status} {error.response.statusText}</h1>
 				<p className="text-lg text-gray-500 dark:text-gray-400">{error.response.data?.detail || "Unexpected error occurred."}</p>

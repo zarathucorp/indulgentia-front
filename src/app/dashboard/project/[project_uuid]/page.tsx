@@ -40,12 +40,15 @@ export default function Project() {
 		console.log(result.data.data.title);
 		return { project_title: result.data.data.title };
 	});
-	if (error) return <>
-		<ErrorPage error={error} reset={() => mutate()} />
-	</>;
+	if (error)
+		return (
+			<>
+				<ErrorPage error={error} reset={() => mutate()} />
+			</>
+		);
 	return (
 		<>
-			{breadcrumbData && <DashboardBreadCrumb breadcrumbData={{ level: "Project", project_id: params.project_uuid, ...breadcrumbData }} />}
+			<div className="py-3 pl-4">{breadcrumbData && <DashboardBreadCrumb breadcrumbData={{ level: "Project", project_id: params.project_uuid, ...breadcrumbData }} />}</div>
 			<div className="flex min-h-screen max-w-screen-xl flex-col mx-auto">{isLoading ? <p>loading</p> : <>{data && <MyBucketList bucketList={data} projectId={params.project_uuid} />}</>}</div>
 		</>
 	);

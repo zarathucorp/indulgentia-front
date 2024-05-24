@@ -55,14 +55,17 @@ export default function Note() {
 		to: new Date(),
 	};
 	const [dateRange, setDateRange] = useState<DateRange | undefined>(defaultSelected);
-	if (error) return (
-		<>
-			<ErrorPage error={error} reset={() => mutate()} />
-		</>
-	);
+	if (error)
+		return (
+			<>
+				<ErrorPage error={error} reset={() => mutate()} />
+			</>
+		);
 	return (
 		<>
-			<DashboardBreadCrumb breadcrumbData={{ level: "Bucket", bucket_id: params.bucket_uuid, ...breadcrumbData }} />
+			<div className="py-3 pl-4">
+				<DashboardBreadCrumb breadcrumbData={{ level: "Bucket", bucket_id: params.bucket_uuid, ...breadcrumbData }} />
+			</div>
 			<div className="grid xs:grid-cols-1 sm:grid-cols-[3fr_1fr] gap-6 p-6 sm:p-10 ">
 				{/* <div>
 				{data ??
