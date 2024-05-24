@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	// react-pdf 지원
-	// webpack: (config) => {
-	// 	config.resolve.alias.canvas = false;
-	// 	return config;
-	// },
+	i18n: {
+		locales: ["ko", "ja"],
+		defaultLocale: "ko",
+	},
+	reactStrictMode: false,
 };
 
 export default nextConfig;
