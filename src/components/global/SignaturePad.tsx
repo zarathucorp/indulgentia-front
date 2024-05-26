@@ -39,6 +39,12 @@ const SignaturePad = () => {
 		};
 	}, []);
 
+	const handleSave = () => {
+		const canvas = canvasRef.current.getCanvas();
+		const dataUrl = canvas.toDataURL("image/png");
+		// dataUrl에 이미지 데이터가 들어있음. 백엔드로 보내면 됨.
+	};
+
 	return (
 		<div className="flex flex-col items-center">
 			<div className="relative border-2 border-gray-500" style={{ width: "500px", height: "200px" }}>
@@ -61,13 +67,13 @@ const SignaturePad = () => {
 				>
 					서명 초기화
 				</Button>
-				{/* <button
+				<Button
 					className={`px-4 py-2 rounded ${isSigned ? "bg-blue-500 text-white" : "bg-gray-400 text-gray-700"}`}
 					disabled={!isSigned} // 버튼 disabled
-					onClick={() => save()}
+					onClick={handleSave}
 				>
 					저장 버튼
-				</button> */}
+				</Button>
 			</div>
 		</div>
 	);
