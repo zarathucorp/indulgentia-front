@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useVariable } from "@/hooks/useVariable";
 import { AuthSessionMissingError, AuthWeakPasswordError, AuthApiError } from "@supabase/supabase-js";
 import { useToast } from "@/components/ui/use-toast";
+import { Spinner } from "@/components/global/Spinner";
 export default function ResetPassword() {
 	const supabase = createClient();
 	const router = useRouter();
@@ -18,7 +19,7 @@ export default function ResetPassword() {
 	const [password1, , handlePassword1] = useVariable<string>("");
 	const [password2, , handlePassword2] = useVariable<string>("");
 	const [errorMessage, setErrorMessage] = useVariable<string>("");
-
+	const [isLoading, setisLoading] = useVariable<boolean>(false);
 	return (
 		<Card className="mx-auto max-w-md">
 			<CardHeader className="space-y-2">
@@ -39,7 +40,9 @@ export default function ResetPassword() {
 			<CardFooter>
 				<Button
 					onClick={async () => {
+						setisLoading(true);
 						setErrorMessage("");
+
 						if (password1 === password2) {
 							try {
 								const { data, error } = await supabase.auth.updateUser({ password: password1 });
@@ -70,9 +73,11 @@ export default function ResetPassword() {
 						} else {
 							setErrorMessage("비밀번호가 일치하지 않습니다.");
 						}
+
+						setisLoading(false);
 					}}
 				>
-					비밀번호 재설정
+					{isLoading && <Spinner />}&nbsp;비밀번호 재설정
 				</Button>
 			</CardFooter>
 		</Card>

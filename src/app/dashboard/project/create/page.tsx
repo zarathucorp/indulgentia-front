@@ -1,8 +1,8 @@
-import ProjectForm from "@/components/modules/dashboard/project/create/ProjectForm";
-export default function NewProjectForm() {
+import { NewProjectForm } from "@/components/modules/dashboard/project/create/ProjectForm";
+export default function NewProject() {
 	return (
 		<>
-			<ProjectForm />
+			<NewProjectForm />
 		</>
 	);
 }

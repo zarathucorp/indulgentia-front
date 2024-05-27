@@ -3,11 +3,6 @@ import { EditBucketForm, CreateBucketFormValues } from "@/components/modules/das
 import axios from "axios";
 import { UUID } from "crypto";
 import ConnectGithubRepository from "./ConnectGithubRepository";
-// import useSWR from "swr";
-// function ConnectGithubRepository() {
-// 	return <></>;
-// }
-
 import { useParams } from "next/navigation";
 import useSWRImmutable from "swr/immutable";
 
