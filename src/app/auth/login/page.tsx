@@ -11,7 +11,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { Spinner } from "@/components/global/Spinner";
 import { FaGoogle } from "react-icons/fa";
+import { SendPasswordResetMailModal } from "./SendPasswordResetMailModal";
 export default function SigninPage({ searchParams }: { searchParams: { message: string } }) {
 	const signIn = async (formData: FormData) => {
 		"use server";
@@ -61,24 +63,24 @@ export default function SigninPage({ searchParams }: { searchParams: { message: 
 				<Card className="mx-auto max-w-sm">
 					<CardHeader>
 						<CardTitle className="text-2xl">로그인</CardTitle>
+
 						<CardDescription>이메일과 비밀번호를 통해 로그인하기</CardDescription>
 					</CardHeader>
 					<CardContent>
 						<div className="grid gap-4">
 							<form>
 								<div className="grid gap-2">
-									<Label htmlFor="email">Email</Label>
-									<Input id="email" type="email" placeholder="m@example.com" required name="email" />
+									<Label htmlFor="email">이메일</Label>
+									<Input id="email" type="email" placeholder="user@example.com" required name="email" />
 								</div>
 								<div className="grid gap-2">
-									<div className="flex items-center">
-										<Label htmlFor="password">Password</Label>
-										<Link href="#" className="ml-auto inline-block text-sm underline">
-											Forgot your password?
-										</Link>
+									<div className="flex items-center justify-between">
+										<Label htmlFor="password">비밀번호</Label>
+										<SendPasswordResetMailModal />
 									</div>
 									<Input name="password" id="password" type="password" required />
 								</div>
+
 								<SubmitButton formAction={signIn} className="w-full outline" pendingText="Signing In...">
 									로그인
 								</SubmitButton>
