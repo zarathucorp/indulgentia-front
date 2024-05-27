@@ -15,7 +15,10 @@ import { TeamUserType } from "@/types/TeamUserType";
 import { UUID } from "crypto";
 import RemoveModal from "@/components/global/RemoveModal";
 import { KeyedMutator } from "swr";
-
+import { Spinner } from "@/components/global/Spinner";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
+import { useVariable } from "@/hooks/useVariable";
 const BucketSchema = z.object({
 	title: z
 		.string()
@@ -32,8 +35,11 @@ const BucketSchema = z.object({
 export type CreateBucketFormValues = z.infer<typeof BucketSchema>;
 
 export default function NewBucketForm() {
+	const router = useRouter();
+	const { toast } = useToast();
 	const searchParams = useSearchParams();
 	const projectUUID: string = searchParams.get("project") as string;
+	const [isCreating, setIsCreating] = useVariable<boolean>(false);
 
 	if (projectUUID === "" || projectUUID === null) redirect("/dashboard");
 
@@ -53,11 +59,17 @@ export default function NewBucketForm() {
 	});
 
 	async function onSubmit(data: CreateBucketFormValues) {
+		setIsCreating(true);
 		try {
 			await axios.post(process.env.NEXT_PUBLIC_API_URL + "/dashboard/bucket/", { ...data }, { withCredentials: true });
 		} catch (error) {
 			console.error(error);
 		}
+		toast({
+			title: "Bucket 생성 완료",
+			description: `Bucket ${data.title}이 성공적으로 생성되었습니다.`,
+		});
+		router.push(`/dashboard/project/${data.project_id}`);
 	}
 
 	return (
@@ -68,7 +80,15 @@ export default function NewBucketForm() {
 					<BucketManagerField form={form} teamUserList={teamUserList || []} isLoading={isLoading} />
 					<ProjectUUIDField form={form} />
 					<div className="flex justify-center">
-						<Button type="submit">새 Bucket 생성</Button>
+						<Button type="submit">
+							{isCreating && (
+								<>
+									<Spinner />
+									&nbsp;
+								</>
+							)}
+							새 Bucket 생성
+						</Button>
 					</div>
 				</form>
 			</Form>

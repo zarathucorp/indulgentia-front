@@ -66,7 +66,7 @@ export default function MyBucketList({ bucketList, projectId }: { bucketList: Bu
 			</CardContent>
 			<CardFooter>
 				<div className="text-xs text-muted-foreground">
-					Showing <strong>1-10</strong> of <strong>32</strong> products
+					전체 <strong>{bucketList.length}</strong>개 항목
 				</div>
 			</CardFooter>
 		</Card>

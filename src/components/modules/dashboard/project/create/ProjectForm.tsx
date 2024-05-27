@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import DatePicker from "@/components/global/DatePicker";
 import useSWRImmutable from "swr/immutable";
 import { KeyedMutator } from "swr";
 import RemoveModal from "@/components/global/RemoveModal";
+import { UUID } from "crypto";
 
 const ProjectSchema = z
 	.object({
@@ -25,7 +26,7 @@ const ProjectSchema = z
 		path: ["end_date"],
 	});
 
-type CreateProjectFormValues = z.infer<typeof ProjectSchema>;
+export type CreateProjectFormValues = z.infer<typeof ProjectSchema>;
 
 const preprocessValues = (values: CreateProjectFormValues & { id: string }) => ({
 	...values,
@@ -41,47 +42,7 @@ const useTeamId = () => {
 	return teamId;
 };
 
-const useProjectForm = (isNew: boolean, values?: CreateProjectFormValues & { id: string }) => {
-	const form = useForm<CreateProjectFormValues>({
-		resolver: zodResolver(ProjectSchema),
-		values: isNew ? undefined : preprocessValues(values as CreateProjectFormValues & { id: string }),
-	});
-	return form;
-};
-
-const handleSubmit = async (isNew: boolean, data: CreateProjectFormValues, teamId: string | undefined, values: (CreateProjectFormValues & { id: string }) | undefined, mutator?: KeyedMutator<any>) => {
-	const apiUrl = process.env.NEXT_PUBLIC_API_URL + "/dashboard/project/";
-	const payload = { team_id: teamId, ...data };
-	const options = { withCredentials: true };
-
-	try {
-		if (isNew) {
-			await axios.post(apiUrl, payload, options);
-		} else if (values) {
-			await axios.put(`${apiUrl}${values.id}`, { id: values.id, ...payload }, options);
-			mutator && mutator();
-		}
-		console.log("update done");
-	} catch (error) {
-		console.error(error);
-	}
-};
-
-const handleRemove = async (isNew: boolean, values: (CreateProjectFormValues & { id: string }) | undefined) => {
-	if (!isNew && values) {
-		try {
-			const result = await axios.delete(process.env.NEXT_PUBLIC_API_URL + `/dashboard/project/${values.id}`, { withCredentials: true });
-			console.log(result);
-			return;
-		} catch (error) {
-			console.error(error);
-			throw new Error("Cannot remove project: Axios 에러:" + error);
-		}
-	}
-	throw new Error("Cannot remove project");
-};
-
-const ProjectFormFields = ({ form }: { form: ReturnType<typeof useProjectForm> }) => (
+const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValues> }) => (
 	<>
 		<FormField
 			control={form.control}
@@ -152,24 +113,86 @@ const ProjectFormFields = ({ form }: { form: ReturnType<typeof useProjectForm> }
 	</>
 );
 
-const ProjectForm = ({ isNew = true, mutator, values }: { isNew?: boolean; mutator?: KeyedMutator<any>; values?: CreateProjectFormValues & { id: string } }) => {
+const handleRemove = async (values: (CreateProjectFormValues & { id: string }) | undefined) => {
+	if (values) {
+		try {
+			await axios.delete(process.env.NEXT_PUBLIC_API_URL + `/dashboard/project/${values.id}`, { withCredentials: true });
+			console.log("Project removed successfully");
+			return;
+		} catch (error) {
+			console.error(error);
+		}
+	}
+	throw new Error("Cannot remove project");
+};
+
+const NewProjectForm = () => {
 	const teamId = useTeamId();
-	const form = useProjectForm(isNew, values);
+	const form = useForm<CreateProjectFormValues>({
+		resolver: zodResolver(ProjectSchema),
+	});
+
+	const onSubmit = async (data: CreateProjectFormValues) => {
+		const apiUrl = process.env.NEXT_PUBLIC_API_URL + "/dashboard/project/";
+		const payload = { team_id: teamId, ...data };
+		const options = { withCredentials: true };
+
+		try {
+			await axios.post(apiUrl, payload, options);
+			console.log("Project created successfully");
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
 	return (
 		<div className="w-full lg:w-1/2 mx-auto">
 			<Form {...form}>
-				<form onSubmit={form.handleSubmit((data) => handleSubmit(isNew, data, teamId, values, mutator))} className="space-y-8">
+				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 					<ProjectFormFields form={form} />
 					<div className="flex justify-center">
-						<Button type="submit">{isNew ? "새 프로젝트 생성" : "프로젝트 업데이트"}</Button>
+						<Button type="submit">새 프로젝트 생성</Button>
 					</div>
 				</form>
 			</Form>
-
-			{values && <RemoveModal targetEntity={values.title} removeType="Project" onRemoveConfirmed={() => handleRemove(isNew, values)} />}
 		</div>
 	);
 };
 
-export default ProjectForm;
+const EditProjectForm = ({ projectInfo, mutator }: { projectInfo: CreateProjectFormValues & { id: UUID }; mutator?: KeyedMutator<any> }) => {
+	const teamId = useTeamId();
+	const form = useForm<CreateProjectFormValues>({
+		resolver: zodResolver(ProjectSchema),
+		defaultValues: preprocessValues(projectInfo),
+	});
+
+	const onSubmit = async (data: CreateProjectFormValues) => {
+		const apiUrl = process.env.NEXT_PUBLIC_API_URL + `/dashboard/project/${projectInfo.id}`;
+		const payload = { id: projectInfo.id, team_id: teamId, ...data };
+		const options = { withCredentials: true };
+
+		try {
+			await axios.put(apiUrl, payload, options);
+			mutator && mutator();
+			console.log("Project updated successfully");
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	return (
+		<div className="w-full lg:w-1/2 mx-auto">
+			<Form {...form}>
+				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+					<ProjectFormFields form={form} />
+					<div className="flex justify-center">
+						<Button type="submit">프로젝트 업데이트</Button>
+					</div>
+				</form>
+			</Form>
+			<RemoveModal targetEntity={projectInfo.title} removeType="Project" onRemoveConfirmed={() => handleRemove(projectInfo)} />
+		</div>
+	);
+};
+
+export { NewProjectForm, EditProjectForm };
