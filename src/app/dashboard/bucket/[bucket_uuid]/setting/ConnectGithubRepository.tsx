@@ -1,68 +1,44 @@
+"use client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { UUID } from "crypto";
+import { useVariable } from "@/hooks/useVariable";
+import { KeyedMutator } from "swr";
+import axios from "axios";
+type GithubRepoType = {
+	id: UUID;
+	bucket_id: UUID;
+	git_repository: string;
+	git_username: string;
+	repo_url: string;
+	user_id: UUID;
+};
 
-export default function ConnectGithubRepository() {
+export default function ConnectGithubRepository({ connectedGithubRepos }: { connectedGithubRepos: GithubRepoType[] }) {
 	return (
 		<>
-			<div className="max-w-6xl w-full mx-auto grid gap-2">
-				<h1 className="font-semibold text-3xl">GitHub Repository 연결</h1>
-			</div>
-			<div className="grid gap-6 max-w-6xl w-full mx-auto">
-				<div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-					<Input className="bg-white md:flex-1 dark:bg-gray-950" placeholder="Add a new repository" type="text" />
-					<Button>Add Repository</Button>
-				</div>
-				<div className="border rounded-lg overflow-hidden grid gap-4 lg:gap-px lg:bg-gray-100" />
-			</div>
-			<div className="max-w-6xl w-full mx-auto grid gap-2">
+			<div onClick={() => {}} className="max-w-6xl w-full mx-auto grid gap-2">
 				<h1 className="font-semibold text-3xl">연결된 GitHub Repository</h1>
 			</div>
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-				<div className="bg-white rounded-lg shadow-md p-4">
-					<div className="flex items-center justify-between">
-						<div>
-							<h3 className="text-lg font-bold">shadcn/ui</h3>
-							<p className="text-gray-500">shadcn</p>
-						</div>
-						<Button className="text-gray-500 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" size="icon" variant="ghost">
-							<TrashIcon className="w-5 h-5" />
-						</Button>
-					</div>
-				</div>
-				<div className="bg-white rounded-lg shadow-md p-4">
-					<div className="flex items-center justify-between">
-						<div>
-							<h3 className="text-lg font-bold">vercel/next.js</h3>
-							<p className="text-gray-500">vercel</p>
-						</div>
-						<Button className="text-gray-500 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" size="icon" variant="ghost">
-							<TrashIcon className="w-5 h-5" />
-						</Button>
-					</div>
-				</div>
-				<div className="bg-white rounded-lg shadow-md p-4">
-					<div className="flex items-center justify-between">
-						<div>
-							<h3 className="text-lg font-bold">tailwindlabs/tailwindcss</h3>
-							<p className="text-gray-500">tailwindlabs</p>
-						</div>
-						<Button className="text-gray-500 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" size="icon" variant="ghost">
-							<TrashIcon className="w-5 h-5" />
-						</Button>
-					</div>
-				</div>
-				<div className="bg-white rounded-lg shadow-md p-4">
-					<div className="flex items-center justify-between">
-						<div>
-							<h3 className="text-lg font-bold">prisma/prisma</h3>
-							<p className="text-gray-500">prisma</p>
-						</div>
-						<Button className="text-gray-500 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" size="icon" variant="ghost">
-							<TrashIcon className="w-5 h-5" />
-						</Button>
-					</div>
-				</div>
+				{connectedGithubRepos.map((repo: GithubRepoType, index: number) => {
+					return (
+						<>
+							<div className="bg-white rounded-lg shadow-md p-4" key={index}>
+								<div className="flex items-center justify-between">
+									<div>
+										<h3 className="text-lg font-bold">{repo.git_repository}</h3>
+										<p className="text-gray-500">{repo.user_id}</p>
+									</div>
+									<Button className="text-gray-500 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" size="icon" variant="ghost">
+										<TrashIcon className="w-5 h-5" />
+									</Button>
+								</div>
+							</div>
+						</>
+					);
+				})}
 			</div>
 		</>
 	);
