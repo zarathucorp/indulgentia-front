@@ -84,9 +84,11 @@ export default function SigninPage({ searchParams }: { searchParams: { message: 
 								<SubmitButton formAction={signIn} className="w-full outline" pendingText="Signing In...">
 									로그인
 								</SubmitButton>
-								<SubmitButton formAction={signUp} className="w-full outline" pendingText="Signing Up...">
-									회원가입
-								</SubmitButton>
+								<Link href="/auth/join">
+									<SubmitButton className="w-full outline" pendingText="Signing Up...">
+										회원가입
+									</SubmitButton>
+								</Link>
 							</form>
 							<Separator />
 							<CardDescription>외부 계정으로 로그인하기</CardDescription>
