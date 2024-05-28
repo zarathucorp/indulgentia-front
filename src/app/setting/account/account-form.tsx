@@ -61,7 +61,7 @@ export function AccountForm() {
 
 	const handleSaveSignature = async (signatureImage: string) => {
 		try {
-			const response = await axios.post("https://quick-star-teal.ngrok-free.app/api/signatures", { image: signatureImage });
+			const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature", { image: signatureImage });
 			console.log("Signature saved:", response.data);
 		} catch (error) {
 			console.error("Error saving signature:", error);
@@ -114,7 +114,6 @@ export function AccountForm() {
 					<div>
 						<FormItem>
 							<FormLabel>서명</FormLabel>
-
 							{/* <SignaturePad onSave={handleSaveSignature} /> */}
 							<SignaturePad />
 							<FormDescription>이 서명은 연구노트에 기록됩니다.</FormDescription>

@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import SignatureCanvas from "react-signature-canvas";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
 const SignaturePad = () => {
 	const canvasRef = useRef<any>(null);
 	const [isSigned, setIsSigned] = useState<boolean>(false);
@@ -39,16 +40,36 @@ const SignaturePad = () => {
 		};
 	}, []);
 
-	const handleSave = () => {
+	const handleSave = async () => {
 		const canvas = canvasRef.current.getCanvas();
 		const dataUrl = canvas.toDataURL("image/png");
+		try {
+			const { data } = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature", { file: dataUrl as string });
+			console.log(data);
+		} catch (error) {
+			console.error(error);
+		}
 		// dataUrl에 이미지 데이터가 들어있음. 백엔드로 보내면 됨.
 	};
 
 	return (
 		<div className="flex flex-col items-center">
 			<div className="relative border-2 border-gray-500" style={{ width: "500px", height: "200px" }}>
-				{!isSigned && <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-black">여기에 서명을 해주세요.</div>}
+				{!isSigned && (
+					<div
+						className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-black not-selectable"
+						style={{
+							WebkitTouchCallout: "none",
+							WebkitUserSelect: "none",
+							KhtmlUserSelect: "none",
+							MozUserSelect: "none",
+							msUserSelect: "none",
+							userSelect: "none",
+						}}
+					>
+						여기에 서명을 해주세요.
+					</div>
+				)}
 				<SignatureCanvas
 					ref={canvasRef}
 					onBegin={() => {
@@ -60,7 +81,8 @@ const SignaturePad = () => {
 			<div className="mt-4">
 				<Button
 					className="px-4 py-2 bg-red-500 hover:bg-red-700 text-white rounded mr-2"
-					onClick={() => {
+					onClick={(e) => {
+						e.preventDefault();
 						canvasRef.current.clear(); // 리셋
 						setIsSigned(false);
 					}}
@@ -70,7 +92,10 @@ const SignaturePad = () => {
 				<Button
 					className={`px-4 py-2 rounded ${isSigned ? "bg-blue-500 text-white" : "bg-gray-400 text-gray-700"}`}
 					disabled={!isSigned} // 버튼 disabled
-					onClick={handleSave}
+					onClick={(e) => {
+						e.preventDefault();
+						handleSave();
+					}}
 				>
 					저장 버튼
 				</Button>
