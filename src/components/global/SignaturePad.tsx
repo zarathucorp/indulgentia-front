@@ -24,13 +24,7 @@ const SignaturePad = () => {
 				img.src = initialSignatureUrl;
 				img.crossOrigin = "Anonymous";
 				img.onload = () => {
-					// Set canvas dimensions to half of the original image dimensions
-					canvas.width = img.width / 2;
-					canvas.height = img.height / 2;
-
-					// Draw the image scaled down by half
 					context.drawImage(img, 0, 0, img.width / 2, img.height / 2);
-
 					setIsSigned(true);
 				};
 			};
