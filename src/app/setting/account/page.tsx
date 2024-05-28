@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 // import supabase from "../lib/supabase";
 import { useRouter } from "next/navigation";
 import { AccountForm } from "./account-form";
+import { Separator } from "@/components/ui/separator";
 type FormData = {
 	username: string;
 	email: string;
@@ -13,7 +14,16 @@ type FormData = {
 
 const SettingsPage: React.FC = () => {
 	const { register, handleSubmit, setValue } = useForm<FormData>();
-	return <AccountForm />;
+	return (
+		<div className="space-y-6">
+			<div>
+				<h3 className="text-lg font-medium">계정</h3>
+				<p className="text-sm text-muted-foreground">계정과 관련된 설정 페이지입니다.</p>
+			</div>
+			<Separator />
+			<AccountForm />
+		</div>
+	);
 };
 
 export default SettingsPage;

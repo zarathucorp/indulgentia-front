@@ -31,7 +31,7 @@ export default function Dashboard() {
 			<div className="py-3 pl-4">
 				<DashboardBreadCrumb breadcrumbData={{ level: "Dashboard" }} />
 			</div>
-			<div className="flex max-w-screen-xl flex-col mx-auto">{isLoading ? <DashboardLoading /> : <>{data && <MyProjectList projectList={data} />}</>}</div>;
+			<div className="flex max-w-screen-xl flex-col mx-auto">{isLoading ? <DashboardLoading /> : <>{data && <MyProjectList projectList={data} />}</>}</div>
 		</>
 	);
 }

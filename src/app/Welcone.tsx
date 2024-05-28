@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { Divide } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-
+import Link from "next/link";
 export default function WelcomePage() {
 	return (
 		<main className="flex flex-col">
@@ -11,7 +11,9 @@ export default function WelcomePage() {
 					<div className="max-w-3xl mx-auto text-center space-y-6">
 						<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold">깃허브로 완성하는 연구실록</h1>
 						<p className="text-lg md:text-xl lg:text-2xl">GitHub 활동만으로 자동으로 연구노트 완성 어쩌고 저쩌고</p>
-						<Button size="lg">시작하기</Button>
+						<Link href="/dashboard">
+							<Button size="lg">시작하기</Button>
+						</Link>
 					</div>
 				</div>
 			</section>

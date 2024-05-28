@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
 interface Payment {
 	orderName: string;
 	approvedAt: string;
@@ -58,7 +59,7 @@ export default function SuccessPage() {
 	return (
 		<div className="flex flex-col items-center p-6">
 			<div className="box_section w-full max-w-xl p-6 bg-white shadow-md rounded-lg">
-				<Image width={100} src="https://static.toss.im/illusts/check-blue-spot-ending-frame.png" alt="결제 완료" />
+				<img width={100} height={100} src="https://static.toss.im/illusts/check-blue-spot-ending-frame.png" alt="결제 완료" />
 				<h2 className="text-2xl font-semibold mt-4">결제를 완료했어요</h2>
 				<div className="grid grid-cols-2 gap-4 mt-8 text-lg">
 					<div className="text-left font-medium">결제금액</div>
@@ -74,10 +75,10 @@ export default function SuccessPage() {
 				</div>
 				<div className="flex justify-between mt-6">
 					<Link href="https://docs.tosspayments.com/guides/payment-widget/integration">
-						<button className="px-4 py-2 bg-blue-500 text-white rounded-md">연동 문서</button>
+						<Button className="px-4 py-2 bg-blue-500 text-white rounded-md">연동 문서</Button>
 					</Link>
 					<Link href="https://discord.gg/A4fRFXQhRu">
-						<button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-md">실시간 문의</button>
+						<Button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-md">실시간 문의</Button>
 					</Link>
 				</div>
 			</div>
