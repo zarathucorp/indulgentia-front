@@ -3,9 +3,41 @@ import React, { useState, useRef, useEffect } from "react";
 import SignatureCanvas from "react-signature-canvas";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
+import { useVariable } from "@/hooks/useVariable";
+import useSWRImmutable from "swr/immutable";
 const SignaturePad = () => {
 	const canvasRef = useRef<any>(null);
 	const [isSigned, setIsSigned] = useState<boolean>(false);
+	const [initialSignatureUrl, setInitialSignatureUrl] = useVariable<string | null>(null);
+
+	const { data: signatureData } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature", async (url: string) => {
+		const { data } = await axios.get(url);
+		setInitialSignatureUrl(data.url);
+	});
+
+	useEffect(() => {
+		if (initialSignatureUrl) {
+			const loadInitialSignature = () => {
+				const canvas = canvasRef.current.getCanvas();
+				const context = canvas.getContext("2d");
+				const img = new Image();
+				img.src = initialSignatureUrl;
+				img.crossOrigin = "Anonymous";
+				img.onload = () => {
+					// Set canvas dimensions to half of the original image dimensions
+					canvas.width = img.width / 2;
+					canvas.height = img.height / 2;
+
+					// Draw the image scaled down by half
+					context.drawImage(img, 0, 0, img.width / 2, img.height / 2);
+
+					setIsSigned(true);
+				};
+			};
+
+			loadInitialSignature();
+		}
+	}, [initialSignatureUrl]);
 
 	useEffect(() => {
 		const scaleCanvas = () => {
@@ -42,7 +74,8 @@ const SignaturePad = () => {
 
 	const handleSave = async () => {
 		const canvas = canvasRef.current.getCanvas();
-		const dataUrl = canvas.toDataURL("image/png");
+		const dataUrl = canvas.toDataURL("image/png") as string;
+
 		try {
 			const { data } = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature", { file: dataUrl as string });
 			console.log(data);

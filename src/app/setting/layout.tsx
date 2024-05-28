@@ -23,8 +23,8 @@ const sidebarNavItems = [
 		href: "/setting/team",
 	},
 	{
-		title: "Notifications",
-		href: "/setting/notifications",
+		title: "노트",
+		href: "/setting/note",
 	},
 	{
 		title: "Display",
