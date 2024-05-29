@@ -24,7 +24,7 @@ interface Repo {
 	name: string;
 }
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data.data);
+const fetcher = (url: string) => axios.get(url).then((res) => res.data.data.github_token);
 
 const InstallationRepoSelector = ({ setGitUsername, setGitRepository }: { setGitUsername: Dispatch<SetStateAction<string>>; setGitRepository: Dispatch<SetStateAction<string>> }) => {
 	const { data: token, error: tokenError, isLoading: isTokenLoading } = useSWRImmutable<string>(`${process.env.NEXT_PUBLIC_API_URL}/user/settings/github/token`, fetcher);
@@ -34,6 +34,7 @@ const InstallationRepoSelector = ({ setGitUsername, setGitRepository }: { setGit
 	const [installations, setInstallations] = useState<Installation[]>([]);
 
 	useEffect(() => {
+		console.log(token);
 		if (token) {
 			axios
 				.get(`/next-api/github/installations?token=${token}`)
