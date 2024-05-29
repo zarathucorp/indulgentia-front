@@ -6,6 +6,9 @@ import { UUID } from "crypto";
 import { useVariable } from "@/hooks/useVariable";
 import { KeyedMutator } from "swr";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+
 type GithubRepoType = {
 	id: UUID;
 	bucket_id: UUID;
@@ -15,7 +18,7 @@ type GithubRepoType = {
 	user_id: UUID;
 };
 
-export default function ConnectGithubRepository({ connectedGithubRepos }: { connectedGithubRepos: GithubRepoType[] }) {
+export default function ConnectedGithubRepository({ connectedGithubRepos }: { connectedGithubRepos: GithubRepoType[] }) {
 	return (
 		<>
 			<div onClick={() => {}} className="max-w-6xl w-full mx-auto grid gap-2">
