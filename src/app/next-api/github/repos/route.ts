@@ -57,6 +57,9 @@ export async function GET(req: NextRequest) {
 			page++;
 		} while (reposResponse.data.repositories.length === 100);
 
+		// Sort allRepositories by the 'name' property
+		allRepositories.sort((a, b) => a.name.localeCompare(b.name));
+
 		allRepositories.forEach((repo: Repository) => console.log(repo.name));
 		return new NextResponse(JSON.stringify({ repositories: allRepositories }), { status: 200 });
 	} catch (error) {
