@@ -14,10 +14,11 @@ export default function FAQ() {
 				<TabsContent value="general">
 					<Accordion className="space-y-4" collapsible type="single">
 						<AccordionItem value="general-1">
-							<AccordionTrigger className="text-lg font-medium">What is this product?</AccordionTrigger>
+							<AccordionTrigger className="text-lg font-medium">연구실록이 무엇인가요?</AccordionTrigger>
 							<AccordionContent>
 								<p className="text-gray-500 dark:text-gray-400">
-									This is a powerful and versatile product that can help you achieve your goals. It's designed to be easy to use and customizable to your needs.
+									연구실록은 전자연구노트 서비스입니다. GitHub Repository와 연동하여 프로젝트, Bucket, 노트를 생성하고 블록체인을 이용한 전자서명을 할 수 있습니다. 연구실록은 &apos;국가연구개발사업
+									연구노트 지침&apos;의 &apos;연구노트 요건&apos;을 준수합니다.
 								</p>
 							</AccordionContent>
 						</AccordionItem>
@@ -53,19 +54,16 @@ export default function FAQ() {
 							</AccordionContent>
 						</AccordionItem>
 						<AccordionItem value="pricing-2">
-							<AccordionTrigger className="text-lg font-medium">Are there any discounts available?</AccordionTrigger>
+							<AccordionTrigger className="text-lg font-medium">R&D 예산을 사용할 수 있나요?</AccordionTrigger>
 							<AccordionContent>
-								<p className="text-gray-500 dark:text-gray-400">
-									Yes, we offer a number of discounts and promotions throughout the year. For example, we have a 20% discount for annual subscriptions, and we also offer special discounts for
-									students, non-profits, and enterprise customers.
-								</p>
+								<p className="text-gray-500 dark:text-gray-400">네, R&D 예산을 사용할 수 있습니다. 구체적으로 직접비의 ~~, 간접비의 ~~~ 등등</p>
 							</AccordionContent>
 						</AccordionItem>
 						<AccordionItem value="pricing-3">
 							<AccordionTrigger className="text-lg font-medium">Do you offer a free trial?</AccordionTrigger>
 							<AccordionContent>
 								<p className="text-gray-500 dark:text-gray-400">
-									Yes, we offer a 14-day free trial for all of our plans. This gives you the opportunity to try out the product and see if it's a good fit for your needs before committing to a
+									Yes, we offer a 14-day free trial for all of our plans. This gives you the opportunity to try out the product and see if it&apos;s a good fit for your needs before committing to a
 									subscription.
 								</p>
 							</AccordionContent>

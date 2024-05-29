@@ -8,10 +8,10 @@ export default function PricingPage() {
 			<section className="w-full py-12 md:py-24 lg:py-32">
 				<div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
 					<div className="space-y-3">
-						<h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">Choose the plan that suits your needs</h2>
-						<div className="grid grid-cols-2 gap-4">
-							<div className="border rounded-lg p-4">
-								<h3 className="text-xl font-bold">Free Plan</h3>
+						<h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">알맞는 플랜을 선택하세요</h2>
+						<div className="grid grid-cols-1 gap-4">
+							{/* <div className="border rounded-lg p-4">
+								<h3 className="text-xl font-bold">무료 플랜</h3>
 								<ul className="text-left list-disc pl-4">
 									<li>Basic features included</li>
 									<li>Limited support</li>
@@ -20,22 +20,22 @@ export default function PricingPage() {
 								<div className="mt-4">
 									<Button size="lg">Select Free Plan</Button>
 								</div>
-							</div>
+							</div> */}
 							<div className="border rounded-lg p-4">
-								<h3 className="text-xl font-bold">Professional Plan</h3>
+								<h3 className="text-xl font-bold">팀 플랜</h3>
 								<ul className="text-left list-disc pl-4">
-									<li>All features included</li>
-									<li>Premium support</li>
-									<li>Unlimited projects</li>
+									<li>무제한 GitHub Repository 연동</li>
+									<li>무제한 프로젝트/Bucket/노트 생성</li>
+									<li>블록체인을 이용한 전자서명</li>
 								</ul>
 								<div className="mt-4">
-									<Button size="lg">Select Professional Plan</Button>
+									<Button size="lg">선택하기</Button>
 								</div>
 							</div>
 						</div>
-						<p className="mx-auto max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">Need more details? Compare the plans below.</p>
+						{/* <p className="mx-auto max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">Need more details? Compare the plans below.</p> */}
 					</div>
-					<div className="mx-auto w-full max-w-2xl space-y-2">
+					{/* <div className="mx-auto w-full max-w-2xl space-y-2">
 						<table className="w-full border-collapse border border-gray-200 dark:border-gray-800">
 							<thead>
 								<tr className="bg-gray-100 dark:bg-gray-800">
@@ -62,7 +62,7 @@ export default function PricingPage() {
 								</tr>
 							</tbody>
 						</table>
-					</div>
+					</div> */}
 				</div>
 			</section>
 		</>

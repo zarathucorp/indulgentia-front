@@ -24,16 +24,16 @@ export default function Navbar() {
 						</Link> */}
 						&nbsp;
 						<Link href="/dashboard" className="nav-link flex items-center gap-1">
-							<LayoutDashboard className="h-5 w-5" /> Dashboard
+							<LayoutDashboard className="h-5 w-5" /> 대시보드
 						</Link>
 						<Link href="/inquiry" className="nav-link flex items-center gap-1">
-							<AtSign className="h-5 w-5" /> Inquiry
+							<AtSign className="h-5 w-5" /> 문의하기
 						</Link>
 						<Link href="/pricing" className="nav-link flex items-center gap-1">
-							<BadgeDollarSign className="h-5 w-5" /> Pricing
+							<BadgeDollarSign className="h-5 w-5" /> 가격
 						</Link>
-						<Link href="/qna" className="nav-link flex items-center gap-1">
-							<FaRegQuestionCircle className="h-5 w-5" /> Q&A
+						<Link href="/faq" className="nav-link flex items-center gap-1">
+							<FaRegQuestionCircle className="h-5 w-5" /> FAQ
 						</Link>
 					</div>
 				</div>
@@ -57,17 +57,17 @@ export default function Navbar() {
 									<span className="sr-only">연구실록 홈</span>
 								</Link> */}
 								<Link href="/dashboard" className="flex items-center gap-1">
-									<LayoutDashboard className="h-5 w-5" /> Dashboard
+									<LayoutDashboard className="h-5 w-5" /> 대시보드
 								</Link>
 								<Link href="/inquiry" className="flex items-center gap-1">
-									<AtSign className="h-5 w-5" /> Inquiry
+									<AtSign className="h-5 w-5" /> 문의하기
 								</Link>
 								<Link href="/pricing" className="flex items-center gap-1">
-									<BadgeDollarSign className="h-5 w-5" /> Pricing
+									<BadgeDollarSign className="h-5 w-5" /> 가격
 								</Link>
-								<Link href="/qna" className="flex items-center gap-1">
+								<Link href="/faq" className="flex items-center gap-1">
 									<FaRegQuestionCircle className="h-5 w-5" />
-									Q&A
+									FAQ
 								</Link>
 							</nav>
 						</SheetContent>

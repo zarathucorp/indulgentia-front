@@ -6,7 +6,7 @@ export default function SettingsNotificationsPage() {
 		<div className="space-y-6">
 			<div>
 				<h3 className="text-lg font-medium">노트</h3>
-				<p className="text-sm text-muted-foreground">연구노트와 관련된 설정 페이지입니다.</p>
+				<p className="text-sm text-muted-foreground">연구노트와 관련된 설정을 관리합니다.</p>
 			</div>
 			<Separator />
 			<NoteForm />
