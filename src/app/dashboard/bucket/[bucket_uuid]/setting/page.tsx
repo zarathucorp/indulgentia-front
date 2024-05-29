@@ -163,8 +163,6 @@ export default function BucketSetting() {
 
 	return (
 		<div>
-			<p>깃허브 연동</p>
-			<p>일단 원시적으로 id/repo 입력하도록</p>
 			{isLoadingBucketInfo ? <p>Loading...</p> : bucketInfo && <EditBucketForm bucketInfo={bucketInfo} mutate={mutateBucketInfo} />}
 			<div className="max-w-6xl w-full mx-auto grid gap-2">
 				<h1 className="font-semibold text-3xl">GitHub Repository 연결</h1>
@@ -176,7 +174,7 @@ export default function BucketSetting() {
 				</div>
 				<div className="border rounded-lg overflow-hidden grid gap-4 lg:gap-px lg:bg-gray-100" />
 			</div>
-			{!isLoadingConnectedGithubRepos && connectedGithubRepos && <ConnectedGithubRepository connectedGithubRepos={connectedGithubRepos} />}
+			{!isLoadingConnectedGithubRepos && connectedGithubRepos && <ConnectedGithubRepository connectedGithubRepos={connectedGithubRepos} mutateConnectedGithubRepos={mutateConnectedGithubRepos} />}
 		</div>
 	);
 }

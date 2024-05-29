@@ -21,16 +21,17 @@ type GithubRepoType = {
 	user_id: UUID;
 };
 
-export function RemoveRepositoryModal({ repo }: { repo: GithubRepoType }) {
+export function RemoveRepositoryModal({ repo, mutateConnectedGithubRepos }: { repo: GithubRepoType; mutateConnectedGithubRepos: KeyedMutator<any> }) {
 	const { toast } = useToast();
 	const [isOpen, setIsOpen] = useState(false); // State to manage modal open/close
 	const disconnectRepository = async () => {
 		try {
-			await axios.delete(process.env.NEXT_PUBLIC_API_URl + `/dashboard/bucket/gitrepo/${repo.id}`);
+			const { data } = await axios.delete(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/${repo.bucket_id}/github_repo/${repo.id}`, { withCredentials: true });
 			toast({
 				title: "Repository 연결 해제",
 				description: "Repository의 연결이 해제되었습니다.",
 			});
+			mutateConnectedGithubRepos();
 			setIsOpen(false);
 		} catch (e) {
 			console.error(e);
@@ -69,7 +70,7 @@ export function RemoveRepositoryModal({ repo }: { repo: GithubRepoType }) {
 	);
 }
 
-export default function ConnectedGithubRepository({ connectedGithubRepos }: { connectedGithubRepos: GithubRepoType[] }) {
+export default function ConnectedGithubRepository({ connectedGithubRepos, mutateConnectedGithubRepos }: { connectedGithubRepos: GithubRepoType[]; mutateConnectedGithubRepos: KeyedMutator<any> }) {
 	return (
 		<>
 			<div onClick={() => {}} className="max-w-6xl w-full mx-auto grid gap-2">
@@ -83,9 +84,9 @@ export default function ConnectedGithubRepository({ connectedGithubRepos }: { co
 								<div className="flex items-center justify-between">
 									<div>
 										<h3 className="text-lg font-bold">{repo.git_repository}</h3>
-										<p className="text-gray-500">{repo.user_id}</p>
+										<p className="text-gray-500">{repo.git_username}</p>
 									</div>
-									<RemoveRepositoryModal repo={repo} />
+									<RemoveRepositoryModal repo={repo} mutateConnectedGithubRepos={mutateConnectedGithubRepos} />
 								</div>
 							</div>
 						</>
