@@ -109,11 +109,9 @@ const handleRemove = async (values: (CreateBucketFormValues & { id: string }) | 
 };
 
 export function EditBucketForm({ bucketInfo, mutate }: { bucketInfo: CreateBucketFormValues & { id: UUID }; mutate: KeyedMutator<any> }) {
+	const { toast } = useToast();
+	const router = useRouter();
 	if (bucketInfo.id === null || bucketInfo.id === undefined) redirect("/dashboard");
-
-	const defaultValues: Partial<CreateBucketFormValues> = {
-		project_id: bucketInfo.id,
-	};
 
 	const form = useForm<CreateBucketFormValues>({
 		resolver: zodResolver(BucketSchema),
@@ -129,8 +127,19 @@ export function EditBucketForm({ bucketInfo, mutate }: { bucketInfo: CreateBucke
 	async function onSubmit(data: CreateBucketFormValues) {
 		try {
 			await axios.put(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/${bucketInfo.id}`, { id: bucketInfo.id, ...data }, { withCredentials: true });
-		} catch (error) {
+			toast({
+				title: "Bucket 수정 완료",
+				description: `Bucket ${data.title}이 성공적으로 수정되었습니다.`,
+			});
+			const currentUrl = window.location.pathname;
+			const newUrl = currentUrl.substring(0, currentUrl.lastIndexOf("/"));
+			router.push(newUrl);
+		} catch (error: any) {
 			console.error(error);
+			toast({
+				title: "Bucket 수정 실패",
+				description: `Bucket ${data.title}의 수정에 실패하였습니다. ${error.message}`,
+			});
 		}
 		mutate();
 	}
