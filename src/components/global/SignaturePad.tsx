@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useVariable } from "@/hooks/useVariable";
 import useSWRImmutable from "swr/immutable";
+import { useToast } from "../ui/use-toast";
 const SignaturePad = () => {
 	const canvasRef = useRef<any>(null);
 	const [isSigned, setIsSigned] = useState<boolean>(false);
 	const [initialSignatureUrl, setInitialSignatureUrl] = useVariable<string | null>(null);
-
+	const { toast } = useToast();
 	const { data: signatureData } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature", async (url: string) => {
 		const { data } = await axios.get(url);
 		setInitialSignatureUrl(data.url);
@@ -71,10 +72,19 @@ const SignaturePad = () => {
 		const dataUrl = canvas.toDataURL("image/png") as string;
 
 		try {
-			const { data } = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature", { file: dataUrl as string });
+			const { data } = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature", { file: dataUrl as string }, { withCredentials: true });
 			console.log(data);
-		} catch (error) {
+
+			toast({
+				title: "서명이 저장되었습니다.",
+				description: "서명이 성공적으로 저장되었습니다.",
+			});
+		} catch (error: any) {
 			console.error(error);
+			toast({
+				title: "서명이 저장되지 않았습니다.",
+				description: `에러: ${error.message}.`,
+			});
 		}
 		// dataUrl에 이미지 데이터가 들어있음. 백엔드로 보내면 됨.
 	};
