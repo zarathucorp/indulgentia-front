@@ -10,6 +10,7 @@ export default function FAQ() {
 					<TabsTrigger value="general">일반</TabsTrigger>
 					<TabsTrigger value="pricing">가격</TabsTrigger>
 					<TabsTrigger value="features">기능</TabsTrigger>
+					<TabsTrigger value="account">계정</TabsTrigger>
 				</TabsList>
 				<TabsContent value="general">
 					<Accordion className="space-y-4" collapsible type="single">
@@ -96,6 +97,19 @@ export default function FAQ() {
 								<p className="text-gray-500 dark:text-gray-400">
 									Yes, our product is highly customizable and you can tailor the features to your specific needs. You can adjust the layout, add or remove widgets, and even integrate with third-party
 									tools and services.
+								</p>
+							</AccordionContent>
+						</AccordionItem>
+					</Accordion>
+				</TabsContent>
+				<TabsContent value="account">
+					<Accordion className="space-y-4" collapsible type="single">
+						<AccordionItem value="features-1">
+							<AccordionTrigger className="text-lg font-medium">이미 가입한 계정과 동일한 이메일의 소셜 게정으로 로그인 하면 어떻게 되나요?</AccordionTrigger>
+							<AccordionContent>
+								<p className="text-gray-500 dark:text-gray-400">
+									한 이메일에는 하나의 계정만 할당됩니다. 이미 가입한 계정과 동일한 이메일의 소셜 계정으로 로그인하면 이미 가입한 계정으로 로그인됩니다. 이 경우 ID/PW 또는 소셜 로그인 어느 쪽으로도
+									로그인할 수 있습니다.
 								</p>
 							</AccordionContent>
 						</AccordionItem>

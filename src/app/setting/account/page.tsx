@@ -18,7 +18,7 @@ const SettingsPage: React.FC = () => {
 		<div className="space-y-6">
 			<div>
 				<h3 className="text-lg font-medium">계정</h3>
-				<p className="text-sm text-muted-foreground">계정과 관련된 설정 페이지입니다.</p>
+				<p className="text-sm text-muted-foreground">계정 설정을 관리합니다.</p>
 			</div>
 			<Separator />
 			<AccountForm />

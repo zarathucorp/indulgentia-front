@@ -6,7 +6,7 @@ export default function SettingsAppearancePage() {
 		<div className="space-y-6">
 			<div>
 				<h3 className="text-lg font-medium">팀</h3>
-				<p className="text-sm text-muted-foreground">Customize the appearance of the app. Automatically switch between day and night themes.</p>
+				<p className="text-sm text-muted-foreground">팀 설정을 관리합니다.</p>
 			</div>
 			<Separator />
 			<TeamForm />
