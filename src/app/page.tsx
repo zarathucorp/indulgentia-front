@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import WelcomePage from "./Welcone";
+import Footer from "@/components/global/Footer";
 export default function Home() {
 	return (
 		<main className="">
@@ -14,6 +15,7 @@ export default function Home() {
 					<Button>시작하기</Button>
 				</Link>
 			</div> */}
+			<Footer />
 		</main>
 	);
 }
