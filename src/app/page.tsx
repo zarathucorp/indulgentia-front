@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import WelcomePage from "./Welcone";
 import Footer from "@/components/global/Footer";
+import ChannelTalk from "@/components/global/ChannelTalk";
 export default function Home() {
 	return (
 		<main className="">
@@ -16,6 +17,7 @@ export default function Home() {
 				</Link>
 			</div> */}
 			<Footer />
+			<ChannelTalk />
 		</main>
 	);
 }
