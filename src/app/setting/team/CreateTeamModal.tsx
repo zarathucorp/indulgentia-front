@@ -9,10 +9,11 @@ import { createClient } from "@/utils/supabase/client";
 import { useVariable } from "@/hooks/useVariable";
 import { useToast } from "@/components/ui/use-toast";
 import { Spinner } from "@/components/global/Spinner";
+import { createTeam } from "@/hooks/fetch/useTeam";
+import { ActionButton } from "@/components/ui/actionbutton";
 export function CreateTeamModal() {
 	const { toast } = useToast();
 	const [openModal, setOpenModal] = useState<boolean>(false);
-	const [isSending, setIsSending] = useState<boolean>(false);
 	const [teamName, setTeamName, handleTeamName] = useVariable<string>("");
 	const [orgName, setOrgName, handleOrgName] = useVariable<string>("");
 
@@ -44,19 +45,25 @@ export function CreateTeamModal() {
 						</div>
 					</div>
 					<DialogFooter>
-						<Button
-							onClick={() => {
-								setIsSending(true);
+						<ActionButton
+							onClick={async () => {
+								try {
+									await createTeam(teamName);
+
+									toast({
+										title: "팀 생성 성공",
+										description: `팀 ${teamName}이 생성되었습니다.`,
+									});
+								} catch (e: any) {
+									toast({
+										title: "팀 생성 실패",
+										description: `팀 생성에 실패하였습니다: ${e.message}`,
+									});
+								}
 							}}
 						>
-							{isSending && (
-								<>
-									<Spinner />
-									&nbsp;
-								</>
-							)}
 							팀 생성
-						</Button>
+						</ActionButton>
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>

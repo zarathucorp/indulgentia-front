@@ -9,133 +9,97 @@ import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { toast } from "@/components/ui/use-toast";
+// import { toast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
-const appearanceFormSchema = z.object({
-	theme: z.enum(["light", "dark"], {
-		required_error: "Please select a theme.",
-	}),
-	font: z.enum(["inter", "manrope", "system"], {
-		invalid_type_error: "Select a font",
-		required_error: "Please select a font.",
-	}),
-});
+import { CardTitle, CardDescription, CardHeader, CardContent, CardFooter, Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 
-type AppearanceFormValues = z.infer<typeof appearanceFormSchema>;
-
-// This can come from your database or API.
-const defaultValues: Partial<AppearanceFormValues> = {
-	theme: "light",
-};
+import { CreateTeamModal } from "./CreateTeamModal";
+import { useTeamInfo, useTeamMemberList } from "@/hooks/fetch/useTeam";
+import { TeamMemberType } from "@/hooks/fetch/useTeam";
+import { useVariable } from "@/hooks/useVariable";
+import { TeamMemberLoading } from "@/components/global/Loading/TeamMember";
 
 export function TeamForm() {
-	const form = useForm<AppearanceFormValues>({
-		resolver: zodResolver(appearanceFormSchema),
-		defaultValues,
-	});
-
-	function onSubmit(data: AppearanceFormValues) {
-		toast({
-			title: "You submitted the following values:",
-			description: (
-				<pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-					<code className="text-white">{JSON.stringify(data, null, 2)}</code>
-				</pre>
-			),
-		});
-	}
+	const onLeaveButtonClick = () => {};
+	// const { toast } = useToast();
+	const { teamInfo, hasTeam, isLoading: teamLoading } = useTeamInfo();
+	const { memberList, isLoading: teamMemberLoading } = useTeamMemberList();
+	const [inviteUserEmail, setInviteUserEmail, handleInviteUserEmail] = useVariable<string>("");
+	const handleInviteUser = () => {};
 
 	return (
-		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-				<FormField
-					control={form.control}
-					name="font"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Font</FormLabel>
-							<div className="relative w-max">
-								<FormControl>
-									<select className={cn(buttonVariants({ variant: "outline" }), "w-[200px] appearance-none font-normal")} {...field}>
-										<option value="inter">Inter</option>
-										<option value="manrope">Manrope</option>
-										<option value="system">System</option>
-									</select>
-								</FormControl>
-								<ChevronDownIcon className="absolute right-3 top-2.5 h-4 w-4 opacity-50" />
-							</div>
-							<FormDescription>Set the font you want to use in the dashboard.</FormDescription>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<div>
-					<Input disabled type="email" />
+		// 최초 가입시 팀 없음 -> 팀 생성 또는 기존 팀에 소속되기를 기다림
+		// 팀 생성시 -> 팀 이름/기관명(옵션) 등. 팀장은 만든사람 고정
+		// 팀 관리 -> 유저 초대 -> 팀에 소속되지 않았으면서 초대 받으면 다음 로그인시 수락여부 체크. 거절시 취소/수락시 팀 소속, 그 후부터 대시보드 등 볼 수 있음.
+		// 팀장: 다른 유저가 있으면 탈퇴 불가. 다른 유저에게 팀장 넘기고 팀 탈퇴 가능. 다른 팀원 없으면 탈퇴가능.
+		// 유저: 팀 탈퇴 가능.
+		<>
+			<div className="grid gap-4">
+				<CreateTeamModal />
+				{/* <div className="relative w-max">
+					<select className={cn(buttonVariants({ variant: "outline" }), "w-[200px] appearance-none font-normal")}>
+						<option value="inter">Inter</option>
+						<option value="manrope">Manrope</option>
+						<option value="system">System</option>
+					</select>
+					<ChevronDownIcon className="absolute right-3 top-2.5 h-4 w-4 opacity-50" />
+				</div> */}
+				<div className="grid items-center gap-4">
+					<Label htmlFor="team-name">팀 이름</Label>
+					<Input defaultValue={"팀 이름"} id="team-name" value={teamLoading ? "정보를 불러오는 중입니다." : teamInfo?.name || "소속된 팀이 없습니다."} />
 				</div>
-				<FormField
-					control={form.control}
-					name="theme"
-					render={({ field }) => (
-						<FormItem className="space-y-1">
-							<FormLabel>Theme</FormLabel>
-							<FormDescription>Select the theme for the dashboard.</FormDescription>
-							<FormMessage />
-							<RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid max-w-md grid-cols-2 gap-8 pt-2">
-								<FormItem>
-									<FormLabel className="[&:has([data-state=checked])>div]:border-primary">
-										<FormControl>
-											<RadioGroupItem value="light" className="sr-only" />
-										</FormControl>
-										<div className="items-center rounded-md border-2 border-muted p-1 hover:border-accent">
-											<div className="space-y-2 rounded-sm bg-[#ecedef] p-2">
-												<div className="space-y-2 rounded-md bg-white p-2 shadow-sm">
-													<div className="h-2 w-[80px] rounded-lg bg-[#ecedef]" />
-													<div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
-												</div>
-												<div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
-													<div className="h-4 w-4 rounded-full bg-[#ecedef]" />
-													<div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
-												</div>
-												<div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
-													<div className="h-4 w-4 rounded-full bg-[#ecedef]" />
-													<div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
-												</div>
-											</div>
-										</div>
-										<span className="block w-full p-2 text-center font-normal">Light</span>
-									</FormLabel>
-								</FormItem>
-								<FormItem>
-									<FormLabel className="[&:has([data-state=checked])>div]:border-primary">
-										<FormControl>
-											<RadioGroupItem value="dark" className="sr-only" />
-										</FormControl>
-										<div className="items-center rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground">
-											<div className="space-y-2 rounded-sm bg-slate-950 p-2">
-												<div className="space-y-2 rounded-md bg-slate-800 p-2 shadow-sm">
-													<div className="h-2 w-[80px] rounded-lg bg-slate-400" />
-													<div className="h-2 w-[100px] rounded-lg bg-slate-400" />
-												</div>
-												<div className="flex items-center space-x-2 rounded-md bg-slate-800 p-2 shadow-sm">
-													<div className="h-4 w-4 rounded-full bg-slate-400" />
-													<div className="h-2 w-[100px] rounded-lg bg-slate-400" />
-												</div>
-												<div className="flex items-center space-x-2 rounded-md bg-slate-800 p-2 shadow-sm">
-													<div className="h-4 w-4 rounded-full bg-slate-400" />
-													<div className="h-2 w-[100px] rounded-lg bg-slate-400" />
-												</div>
-											</div>
-										</div>
-										<span className="block w-full p-2 text-center font-normal">Dark</span>
-									</FormLabel>
-								</FormItem>
-							</RadioGroup>
-						</FormItem>
-					)}
-				/>
 
-				<Button type="submit">Update preferences</Button>
-			</form>
-		</Form>
+				<div className="grid items-center gap-4">
+					<Label htmlFor="team-uuid">팀 ID</Label>
+					<div className="flex items-center gap-2">
+						<Input
+							type="text"
+							disabled
+							className="rounded-md bg-gray-100 px-2 py-1 font-mono text-sm dark:bg-gray-800"
+							value={teamLoading ? "정보를 불러오는 중입니다." : teamInfo?.id || "소속된 팀이 없습니다."}
+						/>
+						{/* <Button size="sm" variant="ghost">
+							Copy
+						</Button> */}
+					</div>
+				</div>
+				<div>
+					<h3 className="text-lg font-medium">팀 멤버 초대</h3>
+					<div className="mt-2 flex items-center gap-2">
+						<Input placeholder="초대할 유저의 이메일 주소를 입력하세요." value={inviteUserEmail} onChange={handleInviteUser} />
+						<Button onClick={handleInviteUser}>초대하기</Button>
+					</div>
+				</div>
+				<div>
+					<h3 className="text-lg font-medium">팀장 권한 이전</h3>
+					<div className="mt-2 space-y-2">
+						{teamMemberLoading && <TeamMemberLoading />}
+						{memberList &&
+							memberList.map((member: TeamMemberType) => (
+								<div key={member.id} className="flex items-center justify-between rounded-md border border-gray-200 bg-gray-100 p-3 dark:border-gray-800 dark:bg-gray-800">
+									<div className="flex items-center gap-3">
+										<Avatar>
+											<AvatarImage src="/avatars/01.png" />
+											<AvatarFallback>{Array.from(member.last_name)[0]}</AvatarFallback>
+										</Avatar>
+										<div>
+											<p className="text-sm font-medium">{member.last_name + " " + member.first_name}</p>
+											<p className="text-sm text-gray-500 dark:text-gray-400">{member.email}</p>
+										</div>
+									</div>
+									<Button size="sm" variant="ghost">
+										이전
+									</Button>
+								</div>
+							))}
+					</div>
+				</div>
+				<Button className="bg-red-500 hover:bg-red-700" onClick={onLeaveButtonClick}>
+					팀 탈퇴
+				</Button>
+			</div>
+		</>
 	);
 }
