@@ -20,7 +20,7 @@ const FormSchema = z.object({
 		.string({
 			required_error: "이메일은 필수 항목입니다.",
 		})
-		.email(),
+		.email({ message: "유효하지 않은 이메일 주소입니다." }),
 	phone: z.string().optional(),
 	description: z.string().optional(),
 	size: z.string({ required_error: "검토 규모는 필수 항목입니다." }),
