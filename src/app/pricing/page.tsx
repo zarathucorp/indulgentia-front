@@ -1,8 +1,14 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import Link from "next/link";
-
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { map } from "zod";
+import { useState } from "react";
 export default function PricingPage() {
+	const numbers = Array.from({ length: 100 }, (_, i) => i + 1);
+	const [numUser, setNumUser] = useState<string>("10");
 	return (
 		<>
 			<section className="w-full py-12 md:py-24 lg:py-32">
@@ -29,7 +35,27 @@ export default function PricingPage() {
 									<li>블록체인을 이용한 전자서명</li>
 								</ul>
 								<div className="mt-4">
-									<Button size="lg">선택하기</Button>
+									<Label htmlFor="num_user">유저 수를 선택해주세요.</Label>
+									<Select name="num_user" value={numUser} onValueChange={setNumUser}>
+										<SelectTrigger className="w-full">
+											<SelectValue placeholder="유저 수 선택" />
+										</SelectTrigger>
+										<SelectContent>
+											{numbers.map((num: number) => (
+												<SelectItem key={num} value={num.toString()}>
+													{num}명
+												</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+								</div>
+								<Label>
+									{numUser}명 * 50,000원/1년 = {(parseInt(numUser) * 50_000).toLocaleString()}원
+								</Label>
+								<div className="mt-4">
+									<Link href={`/payment?user=${numUser}`}>
+										<Button size="lg">선택하기</Button>
+									</Link>
 								</div>
 							</div>
 						</div>

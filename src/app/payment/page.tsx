@@ -5,6 +5,7 @@ import { nanoid } from "nanoid";
 import useSWRImmutable from "swr/immutable";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useSearchParams } from "next/navigation";
 
 // TODO: clientKey는 개발자센터의 결제위젯 연동 키 > 클라이언트 키로 바꾸세요.
 // TODO: customerKey는 구매자와 1:1 관계로 무작위한 고유값을 생성하세요.
@@ -17,9 +18,12 @@ const fetcher = async ({ clientKey, customerKey }: { clientKey: string; customer
 };
 
 export default function Home() {
+	const params = useSearchParams();
+	const numUser = params.get("user") || "10";
+	const price: number = parseInt(numUser) * 50_000;
 	const { data: paymentWidget, error } = useSWRImmutable({ clientKey, customerKey }, fetcher);
 	const paymentMethodsWidgetRef = useRef<any>(null);
-	const [price, setPrice] = useState(50000);
+	// const [price, setPrice] = priceuseState(50000);
 	const [paymentMethodsWidgetReady, setPaymentMethodsWidgetReady] = useState(false);
 
 	useEffect(() => {
@@ -48,6 +52,8 @@ export default function Home() {
 
 	return (
 		<div className="flex flex-col items-center">
+			<h1>결제하기</h1>
+			<h2>{price.toLocaleString()}원을 결제합니다.</h2>
 			<div className="p-6 box_section w-full max-w-xl bg-white shadow-md rounded-lg">
 				<div id="payment-widget" className="w-full mb-4" />
 				<div id="agreement" className="w-full mb-4" />
@@ -80,10 +86,10 @@ export default function Home() {
 							// Request payment
 							await paymentWidget.requestPayment({
 								orderId: nanoid(),
-								orderName: "토스 티셔츠 외 2건",
-								customerName: "김토스",
-								customerEmail: "customer123@gmail.com",
-								customerMobilePhone: "01012341234",
+								orderName: `연구실록 ${numUser}명 1년 구독`,
+								customerName: "",
+								customerEmail: "",
+								// customerMobilePhone: "",
 								successUrl: `${window.location.origin}/payment/success`,
 								failUrl: `${window.location.origin}/payment/fail`,
 							});
