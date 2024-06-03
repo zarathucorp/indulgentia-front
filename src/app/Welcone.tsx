@@ -3,16 +3,20 @@ import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { Divide } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+import { SiHiveBlockchain } from "react-icons/si";
 export default function WelcomePage() {
 	return (
 		<main className="flex flex-col">
 			<section className="text-black py-20 md:py-32 lg:py-40">
 				<div className="container mx-auto px-4 md:px-6 lg:px-8">
-					<div className="max-w-3xl mx-auto text-center space-y-6">
-						<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold">깃허브로 완성하는 연구실록</h1>
-						<p className="text-lg md:text-xl lg:text-2xl">GitHub 활동만으로 자동으로 연구노트 완성 어쩌고 저쩌고</p>
-						<Link href="/dashboard">
-							<Button size="lg">시작하기</Button>
+					<div className="max-w-5xl mx-auto text-center">
+						<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold">Git으로 완성하는 연구실록</h1>
+						<p className="text-lg md:text-xl lg:text-2xl mt-2">연구노트 작성에 에너지를 소모하지 마세요. Git 활동만으로 자동으로 연구노트가 완성됩니다.</p>
+						<p className="text-lg md:text-xl lg:text-2xl">그저 노트 다운로드 후 제출하기만 하면 신경쓸 필요가 없습니다.</p>
+						<Link href="/inquiry">
+							<Button size="lg" className="mt-2">
+								도입 문의하기
+							</Button>
 						</Link>
 					</div>
 				</div>
@@ -21,29 +25,29 @@ export default function WelcomePage() {
 			<section className="py-16 md:py-24 lg:py-32">
 				<div className="container mx-auto px-4 md:px-6 lg:px-8">
 					<div className="max-w-3xl mx-auto text-center space-y-6">
-						<h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">Features That Make a Difference</h2>
-						<p className="text-lg md:text-xl lg:text-2xl text-gray-600 dark:text-gray-400">Our electronic research note offers a suite of powerful features to streamline your workflow.</p>
+						<h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">개발에만 집중하세요</h2>
+						<p className="text-lg md:text-xl lg:text-2xl text-gray-600 dark:text-gray-400">소프트웨어 R&D를 진행하시나요? 모든 Git 활동이 기록되어, 따로 연구노트를 준비 할 필요가 없습니다.</p>
 					</div>
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
 						<div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 space-y-4">
 							<PenIcon className="w-10 h-10 text-[#4b0082]" />
 							<h3 className="text-xl font-bold">GitHub 데이터를 자동으로 연구노트로 전환</h3>
-							<p className="text-gray-600 dark:text-gray-400">GitHub 등 Git에서의 활동만으로 정부에서 인정하는 전자연구노트 자동작성</p>
-						</div>
-						<div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 space-y-4">
-							<SearchIcon className="w-10 h-10 text-[#4b0082]" />
-							<h3 className="text-xl font-bold">Poweㅌrful Search</h3>
-							<p className="text-gray-600 dark:text-gray-400">Quickly find the information you need with our advanced search functionality.</p>
+							<p className="text-gray-600 dark:text-gray-400">GitHub 등 Git에서의 활동만으로 정부에서 인정하는 전자연구노트 자동작성이 가능합니다.</p>
 						</div>
 						<div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 space-y-4">
 							<FolderSyncIcon className="w-10 h-10 text-[#4b0082]" />
-							<h3 className="text-xl font-bold">Seamless Sync</h3>
-							<p className="text-gray-600 dark:text-gray-400">Access your notes from anywhere, with automatic syncing across all your devices.</p>
+							<h3 className="text-xl font-bold">빠른 노트 업데이트</h3>
+							<p className="text-gray-600 dark:text-gray-400">GitHub 활동 이후 평균 1분 이내에 노트가 업데이트됩니다.</p>
+						</div>
+						<div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 space-y-4">
+							<SiHiveBlockchain className="w-10 h-10 text-[#4b0082]" />
+							<h3 className="text-xl font-bold">블록체인을 통한 시점 인증</h3>
+							<p className="text-gray-600 dark:text-gray-400">블록체인을 통한 시점 인증으로 전자연구노트의 요건을 모두 만족합니다.</p>
 						</div>
 					</div>
 				</div>
 			</section>
-			<section className="bg-[#4b0082] text-white py-16 md:py-24 lg:py-32">
+			{/* <section className="bg-[#4b0082] text-white py-16 md:py-24 lg:py-32">
 				<div className="container mx-auto px-4 md:px-6 lg:px-8">
 					<div className="max-w-3xl mx-auto text-center space-y-6">
 						<h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">How It Works</h2>
@@ -67,8 +71,8 @@ export default function WelcomePage() {
 						</div>
 					</div>
 				</div>
-			</section>
-			<section className="py-16 md:py-24 lg:py-32">
+			</section> */}
+			{/* <section className="py-16 md:py-24 lg:py-32">
 				<div className="container mx-auto px-4 md:px-6 lg:px-8">
 					<div className="max-w-3xl mx-auto text-center space-y-6">
 						<h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">What Our Users Say</h2>
@@ -120,7 +124,7 @@ export default function WelcomePage() {
 						</div>
 					</div>
 				</div>
-			</section>
+			</section> */}
 		</main>
 	);
 }
