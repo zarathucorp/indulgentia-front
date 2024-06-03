@@ -5,15 +5,16 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { map } from "zod";
+import { UsePeriodPolicy, RefundPolicy } from "@/components/global/UsePeriodRefundPolicy";
 import { useState } from "react";
 export default function PricingPage() {
-	const numbers = Array.from({ length: 100 }, (_, i) => i + 1);
+	const numbers = Array.from({ length: 50 }, (_, i) => i + 1);
 	const [numUser, setNumUser] = useState<string>("10");
 	return (
 		<>
-			<section className="w-full py-12 md:py-24 lg:py-32">
+			<section className="w-full py-6 md:py-12 lg:py-16">
 				<div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
-					<div className="space-y-3">
+					<div>
 						<h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">알맞는 플랜을 선택하세요</h2>
 						<div className="grid grid-cols-1 gap-4">
 							{/* <div className="border rounded-lg p-4">
@@ -61,6 +62,7 @@ export default function PricingPage() {
 						</div>
 						{/* <p className="mx-auto max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">Need more details? Compare the plans below.</p> */}
 					</div>
+
 					{/* <div className="mx-auto w-full max-w-2xl space-y-2">
 						<table className="w-full border-collapse border border-gray-200 dark:border-gray-800">
 							<thead>
@@ -91,6 +93,8 @@ export default function PricingPage() {
 					</div> */}
 				</div>
 			</section>
+			<UsePeriodPolicy />
+			<RefundPolicy />
 		</>
 	);
 }

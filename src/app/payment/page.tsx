@@ -6,7 +6,7 @@ import useSWRImmutable from "swr/immutable";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useSearchParams } from "next/navigation";
-
+import { UsePeriodPolicy, RefundPolicy } from "@/components/global/UsePeriodRefundPolicy";
 // TODO: clientKey는 개발자센터의 결제위젯 연동 키 > 클라이언트 키로 바꾸세요.
 // TODO: customerKey는 구매자와 1:1 관계로 무작위한 고유값을 생성하세요.
 // @docs https://docs.tosspayments.com/reference/using-api/api-keys
@@ -52,8 +52,8 @@ export default function Home() {
 
 	return (
 		<div className="flex flex-col items-center">
-			<h1>결제하기</h1>
-			<h2>{price.toLocaleString()}원을 결제합니다.</h2>
+			<h1 className="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">결제하기</h1>
+			<p className="mb-8">{price.toLocaleString()}원을 결제합니다.</p>
 			<div className="p-6 box_section w-full max-w-xl bg-white shadow-md rounded-lg">
 				<div id="payment-widget" className="w-full mb-4" />
 				<div id="agreement" className="w-full mb-4" />
@@ -102,6 +102,8 @@ export default function Home() {
 					결제하기
 				</Button>
 			</div>
+			<UsePeriodPolicy />
+			<RefundPolicy />
 		</div>
 	);
 }
