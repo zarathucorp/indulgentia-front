@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import axios from "axios";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -15,101 +15,132 @@ import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { toast } from "@/components/ui/use-toast";
 import SignaturePad from "@/components/global/SignaturePad";
+import { useEffect } from "react";
+import { createClient } from "@/utils/supabase/client";
+import { useVariable } from "@/hooks/useVariable";
+import { redirect } from "next/navigation";
+import useGithub from "@/hooks/fetch/useGithub";
+import useUser from "@/hooks/fetch/useUser";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const accountFormSchema = z.object({
-	lastName: z
-		.string()
-		.min(2, {
-			message: "Name must be at least 2 characters.",
-		})
-		.max(30, {
-			message: "Name must not be longer than 30 characters.",
-		}),
-
-	firstName: z
-		.string()
-		.min(2, {
-			message: "Name must be at least 2 characters.",
-		})
-		.max(30, {
-			message: "Name must not be longer than 30 characters.",
-		}),
+	lastName: z.string().min(1, { message: "성을 입력하세요." }).max(30, { message: "30자 이하로 입력해주세요" }),
+	firstName: z.string().min(1, { message: "이름을 입력하세요" }).max(30, { message: "30자 이하로 입력해주세요" }),
 });
 
 type AccountFormValues = z.infer<typeof accountFormSchema>;
 
-// This can come from your database or API.
-const defaultValues: Partial<AccountFormValues> = {
-	// name: "Your name",
-	// dob: new Date("2023-01-23"),
-};
-
 export function AccountForm() {
+	const [userEmail, setUserEmail] = useVariable<string>("");
+	const { username: githubUsername, error: githubError, isLoading: isLoadingGithub } = useGithub();
+	const { userInfo, error: userInfoError, isLoading: isLoadingUserInfo } = useUser();
+
+	const values: AccountFormValues = {
+		firstName: userInfo?.first_name || "",
+		lastName: userInfo?.last_name || "",
+	};
+
+	useEffect(() => {
+		const getUser = async () => {
+			const supabase = createClient();
+			const {
+				data: { user },
+			} = await supabase.auth.getUser();
+
+			if (!user?.email) redirect("/auth/login");
+
+			setUserEmail(user.email);
+		};
+
+		getUser();
+	}, []);
+
 	const form = useForm<AccountFormValues>({
 		resolver: zodResolver(accountFormSchema),
-		defaultValues,
+		values: values,
 	});
 
-	function onSubmit(data: AccountFormValues) {
-		toast({
-			title: "You submitted the following values:",
-			description: (
-				<pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-					<code className="text-white">{JSON.stringify(data, null, 2)}</code>
-				</pre>
-			),
-		});
-	}
+	const onSubmit = async (data: AccountFormValues) => {
+		try {
+			await axios.patch(process.env.NEXT_PUBLIC_API_URL + "/user/settings/info", {
+				first_name: data.firstName,
+				last_name: data.lastName,
+			});
+
+			toast({
+				title: "업데이트에 성공하였습니다.",
+				description: `설정 업데이트에 성공하였습니다.`,
+			});
+		} catch (error: any) {
+			console.error(error);
+
+			toast({
+				title: "업데이트에 실패하였습니다.",
+				description: `설정 업데이트에 실패하였습니다: ${error.message}`,
+			});
+		}
+	};
 
 	return (
-		<>
-			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-					<div className="grid grid-cols-2 gap-4">
-						<FormField
-							control={form.control}
-							name="lastName"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>성</FormLabel>
-									<FormControl>
-										<Input placeholder="성을 입력하세요" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="firstName"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>이름</FormLabel>
-									<FormControl>
-										<Input placeholder="이름을 입력하세요" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-					</div>
-					<FormDescription>이 이름은 연구노트 작성자로 활용됩니다. 이름을 변경하더라도 이미 생성된 연구노트 PDF에는 영향을 끼치지 않습니다.</FormDescription>
+		<Form {...form}>
+			<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+				<div className="grid grid-cols-2 gap-4">
 					<FormField
-						name="signature"
+						control={form.control}
+						name="lastName"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>이메일</FormLabel>
+								<FormLabel>성</FormLabel>
 								<FormControl>
-									<Input disabled type="email" />
+									<Input placeholder="성을 입력하세요" {...field} />
 								</FormControl>
-								<FormDescription>이메일은 변경할 수 없습니다.</FormDescription>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
-					<Button type="submit">설정 업데이트</Button>
-				</form>
-			</Form>
-		</>
+					<FormField
+						control={form.control}
+						name="firstName"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>이름</FormLabel>
+								<FormControl>
+									<Input placeholder="이름을 입력하세요" {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				</div>
+				<FormDescription>이 이름은 연구노트 작성자로 활용됩니다. 이름을 변경하더라도 이미 생성된 연구노트 PDF에는 영향을 끼치지 않습니다.</FormDescription>
+				<FormField
+					name="signature"
+					render={() => (
+						<FormItem>
+							<FormLabel>이메일</FormLabel>
+							<FormControl>
+								<Input disabled type="email" value={userEmail} />
+							</FormControl>
+							<FormDescription>이메일은 변경할 수 없습니다.</FormDescription>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<div className="">
+					<div>
+						<FormLabel>GitHub 계정 연결</FormLabel>
+						{/* <Label>연결된 계정</Label> */}
+					</div>
+					<div className="mt-2 flex items-center gap-2">
+						<Input type="email" disabled value={isLoadingGithub ? "정보를 불러오는 중입니다." : githubError || githubUsername} />
+						<Link href={process.env.NEXT_PUBLIC_GITHUB_APP_INSTALL_URL || "#"}>
+							<Button onClick={(e) => e.preventDefault()}>깃허브 계정 연동</Button>
+						</Link>
+					</div>
+				</div>
+				<Button type="submit">설정 업데이트</Button>
+			</form>
+		</Form>
 	);
 }
