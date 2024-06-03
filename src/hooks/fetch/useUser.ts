@@ -16,10 +16,10 @@ type UserInfoType = {
 const fetcher = (url: string) => axios.get(url).then((res) => res.data.data as UserInfoType);
 
 const useGithub = () => {
-	const { data: userInfo, error } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/settings/info", fetcher);
+	const { data: userInfo, error, isLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/settings/info", fetcher);
 
-	const isLoading = !error && !userInfo;
-	console.log(userInfo);
+	// const isLoading = !error && !userInfo;
+	// console.log(userInfo);
 	return {
 		userInfo,
 		error: error ? error : null,

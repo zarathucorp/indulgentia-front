@@ -1,7 +1,7 @@
 import axios from "axios";
 import { UUID } from "crypto";
 import useSWRImmutable from "swr/immutable";
-
+import useSWR from "swr";
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 type DateTimeString = string;
@@ -17,9 +17,9 @@ type TeamInfoType = {
 };
 
 const useTeamInfo = () => {
-	const { data, error, mutate } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/team/", fetcher);
+	const { data, error, mutate, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + "/user/team", fetcher);
 
-	const isLoading = !error && !data;
+	// const isLoading = !error && !data;
 	const teamInfo: TeamInfoType | null = data?.data ?? null;
 	const hasTeam: boolean = !!teamInfo;
 
@@ -30,11 +30,12 @@ const useTeamInfo = () => {
 		hasTeam,
 		error: error ? (error.response?.status === 404 ? "GitHub 로그인이 필요합니다." : error.response?.status === 500 ? "다시 로그인해주세요" : error.message) : null,
 		isLoading,
+		mutate,
 	};
 };
 
 const useTeamName = () => {
-	const { data, error, mutate } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/team/", fetcher);
+	const { data, error, mutate } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/team", fetcher);
 };
 
 type TeamMemberType = {

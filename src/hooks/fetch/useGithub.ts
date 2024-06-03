@@ -4,7 +4,7 @@ import useSWRImmutable from "swr/immutable";
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const useGithub = () => {
-	const { data, error } = useSWRImmutable("/next-api/github/user", fetcher);
+	const { data, error, mutate: mutateGitHub } = useSWRImmutable("/next-api/github/user", fetcher);
 
 	const isLoading = !error && !data;
 	const username = data?.login ?? "";
