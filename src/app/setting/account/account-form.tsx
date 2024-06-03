@@ -25,8 +25,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 const accountFormSchema = z.object({
-	lastName: z.string().min(1, { message: "성을 입력하세요." }).max(30, { message: "30자 이하로 입력해주세요" }),
-	firstName: z.string().min(1, { message: "이름을 입력하세요" }).max(30, { message: "30자 이하로 입력해주세요" }),
+	lastName: z.string().max(30, { message: "30자 이하로 입력해주세요" }).nullable(),
+	firstName: z.string().max(30, { message: "30자 이하로 입력해주세요" }).nullable(),
 });
 
 type AccountFormValues = z.infer<typeof accountFormSchema>;
@@ -37,8 +37,8 @@ export function AccountForm() {
 	const { userInfo, error: userInfoError, isLoading: isLoadingUserInfo } = useUser();
 
 	const values: AccountFormValues = {
-		firstName: userInfo?.first_name || "",
-		lastName: userInfo?.last_name || "",
+		firstName: userInfo?.first_name || null,
+		lastName: userInfo?.last_name || null,
 	};
 
 	useEffect(() => {
@@ -62,10 +62,16 @@ export function AccountForm() {
 	});
 
 	const onSubmit = async (data: AccountFormValues) => {
+		const processedData = {
+			...data,
+			lastName: data.lastName?.trim() === "" ? null : data.lastName,
+			firstName: data.firstName?.trim() === "" ? null : data.firstName,
+		};
+
 		try {
 			await axios.patch(process.env.NEXT_PUBLIC_API_URL + "/user/settings/info", {
-				first_name: data.firstName,
-				last_name: data.lastName,
+				first_name: processedData.firstName,
+				last_name: processedData.lastName,
 			});
 
 			toast({
@@ -93,7 +99,7 @@ export function AccountForm() {
 							<FormItem>
 								<FormLabel>성</FormLabel>
 								<FormControl>
-									<Input placeholder="성을 입력하세요" {...field} />
+									<Input placeholder="성을 입력하세요" {...field} disabled={isLoadingUserInfo} value={isLoadingUserInfo ? "값을 불러오는 중입니다." : field.value ?? ""} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -106,7 +112,7 @@ export function AccountForm() {
 							<FormItem>
 								<FormLabel>이름</FormLabel>
 								<FormControl>
-									<Input placeholder="이름을 입력하세요" {...field} />
+									<Input placeholder="이름을 입력하세요" {...field} disabled={isLoadingUserInfo} value={isLoadingUserInfo ? "값을 불러오는 중입니다." : field.value ?? ""} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
