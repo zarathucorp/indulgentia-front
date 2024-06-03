@@ -12,6 +12,8 @@ import { toast } from "@/components/ui/use-toast";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { MdError } from "react-icons/md";
 import axios from "axios";
+import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 const FormSchema = z.object({
 	name: z.string({
 		required_error: "이름은 필수 항목입니다",
@@ -148,9 +150,45 @@ export default function Component() {
 								</FormItem>
 							)}
 						/>
-						<Button type="submit">제출하기</Button>
+						<FormField
+							control={form.control}
+							name="size"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>
+										검토 규모(예상) <b className="text-red-600">*</b>
+									</FormLabel>
+									<Select onValueChange={field.onChange} defaultValue={field.value}>
+										<FormControl>
+											<SelectTrigger>
+												<SelectValue placeholder="규모 선택" />
+											</SelectTrigger>
+										</FormControl>
+										<SelectContent>
+											<SelectItem value="size_1to10">1~10인</SelectItem>
+											<SelectItem value="size_11to50">11~50인</SelectItem>
+											<SelectItem value="size_over50">50인 이상</SelectItem>
+										</SelectContent>
+									</Select>
+									<FormDescription>도입을 검토하시는 규모를 선택하여 주십시오.</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<Button type="submit" className="w-full">
+							제출하기
+						</Button>
 					</form>
 				</Form>
+
+				<Separator />
+				<div className="text-center">
+					{/* <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-50 sm:text-4xl">문의하기</h1> */}
+					<Link href="mailto:office@zarathu.com">
+						<p className="mt-3 text-lg text-gray-500 dark:text-gray-400">또는 이메일로 문의하기</p>
+					</Link>
+					<p className="mt-3 text-lg text-gray-500 dark:text-gray-400">우측 하단의 채널톡을 통해서도 문의 가능합니다.</p>
+				</div>
 			</div>
 		</div>
 	);
