@@ -27,7 +27,7 @@ export function RefundPolicy() {
 							<div>
 								<h3 className="font-semibold text-gray-900 dark:text-gray-100">14일 환불 보장</h3>
 								<p className="text-gray-600 dark:text-gray-400">
-									상품에 만족하지 못하셨을 경우, 14일 이내에 전액 환불해 드립니다. 결제일을 포함하여 14일 후의 23:59까지 상단 '문의하기' 또는 고객 서비스 이메일로 접수 된 건에 한합니다.
+									상품에 만족하지 못하셨을 경우, 14일 이내에 전액 환불해 드립니다. 결제일을 포함하여 14일 후의 23:59까지 상단 &apos;문의하기&apos; 또는 고객 서비스 이메일로 접수 된 건에 한합니다.
 								</p>
 							</div>
 						</li>
