@@ -1,12 +1,12 @@
 import { TabsTrigger, TabsList, TabsContent, Tabs } from "@/components/ui/tabs";
 import { AccordionTrigger, AccordionContent, AccordionItem, Accordion } from "@/components/ui/accordion";
-
+import Link from "next/link";
 export default function FAQ() {
 	return (
 		<div className="container mx-auto py-12 px-4 md:px-6">
 			<h1 className="text-3xl font-bold mb-8">자주 묻는 질문들</h1>
 			<Tabs className="w-full" defaultValue="general">
-				<TabsList className="grid grid-cols-3 gap-4 mb-8">
+				<TabsList className="grid grid-cols-4 gap-4 mb-8">
 					<TabsTrigger value="general">일반</TabsTrigger>
 					<TabsTrigger value="pricing">가격</TabsTrigger>
 					<TabsTrigger value="features">기능</TabsTrigger>
@@ -24,11 +24,11 @@ export default function FAQ() {
 							</AccordionContent>
 						</AccordionItem>
 						<AccordionItem value="general-2">
-							<AccordionTrigger className="text-lg font-medium">How does it work?</AccordionTrigger>
+							<AccordionTrigger className="text-lg font-medium">GitHub와 연구실록은 어떻게 연동하나요?</AccordionTrigger>
 							<AccordionContent>
 								<p className="text-gray-500 dark:text-gray-400">
-									The product works by integrating with your existing systems and workflows. It uses advanced algorithms to analyze your data and provide insights and recommendations to help you make
-									better decisions.
+									가입 후 우측 상단 &apos;사람 모양 아이콘-설정-계정&apos;에서 GitHub 계정을 연동할 수 있습니다. 연동 후 &apos;Bucket 설정&apos;에서 GitHub Repository를 선택하면 해당 Repository가
+									연동됩니다. 연동 이후에는 해당 Repository의 Issue, Pull Request, Commit 등을 연구실록에서 확인할 수 있습니다.
 								</p>
 							</AccordionContent>
 						</AccordionItem>
@@ -74,7 +74,7 @@ export default function FAQ() {
 				<TabsContent value="features">
 					<Accordion className="space-y-4" collapsible type="single">
 						<AccordionItem value="features-1">
-							<AccordionTrigger className="text-lg font-medium">What features are included?</AccordionTrigger>
+							<AccordionTrigger className="text-lg font-medium">어떤 기능이 포함되어 있나요?</AccordionTrigger>
 							<AccordionContent>
 								<p className="text-gray-500 dark:text-gray-400">
 									Our product includes a wide range of features to help you achieve your goals. Some of the key features include advanced analytics, customizable dashboards, collaboration tools, and
@@ -92,11 +92,11 @@ export default function FAQ() {
 							</AccordionContent>
 						</AccordionItem>
 						<AccordionItem value="features-3">
-							<AccordionTrigger className="text-lg font-medium">Can I customize the features?</AccordionTrigger>
+							<AccordionTrigger className="text-lg font-medium">커스텀 기능 요청이 가능한가요?</AccordionTrigger>
 							<AccordionContent>
 								<p className="text-gray-500 dark:text-gray-400">
-									Yes, our product is highly customizable and you can tailor the features to your specific needs. You can adjust the layout, add or remove widgets, and even integrate with third-party
-									tools and services.
+									네, 가능합니다. 연구실록 팀은 고객의 만족을 최우선으로 여깁니다. 커스텀 기능 요청은 &apos;<Link href="/inquiry">문의하기</Link>&apos; 또는 우측 하단 채팅 버턴으로 문의 해 주시기
+									바랍니다.
 								</p>
 							</AccordionContent>
 						</AccordionItem>
