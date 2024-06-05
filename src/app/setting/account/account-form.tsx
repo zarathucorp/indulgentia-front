@@ -54,6 +54,7 @@ export function AccountForm() {
 		};
 
 		getUser();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const form = useForm<AccountFormValues>({
