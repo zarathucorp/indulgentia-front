@@ -1,11 +1,10 @@
-"use client";
 import React, { useState, useRef, useEffect } from "react";
 import SignatureCanvas from "react-signature-canvas";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { useVariable } from "@/hooks/useVariable";
 import useSWRImmutable from "swr/immutable";
-import { useToast } from "../ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
+
 const SignaturePad = () => {
 	const canvasRef = useRef<any>(null);
 	const [isSigned, setIsSigned] = useState<boolean>(false);
@@ -25,7 +24,11 @@ const SignaturePad = () => {
 				img.src = initialSignatureUrl;
 				img.crossOrigin = "Anonymous";
 				img.onload = () => {
-					context.drawImage(img, 0, 0, img.width / 2, img.height / 2);
+					canvas.width = canvas.parentElement.offsetWidth;
+					canvas.height = canvas.parentElement.offsetHeight;
+					canvas.style.width = "100%";
+					canvas.style.height = "100%";
+					context.drawImage(img, 0, 0, canvas.width, canvas.height);
 					setIsSigned(true);
 				};
 			};
@@ -44,18 +47,20 @@ const SignaturePad = () => {
 			const dataUrl = canvas.toDataURL();
 
 			// Scale the canvas
-			canvas.width = 500 * ratio;
-			canvas.height = 200 * ratio;
-			canvas.style.width = "500px";
-			canvas.style.height = "200px";
+			const containerWidth = canvas.parentElement.offsetWidth;
+			const containerHeight = canvas.parentElement.offsetHeight;
+			canvas.width = containerWidth * ratio;
+			canvas.height = containerHeight * ratio;
+			canvas.style.width = `${containerWidth}px`;
+			canvas.style.height = `${containerHeight}px`;
 
-			context.scale(ratio, ratio);
+			context.setTransform(ratio, 0, 0, ratio, 0, 0);
 
 			// Restore the canvas content
 			const img = new Image();
 			img.src = dataUrl;
 			img.onload = () => {
-				context.drawImage(img, 0, 0);
+				context.drawImage(img, 0, 0, canvas.width, canvas.height);
 			};
 		};
 
@@ -69,7 +74,7 @@ const SignaturePad = () => {
 
 	const handleSave = async () => {
 		const canvas = canvasRef.current.getCanvas();
-		const dataUrl = canvas.toDataURL("image/png") as string;
+		const dataUrl = canvas.toDataURL("image/png", 1.0) as string;
 
 		try {
 			const { data } = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature", { file: dataUrl as string }, { withCredentials: true });
@@ -86,12 +91,11 @@ const SignaturePad = () => {
 				description: `에러: ${error.message}.`,
 			});
 		}
-		// dataUrl에 이미지 데이터가 들어있음. 백엔드로 보내면 됨.
 	};
 
 	return (
-		<div className="flex flex-col items-center">
-			<div className="relative border-2 border-gray-500" style={{ width: "500px", height: "200px" }}>
+		<div className="flex flex-col items-center px-4">
+			<div className="relative border-2 border-gray-500 w-full max-w-[500px] h-[200px] signature-container">
 				{!isSigned && (
 					<div
 						className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-black not-selectable"
@@ -115,7 +119,7 @@ const SignaturePad = () => {
 					canvasProps={{ className: "signature-canvas w-full h-full" }}
 				/>
 			</div>
-			<div className="mt-4 flex items-center w-1/3 gap-2">
+			<div className="mt-4 flex items-center w-full max-w-md gap-2">
 				<Button
 					className="px-4 py-2 bg-red-500 hover:bg-red w-full"
 					onClick={(e) => {
