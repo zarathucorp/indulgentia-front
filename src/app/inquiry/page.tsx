@@ -150,31 +150,7 @@ export default function Component() {
 								</FormItem>
 							)}
 						/>
-						<FormField
-							control={form.control}
-							name="size"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>
-										검토 규모(예상) <b className="text-red-600">*</b>
-									</FormLabel>
-									<Select onValueChange={field.onChange} defaultValue={field.value}>
-										<FormControl>
-											<SelectTrigger>
-												<SelectValue placeholder="규모 선택" />
-											</SelectTrigger>
-										</FormControl>
-										<SelectContent>
-											<SelectItem value="size_1to10">1~10인</SelectItem>
-											<SelectItem value="size_11to50">11~50인</SelectItem>
-											<SelectItem value="size_over50">50인 이상</SelectItem>
-										</SelectContent>
-									</Select>
-									<FormDescription>도입을 검토하시는 규모를 선택하여 주십시오.</FormDescription>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+
 						<Button type="submit" className="w-full">
 							제출하기
 						</Button>
