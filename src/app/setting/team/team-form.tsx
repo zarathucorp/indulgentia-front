@@ -1,102 +1,209 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import axios from "axios";
 
-import { cn } from "@/lib/utils";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-// import { toast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CardTitle, CardDescription, CardHeader, CardContent, CardFooter, Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
-
 import { CreateTeamModal } from "./CreateTeamModal";
-import { useTeamInfo, useTeamMemberList } from "@/hooks/fetch/useTeam";
-import { TeamMemberType } from "@/hooks/fetch/useTeam";
+import { useTeamInfo, useTeamMemberList, inviteUser, getInvitationList } from "@/hooks/fetch/useTeam";
+import { TeamMemberType, InvitationType } from "@/hooks/fetch/useTeam";
 import { useVariable } from "@/hooks/useVariable";
 import { TeamMemberLoading } from "@/components/global/Loading/TeamMember";
+import { useToast } from "@/components/ui/use-toast";
+import { createClient } from "@/utils/supabase/client";
 
 export function TeamForm() {
-	const onLeaveButtonClick = () => {};
-	// const { toast } = useToast();
-	const { teamInfo, hasTeam, isLoading: teamLoading } = useTeamInfo();
+	const { toast } = useToast();
+	const { teamInfo, hasTeam, isLoading: teamLoading, mutate: teamMutate, isLeader } = useTeamInfo();
 	const { memberList, isLoading: teamMemberLoading } = useTeamMemberList();
 	const [inviteUserEmail, setInviteUserEmail, handleInviteUserEmail] = useVariable<string>("");
-	const handleInviteUser = () => {};
+	const { invitationList, isLoading: invitationLoading } = getInvitationList();
+	const supabase = createClient();
+	const onSettingUpdate = () => {};
+	const onLeaveButtonClick = async () => {
+		try {
+			const { data } = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/user/team/${teamInfo?.id}`);
+			if (data.status === "succeed") {
+				toast({
+					title: "팀 탈퇴 완료",
+					description: "팀에서 탈퇴되었습니다.",
+				});
+				// Force revalidation
+				await teamMutate();
+			} else {
+				throw new Error("팀 탈퇴 실패");
+			}
+		} catch (error: any) {
+			console.error("Error during team leave:", error);
+			toast({
+				title: "팀 탈퇴 실패",
+				description: "팀에서 탈퇴되지 않았습니다.",
+			});
+		}
+	};
+
+	const handleInviteUser = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		// Implement user invite logic
+		// Once done, update the team info to reflect the changes
+		try {
+			await inviteUser(inviteUserEmail);
+
+			toast({
+				title: "유저 초대 완료",
+				description: "유저가 초대되었습니다.",
+			});
+		} catch (error: any) {
+			console.error(error);
+			console.error(error.response.data.detail);
+			let errorMessage = "";
+			switch (error.response.data.detail) {
+				case "400: Email not found":
+					errorMessage = "해당 이메일을 가진 유저가 없습니다.";
+					break;
+				case "400: User already in team":
+					errorMessage = "이미 팀에 속한 유저입니다.";
+					break;
+				case "403: Not a team leader":
+					errorMessage = "팀장만 유저를 초대할 수 있습니다.";
+					break;
+			}
+			toast({
+				title: "유저 초대 실패",
+				description: `유저가 초대되지 않았습니다. ${error.response.data.detail}`,
+			});
+		}
+		teamMutate();
+	};
+
+	const onTransferButtonClick = async (newLeaderId: string) => {
+		try {
+			const { data } = await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/user/team/${teamInfo?.id}/leader`, {
+				next_leader_id: newLeaderId,
+			});
+			if (data.status === "succeed") {
+				toast({
+					title: "팀장 권한 이전 완료",
+					description: "팀장 권한이 이전되었습니다.",
+				});
+				// Force revalidation
+				await teamMutate();
+			} else {
+				throw new Error("팀장 권한 이전 실패");
+			}
+		} catch (error: any) {
+			console.error("Error during team leader transfer:", error);
+			toast({
+				title: "팀장 권한 이전 실패",
+				description: "팀장 권한이 이전되지 않았습니다.",
+			});
+		}
+	};
 
 	return (
-		// 최초 가입시 팀 없음 -> 팀 생성 또는 기존 팀에 소속되기를 기다림
-		// 팀 생성시 -> 팀 이름/기관명(옵션) 등. 팀장은 만든사람 고정
-		// 팀 관리 -> 유저 초대 -> 팀에 소속되지 않았으면서 초대 받으면 다음 로그인시 수락여부 체크. 거절시 취소/수락시 팀 소속, 그 후부터 대시보드 등 볼 수 있음.
-		// 팀장: 다른 유저가 있으면 탈퇴 불가. 다른 유저에게 팀장 넘기고 팀 탈퇴 가능. 다른 팀원 없으면 탈퇴가능.
-		// 유저: 팀 탈퇴 가능.
 		<>
 			<div className="grid gap-4">
 				<CreateTeamModal />
-				{/* <div className="relative w-max">
-					<select className={cn(buttonVariants({ variant: "outline" }), "w-[200px] appearance-none font-normal")}>
-						<option value="inter">Inter</option>
-						<option value="manrope">Manrope</option>
-						<option value="system">System</option>
-					</select>
-					<ChevronDownIcon className="absolute right-3 top-2.5 h-4 w-4 opacity-50" />
-				</div> */}
 				<div className="grid items-center gap-4">
 					<Label htmlFor="team-name">팀 이름</Label>
-					<Input defaultValue={"팀 이름"} id="team-name" value={teamLoading ? "정보를 불러오는 중입니다." : teamInfo?.name || "소속된 팀이 없습니다."} />
+					<Input type="text" disabled defaultValue={"팀 이름"} id="team-name" value={teamLoading ? "정보를 불러오는 중입니다." : teamInfo?.name || "소속된 팀이 없습니다."} />
 				</div>
-
 				<div className="grid items-center gap-4">
 					<Label htmlFor="team-uuid">팀 ID</Label>
 					<div className="flex items-center gap-2">
-						<Input
-							type="text"
-							disabled
-							className="rounded-md bg-gray-100 px-2 py-1 font-mono text-sm dark:bg-gray-800"
-							value={teamLoading ? "정보를 불러오는 중입니다." : teamInfo?.id || "소속된 팀이 없습니다."}
-						/>
-						{/* <Button size="sm" variant="ghost">
-							Copy
-						</Button> */}
+						<Input type="text" disabled className="rounded-md  px-2 py-1 font-mono text-sm" value={teamLoading ? "정보를 불러오는 중입니다." : teamInfo?.id || "소속된 팀이 없습니다."} />
+					</div>
+				</div>
+				<div className="grid items-center gap-4">
+					<Label htmlFor="team-uuid">내 권한</Label>
+					<div className="flex items-center gap-2">
+						<Label className="rounded-md bg-gray-100 px-2 py-1 font-mono text-sm dark:bg-gray-800">
+							{teamLoading ? "정보를 불러오는 중입니다." : !hasTeam ? "소속된 팀이 없습니다." : isLeader ? "팀 리더" : "팀원"}
+						</Label>
 					</div>
 				</div>
 				<div>
 					<h3 className="text-lg font-medium">팀 멤버 초대</h3>
-					<div className="mt-2 flex items-center gap-2">
-						<Input placeholder="초대할 유저의 이메일 주소를 입력하세요." value={inviteUserEmail} onChange={handleInviteUser} />
-						<Button onClick={handleInviteUser}>초대하기</Button>
-					</div>
+					<form onSubmit={handleInviteUser}>
+						<div className="mt-2 flex items-center gap-2">
+							<Input
+								placeholder="초대할 유저의 이메일 주소를 입력하세요."
+								disabled={!isLeader}
+								type="email"
+								value={teamLoading ? "정보를 불러오는 중입니다." : isLeader ? inviteUserEmail : "팀 리더만 새로운 유저를 초대할 수 있습니다."}
+								onChange={handleInviteUserEmail}
+							/>
+							<Button onClick={() => {}}>초대하기</Button>
+						</div>
+					</form>
 				</div>
-				<div>
-					<h3 className="text-lg font-medium">팀장 권한 이전</h3>
-					<div className="mt-2 space-y-2">
-						{teamMemberLoading && <TeamMemberLoading />}
-						{memberList &&
-							memberList.map((member: TeamMemberType) => (
-								<div key={member.id} className="flex items-center justify-between rounded-md border border-gray-200 bg-gray-100 p-3 dark:border-gray-800 dark:bg-gray-800">
-									<div className="flex items-center gap-3">
-										<Avatar>
-											<AvatarImage src="/avatars/01.png" />
-											<AvatarFallback>{Array.from(member.last_name)[0]}</AvatarFallback>
-										</Avatar>
-										<div>
-											<p className="text-sm font-medium">{member.last_name + " " + member.first_name}</p>
-											<p className="text-sm text-gray-500 dark:text-gray-400">{member.email}</p>
+				{hasTeam && (
+					<div>
+						<h3 className="text-lg font-medium">{isLeader ? "팀장 권한 이전" : "팀원"}</h3>
+						<div className="mt-2 space-y-2">
+							{teamMemberLoading && <TeamMemberLoading />}
+							{memberList &&
+								memberList.map((member: TeamMemberType) => (
+									<div key={member.id} className="flex items-center justify-between rounded-md border border-gray-200 bg-gray-100 p-3 dark:border-gray-800 dark:bg-gray-800">
+										<div className="flex items-center gap-3">
+											<Avatar>
+												<AvatarImage src="/avatars/01.png" />
+												<AvatarFallback>{Array.from(member.last_name)[0]}</AvatarFallback>
+											</Avatar>
+											<div>
+												<p className="text-sm font-medium">
+													{member.last_name + " " + member.first_name} {member.id === teamInfo?.team_leader_id && "(팀 리더)"}
+												</p>
+												<p className="text-sm text-gray-500 dark:text-gray-400">{member.email}</p>
+											</div>
 										</div>
+										{isLeader && member.id !== teamInfo?.team_leader_id && (
+											<Button size="sm" variant="ghost" onClick={() => onTransferButtonClick(member.id)}>
+												이전
+											</Button>
+										)}
 									</div>
-									<Button size="sm" variant="ghost">
-										이전
-									</Button>
-								</div>
-							))}
+								))}
+						</div>
 					</div>
-				</div>
-				<Button className="bg-red-500 hover:bg-red-700" onClick={onLeaveButtonClick}>
+				)}
+				{!hasTeam && (
+					<div>
+						<h3 className="text-lg font-medium">받은 초대 목록</h3>
+						<div className="mt-2 space-y-2">
+							{invitationLoading && <TeamMemberLoading />}
+							{invitationList &&
+								invitationList.map((invitation: InvitationType) => (
+									<div key={invitation.id} className="flex items-center justify-between rounded-md border border-gray-200 bg-gray-100 p-3 dark:border-gray-800 dark:bg-gray-800">
+										<div className="flex items-center gap-3">
+											{/* <Avatar>
+												<AvatarImage src="/avatars/01.png" />
+												<AvatarFallback>{Array.from(member.last_name)[0]}</AvatarFallback>
+											</Avatar> */}
+											<div>
+												<p className="text-sm font-medium">
+													{member.last_name + " " + member.first_name} {member.id === teamInfo?.team_leader_id && "(팀 리더)"}
+												</p>
+												<p className="text-sm text-gray-500 dark:text-gray-400">{member.email}</p>
+											</div>
+										</div>
+										{isLeader && member.id !== teamInfo?.team_leader_id && (
+											<Button size="sm" variant="ghost" onClick={() => onTransferButtonClick(member.id)}>
+												이전
+											</Button>
+										)}
+									</div>
+								))}
+						</div>
+					</div>
+				)}
+				{/* <Button className="" onClick={onSettingUpdate}>
+					팀 설정 업데이트
+				</Button> */}
+				<Button disabled={!hasTeam} className="bg-red-500 hover:bg-red-700" onClick={onLeaveButtonClick}>
 					팀 탈퇴
 				</Button>
 			</div>

@@ -14,8 +14,13 @@ import SignaturePad from "@/components/global/SignaturePad";
 export function NoteForm() {
 	return (
 		<div>
-			<SignaturePad />
-			<Label className="text-sm text-muted-foreground">이 서명은 연구노트에 기록됩니다. 단, 서명을 변경하더라도 이미 생성된 연구노트에는 영향을 끼치지 않습니다.</Label>
+			<div className="grid items-center gap-4">
+				<Label htmlFor="team-uuid">서명</Label>
+				<SignaturePad />
+				<Label className="text-sm text-muted-foreground">
+					이 서명은 연구노트에 기록됩니다. 단, 서명을 변경하더라도 이미 생성된 연구노트에는 영향을 끼치지 않습니다. 서명을 입력하지 않은 경우 유저의 이메일을 서명으로 사용합니다.
+				</Label>
+			</div>
 		</div>
 	);
 }
