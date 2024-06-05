@@ -9,7 +9,7 @@ import { useToast } from "../ui/use-toast";
 const SignaturePad = () => {
 	const canvasRef = useRef<any>(null);
 	const [isSigned, setIsSigned] = useState<boolean>(false);
-	const [initialSignatureUrl, setInitialSignatureUrl] = useVariable<string | null>(null);
+	const [initialSignatureUrl, setInitialSignatureUrl] = useState<string | null>(null);
 	const { toast } = useToast();
 	const { data: signatureData } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature", async (url: string) => {
 		const { data } = await axios.get(url);
@@ -115,9 +115,9 @@ const SignaturePad = () => {
 					canvasProps={{ className: "signature-canvas w-full h-full" }}
 				/>
 			</div>
-			<div className="mt-4">
+			<div className="mt-4 flex items-center w-1/3 gap-2">
 				<Button
-					className="px-4 py-2 bg-red-500 hover:bg-red-700 text-white rounded mr-2"
+					className="px-4 py-2 bg-red-500 hover:bg-red w-full"
 					onClick={(e) => {
 						e.preventDefault();
 						canvasRef.current.clear(); // 리셋
@@ -127,14 +127,14 @@ const SignaturePad = () => {
 					서명 초기화
 				</Button>
 				<Button
-					className={`px-4 py-2 rounded ${isSigned ? "bg-blue-500 text-white" : "bg-gray-400 text-gray-700"}`}
+					className="px-4 py-2 w-full"
 					disabled={!isSigned} // 버튼 disabled
 					onClick={(e) => {
 						e.preventDefault();
 						handleSave();
 					}}
 				>
-					저장 버튼
+					저장
 				</Button>
 			</div>
 		</div>
