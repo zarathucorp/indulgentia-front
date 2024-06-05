@@ -3,7 +3,8 @@ import { UUID } from "crypto";
 import useSWRImmutable from "swr/immutable";
 import useSWR from "swr";
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
-
+import { createClient } from "@/utils/supabase/client";
+import { useState, useEffect } from "react";
 type DateTimeString = string;
 
 type TeamInfoType = {
@@ -17,13 +18,27 @@ type TeamInfoType = {
 };
 
 const useTeamInfo = () => {
-	const { data, error, mutate, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + "/user/team", fetcher);
-
+	const { data, error, mutate, isLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/team", fetcher);
+	const supabase = createClient();
 	// const isLoading = !error && !data;
+	const [isLeader, setIsLeader] = useState(false);
 	const teamInfo: TeamInfoType | null = data?.data ?? null;
 	const hasTeam: boolean = !!teamInfo;
 
-	// console.log(data.data);
+	useEffect(() => {
+		const fetchCurrentUserId = async () => {
+			const { data } = await supabase.auth.getUser();
+			if (data.user?.id === teamInfo?.team_leader_id) {
+				setIsLeader(true);
+			} else {
+				setIsLeader(false);
+			}
+		};
+
+		if (teamInfo) {
+			fetchCurrentUserId();
+		}
+	}, [teamInfo]);
 
 	return {
 		teamInfo,
@@ -31,6 +46,7 @@ const useTeamInfo = () => {
 		error: error ? (error.response?.status === 404 ? "GitHub 로그인이 필요합니다." : error.response?.status === 500 ? "다시 로그인해주세요" : error.message) : null,
 		isLoading,
 		mutate,
+		isLeader,
 	};
 };
 
@@ -43,6 +59,15 @@ type TeamMemberType = {
 	email: string;
 	first_name: string;
 	last_name: string;
+};
+
+type InvitationType = {
+	id: UUID;
+	created_at: DateTimeString;
+	updated_at: DateTimeString;
+	team_id: UUID;
+	invited_user_id: UUID;
+	is_accepted: boolean;
 };
 
 const useTeamMemberList = () => {
@@ -84,5 +109,26 @@ const createTeam = async (team_name: string) => {
 		}
 	);
 };
-export type { TeamMemberType };
-export { useTeamInfo, useTeamMemberList, createTeam };
+
+const inviteUser = async (invitee_email: string): Promise<void> => {
+	const { data } = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/user/team/invite", {
+		user_email: invitee_email,
+	});
+
+	if (data.status !== "succeed") {
+		throw new Error("유저 초대 실패");
+	}
+};
+
+const getInvitationList = () => {
+	const { data, error, mutate, isLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/team/invite/receive/list", fetcher);
+
+	return {
+		invitationList: data?.data,
+		error,
+		isLoading,
+		mutate,
+	};
+};
+export type { TeamMemberType, InvitationType };
+export { useTeamInfo, useTeamMemberList, createTeam, inviteUser, getInvitationList };

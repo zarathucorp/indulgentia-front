@@ -13,9 +13,9 @@ type UserInfoType = {
 	github_token: boolean;
 };
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data.data as UserInfoType);
+const fetcher = async (url: string) => await axios.get(url).then((res) => res.data.data as UserInfoType);
 
-const useGithub = () => {
+const useUser = () => {
 	const { data: userInfo, error, isLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/settings/info", fetcher);
 
 	// const isLoading = !error && !userInfo;
@@ -27,4 +27,4 @@ const useGithub = () => {
 	};
 };
 
-export default useGithub;
+export default useUser;
