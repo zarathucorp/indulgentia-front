@@ -20,7 +20,8 @@ import NoteThumbnail from "./NoteThumbnail";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import convertKST from "@/utils/time/convertKST";
 import { Label } from "@/components/ui/label";
-
+import RemoveModal from "@/components/global/RemoveModal";
+import { handleNoteRemove } from "../../note/[note_uuid]/page";
 const noteListFetcher = async (url: string) => {
 	const result = await axios.get(url, { withCredentials: true });
 	console.log(result.data.data);
@@ -95,7 +96,8 @@ export default function Note() {
 												</form>
 											</CardContent>
 											<CardFooter className="flex justify-between">
-												<Button variant="outline">삭제</Button>
+												<RemoveModal targetEntity={note.title} removeType="Note" onRemoveConfirmed={() => handleNoteRemove(note.id)} parentUUID={params.bucket_uuid} />
+												{/* <Button variant="outline">삭제</Button> */}
 												<Link href={`/dashboard/note/${note.id}`}>
 													<Button>노트 보기</Button>
 												</Link>
