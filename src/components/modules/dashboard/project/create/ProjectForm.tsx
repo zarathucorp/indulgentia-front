@@ -37,7 +37,7 @@ const preprocessValues = (values: CreateProjectFormValues & { id: string }) => (
 const useTeamId = () => {
 	const { data: teamId } = useSWRImmutable<string>(process.env.NEXT_PUBLIC_API_URL + "/user/team/", async (url: string) => {
 		const { data } = await axios.get(url, { withCredentials: true });
-		return data.data;
+		return data.data?.id;
 	});
 	return teamId;
 };
@@ -136,7 +136,7 @@ const NewProjectForm = () => {
 		const apiUrl = process.env.NEXT_PUBLIC_API_URL + "/dashboard/project/";
 		const payload = { team_id: teamId, ...data };
 		const options = { withCredentials: true };
-
+		console.log(payload);
 		try {
 			await axios.post(apiUrl, payload, options);
 			console.log("Project created successfully");
