@@ -66,6 +66,12 @@ type InvitationType = {
 	created_at: DateTimeString;
 	updated_at: DateTimeString;
 	team_id: UUID;
+	team_name: string;
+	team_leader: {
+		id: UUID;
+		last_name: string | null;
+		first_name: string | null;
+	};
 	invited_user_id: UUID;
 	is_accepted: boolean;
 };
@@ -95,6 +101,7 @@ const useTeamMemberList = () => {
 		memberList,
 		isLoading,
 		error,
+		mutate,
 	};
 };
 
