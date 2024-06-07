@@ -15,12 +15,13 @@ import RemoveModal from "@/components/global/RemoveModal";
 import { ErrorPage } from "@/components/global/Error/Error";
 import { NoteLoading } from "@/components/global/Loading/Note";
 
-const handleRemove = async (id: string) => {
+export const handleNoteRemove = async (id: string) => {
 	try {
-		await axios.delete(process.env.NEXT_PUBLIC_API_URL + `/dashboard/note/${id}`, { withCredentials: true });
+		const { data } = await axios.delete(process.env.NEXT_PUBLIC_API_URL + `/dashboard/note/${id}`, { withCredentials: true });
 		return;
 	} catch (error) {
 		console.error(error);
+		throw error;
 	}
 };
 
@@ -79,7 +80,9 @@ export default function ViewNote() {
 						<Button className="py-2">다운로드</Button>
 					</a>
 					<Button className="bg-red-600 ">삭제</Button>
-					{breadcrumbData && <RemoveModal targetEntity={breadcrumbData.note_title} removeType="Note" onRemoveConfirmed={() => handleRemove(params.note_uuid)} parentUUID={breadcrumbData.bucket_id} />}
+					{breadcrumbData && (
+						<RemoveModal targetEntity={breadcrumbData.note_title} removeType="Note" onRemoveConfirmed={() => handleNoteRemove(params.note_uuid)} parentUUID={breadcrumbData.bucket_id} />
+					)}
 					<NoteAuditLog />
 				</div>
 			</div>
