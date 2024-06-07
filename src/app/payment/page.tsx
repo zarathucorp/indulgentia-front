@@ -40,6 +40,7 @@ export default function Home() {
 			paymentMethodsWidgetRef.current = paymentMethodsWidget;
 			setPaymentMethodsWidgetReady(true);
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [paymentWidget]);
 
 	useEffect(() => {
