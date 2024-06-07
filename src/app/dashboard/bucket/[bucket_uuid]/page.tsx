@@ -16,6 +16,11 @@ import useSWRImmutable from "swr/immutable";
 import { DashboardBreadCrumb } from "@/components/modules/dashboard/DashboardBreadCrumb";
 import { DashboardBreadCrumbLoading } from "@/components/global/Loading/BreadCrumb";
 import { ErrorPage } from "@/components/global/Error/Error";
+import NoteThumbnail from "./NoteThumbnail";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import convertKST from "@/utils/time/convertKST";
+import { Label } from "@/components/ui/label";
+
 const noteListFetcher = async (url: string) => {
 	const result = await axios.get(url, { withCredentials: true });
 	console.log(result.data.data);
@@ -24,20 +29,6 @@ const noteListFetcher = async (url: string) => {
 		throw error;
 	}
 	return result.data.data;
-};
-const convertKST = (date: Date) => {
-	const utcDate = date;
-
-	const kstDate = new Date(utcDate.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
-
-	const year = kstDate.getFullYear();
-	const month = String(kstDate.getMonth() + 1).padStart(2, "0");
-	const day = String(kstDate.getDate()).padStart(2, "0");
-	const hours = String(kstDate.getHours()).padStart(2, "0");
-	const minutes = String(kstDate.getMinutes()).padStart(2, "0");
-	const seconds = String(kstDate.getSeconds()).padStart(2, "0");
-
-	return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
 
 export default function Note() {
@@ -76,39 +67,66 @@ export default function Note() {
 			</div> */}
 				<div className="space-y-4">
 					<div className="grid gap-2">
-						<div className="flex items-center justify-between">
+						{/* <div className="flex items-center justify-between">
 							<div className="font-medium">노트 이름</div>
 							<div className="text-sm text-gray-500 dark:text-gray-400">작성자</div>
 							<div className="text-sm text-gray-500 dark:text-gray-400">작성 날짜</div>
 							<div className="text-sm text-gray-500 dark:text-gray-400"></div>
-						</div>
-						<div className="grid gap-2">
+						</div> */}
+						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
 							{data &&
 								data.map((note: NoteType, index: number) => (
-									<div key={index} className="flex items-center justify-between rounded-md bg-gray-100 px-4 py-3 dark:bg-gray-800">
-										<div>{note.title}</div>
-										<div>{note.user_id}</div>
-										<div>{convertKST(note.created_at)}</div>
-										<div>{note.is_github ? note.github_type : null}</div>
-										<div>
-											<DropdownMenu>
-												<DropdownMenuTrigger asChild>
-													<Button aria-haspopup="true" size="icon" variant="ghost">
-														<MoreHorizontal className="h-4 w-4" />
-														<span className="sr-only">메뉴 열기</span>
-													</Button>
-												</DropdownMenuTrigger>
-												<DropdownMenuContent align="end">
-													<DropdownMenuLabel>Actions</DropdownMenuLabel>
-													<Link href={`/dashboard/note/${note.id}`}>
-														<DropdownMenuItem>파일 보기</DropdownMenuItem>
-													</Link>
-													<DropdownMenuItem>Edit</DropdownMenuItem>
-													<DropdownMenuItem>Delete</DropdownMenuItem>
-												</DropdownMenuContent>
-											</DropdownMenu>
-										</div>
+									<div key={note.id}>
+										<Card className="">
+											<CardHeader>
+												<CardTitle>{note.title}</CardTitle>
+												<CardDescription>노트 ID: {note.id}</CardDescription>
+											</CardHeader>
+											<CardContent>
+												<form>
+													<div className="grid w-full items-center gap-4">
+														<div className="flex flex-col space-y-1.5">
+															<Label htmlFor="name">생성일시 {convertKST(note.created_at)}</Label>
+														</div>
+														<div className="flex flex-col space-y-1.5">
+															<Label htmlFor="name">작성자 {note.user_id}</Label>
+														</div>
+													</div>
+												</form>
+											</CardContent>
+											<CardFooter className="flex justify-between">
+												<Button variant="outline">삭제</Button>
+												<Link href={`/dashboard/note/${note.id}`}>
+													<Button>노트 보기</Button>
+												</Link>
+											</CardFooter>
+										</Card>
 									</div>
+									// <NoteThumbnail />
+									// <div key={index} className="flex items-center justify-between rounded-md bg-gray-100 px-4 py-3 dark:bg-gray-800">
+									// 	<div>{note.title}</div>
+									// 	<div>{note.user_id}</div>
+									// 	<div>{convertKST(note.created_at)}</div>
+									// 	<div>{note.is_github ? note.github_type : null}</div>
+									// 	<div>
+									// 		<DropdownMenu>
+									// 			<DropdownMenuTrigger asChild>
+									// 				<Button aria-haspopup="true" size="icon" variant="ghost">
+									// 					<MoreHorizontal className="h-4 w-4" />
+									// 					<span className="sr-only">메뉴 열기</span>
+									// 				</Button>
+									// 			</DropdownMenuTrigger>
+									// 			<DropdownMenuContent align="end">
+									// 				<DropdownMenuLabel>Actions</DropdownMenuLabel>
+									// 				<Link href={`/dashboard/note/${note.id}`}>
+									// 					<DropdownMenuItem>파일 보기</DropdownMenuItem>
+									// 				</Link>
+									// 				<DropdownMenuItem>Edit</DropdownMenuItem>
+									// 				<DropdownMenuItem>Delete</DropdownMenuItem>
+									// 			</DropdownMenuContent>
+									// 		</DropdownMenu>
+									// 	</div>
+									// </div>
 								))}
 						</div>
 					</div>
