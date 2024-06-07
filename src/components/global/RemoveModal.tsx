@@ -97,7 +97,11 @@ function RemoveModalContent({
 							});
 							router.push(redirectTo);
 						} catch (e: any) {
-							setErrorMessage(e.message);
+							// setErrorMessage(e.message);
+							toast({
+								title: "삭제 실패",
+								description: `${removeTypeDescription[removeType]} "${targetEntity}"의 삭제에 실패하였습니다. ${e.message}`,
+							});
 						}
 					}}
 				>
