@@ -61,7 +61,7 @@ type TeamMemberType = {
 	last_name: string;
 };
 
-type InvitationType = {
+type InvitationReceiveType = {
 	id: UUID;
 	created_at: DateTimeString;
 	updated_at: DateTimeString;
@@ -74,6 +74,16 @@ type InvitationType = {
 	};
 	invited_user_id: UUID;
 	is_accepted: boolean;
+};
+
+type InvitationSendType = {
+	id: UUID;
+	created_at: DateTimeString;
+	updated_at: DateTimeString;
+	team_id: UUID;
+	invited_user_id: UUID;
+	is_accepted: boolean;
+	is_deleted: boolean;
 };
 
 const useTeamMemberList = () => {
@@ -127,7 +137,7 @@ const inviteUser = async (invitee_email: string): Promise<void> => {
 	}
 };
 
-const getInvitationList = () => {
+const getInvitationReceiveList = () => {
 	const { data, error, mutate, isLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/team/invite/receive/list", fetcher);
 
 	return {
@@ -137,5 +147,15 @@ const getInvitationList = () => {
 		mutate,
 	};
 };
-export type { TeamMemberType, InvitationType };
-export { useTeamInfo, useTeamMemberList, createTeam, inviteUser, getInvitationList };
+const getInvitationSendList = () => {
+	const { data, error, mutate, isLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/team/invite/send/list", fetcher);
+
+	return {
+		invitationSendList: data?.data,
+		error,
+		isLoading,
+		mutate,
+	};
+};
+export type { TeamMemberType, InvitationReceiveType, InvitationSendType };
+export { useTeamInfo, useTeamMemberList, createTeam, inviteUser, getInvitationReceiveList, getInvitationSendList };
