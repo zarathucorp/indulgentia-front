@@ -4,7 +4,13 @@ export function UsePeriodPolicy() {
 		<div className="container mx-auto">
 			<div className="max-w-3xl mx-auto">
 				<h1 className="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">제공 기간</h1>
-				<p className="text-gray-600 dark:text-gray-400 mb-8">연구실록은 결제일 다음 날부터 시작하여 365일간 제공됩니다.</p>{" "}
+				<p className="text-gray-600 dark:text-gray-400 mb-8">
+					연구실록은 결제일 다음 날부터 시작하여 365일간 제공됩니다. 현재 연구실록 홈페이지에서는 연간 플랜만 제공하고 있습니다. 월간 플랜 이용을 원하시는 경우{" "}
+					<Link href="/inquiry" className="text-blue-600">
+						문의하기
+					</Link>{" "}
+					또는 우측 하단 채팅 버튼을 통해 문의해 주십시오.
+				</p>{" "}
 			</div>
 		</div>
 	);
