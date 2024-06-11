@@ -59,6 +59,7 @@ export function SendPasswordResetMailModal() {
 								setIsSending(true);
 								sendResetEmail();
 							}}
+							type="button"
 						>
 							{isSending && (
 								<>
@@ -79,6 +80,7 @@ export function SendPasswordResetMailModal() {
 					setOpenModal(true);
 				}}
 				className="text-black hover:text-black bg-transparent hover:bg-transparent outline-none p-0"
+				type="button"
 			>
 				비밀번호 초기화
 			</Button>
