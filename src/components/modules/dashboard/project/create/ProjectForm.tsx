@@ -12,6 +12,8 @@ import useSWRImmutable from "swr/immutable";
 import { KeyedMutator } from "swr";
 import RemoveModal from "@/components/global/RemoveModal";
 import { UUID } from "crypto";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
 
 const ProjectSchema = z
 	.object({
@@ -128,6 +130,8 @@ const handleRemove = async (values: (CreateProjectFormValues & { id: string }) |
 
 const NewProjectForm = () => {
 	const teamId = useTeamId();
+	const router = useRouter();
+	const { toast } = useToast();
 	const form = useForm<CreateProjectFormValues>({
 		resolver: zodResolver(ProjectSchema),
 	});
@@ -140,8 +144,16 @@ const NewProjectForm = () => {
 		try {
 			await axios.post(apiUrl, payload, options);
 			console.log("Project created successfully");
-		} catch (error) {
+			toast({
+				title: "Project 생성 완료",
+				description: `Project ${data.title}이 성공적으로 생성되었습니다.`,
+			});
+		} catch (error: any) {
 			console.error(error);
+			toast({
+				title: "Project 수정 실패",
+				description: `Project ${data.title}의 수정에 실패하였습니다. ${error.message}`,
+			});
 		}
 	};
 
@@ -163,6 +175,8 @@ const EditProjectForm = ({ projectInfo, mutator }: { projectInfo: CreateProjectF
 	console.log(projectInfo);
 	console.log(preprocessValues(projectInfo));
 	const teamId = useTeamId();
+	const { toast } = useToast();
+	const router = useRouter();
 	const form = useForm<CreateProjectFormValues>({
 		resolver: zodResolver(ProjectSchema),
 		defaultValues: preprocessValues(projectInfo),
@@ -175,10 +189,21 @@ const EditProjectForm = ({ projectInfo, mutator }: { projectInfo: CreateProjectF
 
 		try {
 			await axios.put(apiUrl, payload, options);
-			mutator && mutator();
-			console.log("Project updated successfully");
-		} catch (error) {
+			// mutator && mutator();
+			// console.log("Project updated successfully");
+			toast({
+				title: "Project 수정 완료",
+				description: `Project ${data.title}이 성공적으로 수정되었습니다.`,
+			});
+			const currentUrl = window.location.pathname;
+			const newUrl = currentUrl.substring(0, currentUrl.lastIndexOf("/"));
+			router.push(newUrl);
+		} catch (error: any) {
 			console.error(error);
+			toast({
+				title: "Project 수정 실패",
+				description: `Project ${data.title}의 수정에 실패하였습니다. ${error.message}`,
+			});
 		}
 	};
 
