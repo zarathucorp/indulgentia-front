@@ -127,12 +127,10 @@ const handleRemove = async (values: (CreateProjectFormValues & { id: string }) |
 
 const NewProjectForm = () => {
 	const teamId = useTeamId();
-	const router = useRouter();
 	const { toast } = useToast();
 	const form = useForm<CreateProjectFormValues>({
 		resolver: zodResolver(ProjectSchema),
 	});
-	const { toast } = useToast();
 
 	const onSubmit = async (data: CreateProjectFormValues) => {
 		const apiUrl = process.env.NEXT_PUBLIC_API_URL + "/dashboard/project/";
@@ -173,7 +171,6 @@ const NewProjectForm = () => {
 const EditProjectForm = ({ projectInfo, mutate }: { projectInfo: CreateProjectFormValues & { id: string }; mutate: any }) => {
 	const teamId = useTeamId();
 	const { toast } = useToast();
-	const router = useRouter();
 	const form = useForm<CreateProjectFormValues>({
 		resolver: zodResolver(ProjectSchema),
 		// defaultValues: preprocessValues(projectInfo),
