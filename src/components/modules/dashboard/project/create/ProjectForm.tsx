@@ -160,6 +160,8 @@ const NewProjectForm = () => {
 };
 
 const EditProjectForm = ({ projectInfo, mutator }: { projectInfo: CreateProjectFormValues & { id: UUID }; mutator?: KeyedMutator<any> }) => {
+	console.log(projectInfo);
+	console.log(preprocessValues(projectInfo));
 	const teamId = useTeamId();
 	const form = useForm<CreateProjectFormValues>({
 		resolver: zodResolver(ProjectSchema),
