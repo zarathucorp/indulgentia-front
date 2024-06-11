@@ -99,7 +99,7 @@ export default function Note() {
 										</Card>
 									</div>
 								))}
-							{data.length === 0 && <p>노트가 없습니다.</p>}
+							{data && data?.length === 0 && <p>노트가 없습니다.</p>}
 						</div>
 					</div>
 				</div>
