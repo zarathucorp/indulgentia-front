@@ -5,7 +5,7 @@ import NoteBreadcrumb from "./NoteBreadcrumb";
 import NoteAuditLog from "./NoteAuditLog";
 import Link from "next/link";
 import axios from "axios";
-// import useSWR from "swr";
+import useSWR from "swr";
 import useSWRImmutable from "swr/immutable";
 import { DashboardBreadCrumb } from "@/components/modules/dashboard/DashboardBreadCrumb";
 import { DashboardBreadCrumbLoading } from "@/components/global/Loading/BreadCrumb";
@@ -47,7 +47,7 @@ export default function ViewNote() {
 		return result.data.url;
 	});
 
-	const { data: breadcrumbData, isLoading: isBreadcrumbLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + `/dashboard/note/${params.note_uuid}/breadcrumb`, async (url) => {
+	const { data: breadcrumbData, isLoading: isBreadcrumbLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + `/dashboard/note/${params.note_uuid}/breadcrumb`, async (url) => {
 		const result = await axios.get(url, { withCredentials: true });
 		if (result.status !== 200) {
 			const error = new Error("An error occurred while fetching the data.");
