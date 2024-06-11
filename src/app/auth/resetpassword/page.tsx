@@ -19,7 +19,7 @@ export default function ResetPassword() {
 	const [password1, , handlePassword1] = useVariable<string>("");
 	const [password2, , handlePassword2] = useVariable<string>("");
 	const [errorMessage, setErrorMessage] = useVariable<string>("");
-	const [isLoading, setisLoading] = useVariable<boolean>(false);
+	const [isLoading, setisLoading] = useState<boolean>(false);
 	return (
 		<Card className="mx-auto max-w-md">
 			<CardHeader className="space-y-2">

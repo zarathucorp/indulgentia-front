@@ -12,6 +12,11 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useSearchParams } from "next/navigation";
 import FileUploader from "@/components/global/FileUploader";
+import getErrorMessage from "@/hooks/error.tsx";
+import { useToast } from "@/components/ui/use-toast";
+import { ActionButton } from "@/components/ui/actionbutton";
+import { useRouter } from "next/navigation";
+import { Spinner } from "@/components/global/Spinner";
 const NoteSchema = z.object({
 	title: z
 		.string()
@@ -30,8 +35,10 @@ const NoteSchema = z.object({
 export type CreateNoteFormValues = z.infer<typeof NoteSchema>;
 
 export default function NewNoteForm() {
+	const { toast } = useToast();
 	const [userUUID, setUserUUID] = useState<string | null>(null);
-
+	const router = useRouter();
+	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 	// useEffect(() => {
 	// 	const supabase = createClient();
 	// 	const getUserUUID = async () => {
@@ -60,6 +67,7 @@ export default function NewNoteForm() {
 	});
 
 	async function onSubmit(data: CreateNoteFormValues) {
+		setIsSubmitting(true);
 		const validationResult = NoteSchema.safeParse(data);
 		if (!validationResult.success) {
 			console.error(validationResult.error.errors);
@@ -87,8 +95,19 @@ export default function NewNoteForm() {
 				},
 			});
 			console.log(result);
-		} catch (error) {
+			toast({
+				title: "노트를 생성했습니다.",
+				description: `노트 ${data.title}이 성공적으로 생성되었습니다.`,
+			});
+			router.push(`/dashboard/bucket/${data.bucket_id}`);
+		} catch (error: any) {
+			toast({
+				title: "노트를 생성하지 못했습니다.",
+				description: getErrorMessage(error),
+			});
 			console.error(error);
+		} finally {
+			setIsSubmitting(false);
 		}
 	}
 
@@ -102,7 +121,7 @@ export default function NewNoteForm() {
 					<NoteFileField form={form} />
 					<BucketUUIDField form={form} />
 					<div className="flex justify-center">
-						<Button type="submit">새 노트 생성</Button>
+						<ActionButton type="submit">{isSubmitting && <Spinner />}&nbsp;새 노트 생성</ActionButton>
 					</div>
 				</form>
 			</Form>

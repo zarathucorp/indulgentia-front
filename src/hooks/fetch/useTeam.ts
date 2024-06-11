@@ -137,7 +137,7 @@ const inviteUser = async (invitee_email: string): Promise<void> => {
 	}
 };
 
-const getInvitationReceiveList = () => {
+const useInvitationReceiveList = () => {
 	const { data, error, mutate, isLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/team/invite/receive/list", fetcher);
 
 	return {
@@ -147,7 +147,7 @@ const getInvitationReceiveList = () => {
 		mutate,
 	};
 };
-const getInvitationSendList = () => {
+const useInvitationSendList = () => {
 	const { data, error, mutate, isLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/team/invite/send/list", fetcher);
 
 	return {
@@ -158,4 +158,4 @@ const getInvitationSendList = () => {
 	};
 };
 export type { TeamMemberType, InvitationReceiveType, InvitationSendType };
-export { useTeamInfo, useTeamMemberList, createTeam, inviteUser, getInvitationReceiveList, getInvitationSendList };
+export { useTeamInfo, useTeamMemberList, createTeam, inviteUser, useInvitationReceiveList as getInvitationReceiveList, useInvitationSendList as getInvitationSendList };

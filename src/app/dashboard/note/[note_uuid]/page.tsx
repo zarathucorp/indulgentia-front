@@ -14,16 +14,7 @@ import { useState, useEffect } from "react";
 import RemoveModal from "@/components/global/RemoveModal";
 import { ErrorPage } from "@/components/global/Error/Error";
 import { NoteLoading } from "@/components/global/Loading/Note";
-
-export const handleNoteRemove = async (id: string) => {
-	try {
-		const { data } = await axios.delete(process.env.NEXT_PUBLIC_API_URL + `/dashboard/note/${id}`, { withCredentials: true });
-		return;
-	} catch (error) {
-		console.error(error);
-		throw error;
-	}
-};
+import { handleNoteRemove } from "./handleNoteRemove";
 
 const getDownloadURL = async (url: string): Promise<string> => {
 	const res = await fetch(url);

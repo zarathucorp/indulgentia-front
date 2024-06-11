@@ -18,7 +18,7 @@ import { KeyedMutator } from "swr";
 import { Spinner } from "@/components/global/Spinner";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
-import { useVariable } from "@/hooks/useVariable";
+import { useState } from "react";
 const BucketSchema = z.object({
 	title: z
 		.string()
@@ -39,7 +39,7 @@ export default function NewBucketForm() {
 	const { toast } = useToast();
 	const searchParams = useSearchParams();
 	const projectUUID: string = searchParams.get("project") as string;
-	const [isCreating, setIsCreating] = useVariable<boolean>(false);
+	const [isCreating, setIsCreating] = useState<boolean>(false);
 
 	if (projectUUID === "" || projectUUID === null) redirect("/dashboard");
 
@@ -195,13 +195,16 @@ function BucketManagerField({ form, teamUserList, isLoading }: { form: any; team
 							</SelectTrigger>
 						</FormControl>
 						<SelectContent>
-							{isLoading
-								? null
-								: teamUserList.map((user: TeamUserType, index: number) => (
-										<SelectItem key={index} value={user.id}>
-											{user.id}
-										</SelectItem>
-								  ))}
+							{isLoading ? (
+								<p>Loading</p>
+							) : (
+								teamUserList.map((user: TeamUserType, index: number) => (
+									<SelectItem key={index} value={user.id}>
+										{/* {user.id} */}
+										{user?.last_name === null && user?.first_name === null ? user.email : (user?.last_name ?? "") + (user?.first_name ?? "")}
+									</SelectItem>
+								))
+							)}
 						</SelectContent>
 					</Select>
 					<FormDescription>버킷 관리자를 선택하세요.</FormDescription>

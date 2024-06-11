@@ -2,12 +2,15 @@
 import { EditProjectForm } from "@/components/modules/dashboard/project/create/ProjectForm";
 import axios from "axios";
 import useSWRImmutable from "swr/immutable";
+import useSWR from "swr";
 import { useParams } from "next/navigation";
 import { CreateProjectFormValues } from "@/components/modules/dashboard/project/create/ProjectForm";
 import { UUID } from "crypto";
-
+import { redirect } from "next/navigation";
 export default function ProjectSetting() {
 	const params = useParams<{ project_uuid: UUID }>();
+
+	if (!params.project_uuid) redirect("/dashboard");
 
 	const {
 		data: projectData,
@@ -21,5 +24,5 @@ export default function ProjectSetting() {
 		// return { id: params.project_uuid, ...data.data };
 	});
 
-	return <>{!isLoading && projectData && params.project_uuid && <EditProjectForm projectInfo={{ id: params.project_uuid, ...projectData }} mutator={mutate} />}</>;
+	return <>{isLoading ? <p>Loading</p> : projectData && <EditProjectForm projectInfo={{ id: params.project_uuid, ...projectData }} mutate={mutate} />}</>;
 }

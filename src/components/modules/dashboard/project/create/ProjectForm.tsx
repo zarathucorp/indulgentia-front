@@ -9,19 +9,16 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import DatePicker from "@/components/global/DatePicker";
 import useSWRImmutable from "swr/immutable";
-import { KeyedMutator } from "swr";
 import RemoveModal from "@/components/global/RemoveModal";
-import { UUID } from "crypto";
-import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
-
+import { ActionButton } from "@/components/ui/actionbutton";
 const ProjectSchema = z
 	.object({
 		title: z.string().min(1, "프로젝트 이름은 1자보다 길어야 합니다.").max(1000, "프로젝트 이름은 1,000자보다 짧아야 합니다."),
-		project_leader: z.string().min(1, "연구책임자 이름은 1자보다 길어야 합니다.").max(1000, "연구책임자 이름은 1,000자보다 짧아야 합니다.").optional(),
-		grant_number: z.string().min(1, "과제 번호는 1자보다 길어야 합니다.").max(1000, "과제 번호는 1,000자보다 짧아야 합니다.").optional(),
-		start_date: z.date().optional(),
-		end_date: z.date().optional(),
+		project_leader: z.string().min(1, "연구책임자 이름은 1자보다 길어야 합니다.").max(1000, "연구책임자 이름은 1,000자보다 짧아야 합니다.").optional().nullable(),
+		grant_number: z.string().min(1, "과제 번호는 1자보다 길어야 합니다.").max(1000, "과제 번호는 1,000자보다 짧아야 합니다.").optional().nullable(),
+		start_date: z.date().optional().nullable(),
+		end_date: z.date().optional().nullable(),
 	})
 	.refine((data) => !data.start_date || !data.end_date || data.start_date <= data.end_date, {
 		message: "연구 종료일은 연구 시작일보다 나중이어야 합니다.",
@@ -37,11 +34,11 @@ const preprocessValues = (values: CreateProjectFormValues & { id: string }) => (
 });
 
 const useTeamId = () => {
-	const { data: teamId } = useSWRImmutable<string>(process.env.NEXT_PUBLIC_API_URL + "/user/team/", async (url: string) => {
+	const { data: teamInfo } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/team/", async (url: string) => {
 		const { data } = await axios.get(url, { withCredentials: true });
-		return data.data?.id;
+		return data.data;
 	});
-	return teamId;
+	return teamInfo?.id;
 };
 
 const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValues> }) => (
@@ -67,7 +64,7 @@ const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValu
 				<FormItem>
 					<FormLabel>연구책임자</FormLabel>
 					<FormControl>
-						<Input placeholder="연구책임자" {...field} />
+						<Input placeholder="연구책임자" {...field} value={field.value ?? ""} />
 					</FormControl>
 					<FormDescription>연구책임자의 이름을 입력합니다.</FormDescription>
 					<FormMessage />
@@ -81,7 +78,7 @@ const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValu
 				<FormItem>
 					<FormLabel>과제 번호</FormLabel>
 					<FormControl>
-						<Input placeholder="과제 번호" {...field} />
+						<Input placeholder="과제 번호" {...field} value={field.value ?? ""} />
 					</FormControl>
 					<FormDescription>과제 번호를 입력합니다.</FormDescription>
 					<FormMessage />
@@ -135,6 +132,7 @@ const NewProjectForm = () => {
 	const form = useForm<CreateProjectFormValues>({
 		resolver: zodResolver(ProjectSchema),
 	});
+	const { toast } = useToast();
 
 	const onSubmit = async (data: CreateProjectFormValues) => {
 		const apiUrl = process.env.NEXT_PUBLIC_API_URL + "/dashboard/project/";
@@ -143,12 +141,12 @@ const NewProjectForm = () => {
 		console.log(payload);
 		try {
 			await axios.post(apiUrl, payload, options);
-			console.log("Project created successfully");
+
 			toast({
-				title: "프로젝트 생성 완료",
-				description: `프로젝트 ${data.title}이 성공적으로 생성되었습니다.`,
+				title: "프로젝트 생성",
+				description: "프로젝트가 성공적으로 생성되었습니다.",
 			});
-		} catch (error: any) {
+		} catch (error) {
 			console.error(error);
 			toast({
 				title: "프로젝트 수정 실패",
@@ -171,15 +169,15 @@ const NewProjectForm = () => {
 	);
 };
 
-const EditProjectForm = ({ projectInfo, mutator }: { projectInfo: CreateProjectFormValues & { id: UUID }; mutator?: KeyedMutator<any> }) => {
-	console.log(projectInfo);
-	console.log(preprocessValues(projectInfo));
+
+const EditProjectForm = ({ projectInfo, mutate }: { projectInfo: CreateProjectFormValues & { id: string }; mutate: any }) => {
 	const teamId = useTeamId();
 	const { toast } = useToast();
 	const router = useRouter();
 	const form = useForm<CreateProjectFormValues>({
 		resolver: zodResolver(ProjectSchema),
-		defaultValues: preprocessValues(projectInfo),
+		// defaultValues: preprocessValues(projectInfo),
+		values: preprocessValues(projectInfo),
 	});
 
 	const onSubmit = async (data: CreateProjectFormValues) => {
@@ -189,20 +187,17 @@ const EditProjectForm = ({ projectInfo, mutator }: { projectInfo: CreateProjectF
 
 		try {
 			await axios.put(apiUrl, payload, options);
-			// mutator && mutator();
-			// console.log("Project updated successfully");
+			mutate();
+			console.log("Project updated successfully");
 			toast({
-				title: "프로젝트 수정 완료",
-				description: `프로젝트 ${data.title}이 성공적으로 수정되었습니다.`,
+				title: "프로젝트 업데이트 완료",
+				description: "프로젝트가 성공적으로 업데이트되었습니다.",
 			});
-			const currentUrl = window.location.pathname;
-			const newUrl = currentUrl.substring(0, currentUrl.lastIndexOf("/"));
-			router.push(newUrl);
-		} catch (error: any) {
+		} catch (error) {
 			console.error(error);
 			toast({
-				title: "프로젝트 수정 실패",
-				description: `프로젝트 ${data.title}의 수정에 실패하였습니다. ${error.message}`,
+				title: "프로젝트 업데이트 실패",
+				description: "프로젝트가 업데이트되지 않았습니다.",
 			});
 		}
 	};
@@ -213,11 +208,13 @@ const EditProjectForm = ({ projectInfo, mutator }: { projectInfo: CreateProjectF
 				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 					<ProjectFormFields form={form} />
 					<div className="flex justify-center">
-						<Button type="submit">프로젝트 업데이트</Button>
+						<ActionButton type="submit" onClick={() => {}}>
+							프로젝트 업데이트
+						</ActionButton>
 					</div>
+					<RemoveModal targetEntity={projectInfo.title} removeType="Project" onRemoveConfirmed={() => handleRemove(projectInfo)} />
 				</form>
 			</Form>
-			<RemoveModal targetEntity={projectInfo.title} removeType="Project" onRemoveConfirmed={() => handleRemove(projectInfo)} />
 		</div>
 	);
 };

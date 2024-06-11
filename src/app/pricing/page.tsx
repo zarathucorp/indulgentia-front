@@ -8,7 +8,7 @@ import { map } from "zod";
 import { UsePeriodPolicy, RefundPolicy } from "@/components/global/UsePeriodRefundPolicy";
 import { useState } from "react";
 export default function PricingPage() {
-	const numbers = Array.from({ length: 50 }, (_, i) => i + 1);
+	const numbers = Array.from({ length: 41 }, (_, i) => i + 10);
 	const [numUser, setNumUser] = useState<string>("10");
 	return (
 		<>
@@ -17,17 +17,6 @@ export default function PricingPage() {
 					<div>
 						<h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">알맞는 플랜을 선택하세요</h2>
 						<div className="grid grid-cols-1 gap-4">
-							{/* <div className="border rounded-lg p-4">
-								<h3 className="text-xl font-bold">무료 플랜</h3>
-								<ul className="text-left list-disc pl-4">
-									<li>Basic features included</li>
-									<li>Limited support</li>
-									<li>Up to 5 projects</li>
-								</ul>
-								<div className="mt-4">
-									<Button size="lg">Select Free Plan</Button>
-								</div>
-							</div> */}
 							<div className="border rounded-lg p-4">
 								<h3 className="text-xl font-bold">팀 플랜</h3>
 								<ul className="text-left list-disc pl-4">
@@ -51,7 +40,7 @@ export default function PricingPage() {
 									</Select>
 								</div>
 								<Label>
-									{numUser}명 * 50,000원/1년 = {(parseInt(numUser) * 50_000).toLocaleString()}원
+									{numUser}명 * 100,000원/1년 = {(parseInt(numUser) * 100_000).toLocaleString()}원
 								</Label>
 								<div className="mt-4">
 									<Link href={`/payment?user=${numUser}`}>
@@ -60,7 +49,6 @@ export default function PricingPage() {
 								</div>
 							</div>
 						</div>
-						{/* <p className="mx-auto max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">Need more details? Compare the plans below.</p> */}
 					</div>
 
 					{/* <div className="mx-auto w-full max-w-2xl space-y-2">
