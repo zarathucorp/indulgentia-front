@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { FaRegQuestionCircle } from "react-icons/fa";
 import { Menu, Package2, Search, FileText, User, Handshake, LayoutDashboard, AtSign, BadgeDollarSign } from "lucide-react";
@@ -56,19 +56,27 @@ export default function Navbar() {
 									<Image src="/logo.png" alt="Logo" width={40} height={40} />
 									<span className="sr-only">연구실록 홈</span>
 								</Link> */}
-								<Link href="/dashboard" className="flex items-center gap-1">
-									<LayoutDashboard className="h-5 w-5" /> 대시보드
-								</Link>
-								<Link href="/inquiry" className="flex items-center gap-1">
-									<AtSign className="h-5 w-5" /> 문의하기
-								</Link>
-								<Link href="/pricing" className="flex items-center gap-1">
-									<BadgeDollarSign className="h-5 w-5" /> 가격
-								</Link>
-								<Link href="/faq" className="flex items-center gap-1">
-									<FaRegQuestionCircle className="h-5 w-5" />
-									FAQ
-								</Link>
+								<SheetClose asChild>
+									<Link href="/dashboard" className="flex items-center gap-1">
+										<LayoutDashboard className="h-5 w-5" /> 대시보드
+									</Link>
+								</SheetClose>
+								<SheetClose asChild>
+									<Link href="/inquiry" className="flex items-center gap-1">
+										<AtSign className="h-5 w-5" /> 문의하기
+									</Link>
+								</SheetClose>
+								<SheetClose asChild>
+									<Link href="/pricing" className="flex items-center gap-1">
+										<BadgeDollarSign className="h-5 w-5" /> 가격
+									</Link>
+								</SheetClose>
+								<SheetClose asChild>
+									<Link href="/faq" className="flex items-center gap-1">
+										<FaRegQuestionCircle className="h-5 w-5" />
+										FAQ
+									</Link>
+								</SheetClose>
 							</nav>
 						</SheetContent>
 					</Sheet>

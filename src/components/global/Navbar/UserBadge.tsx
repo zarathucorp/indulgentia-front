@@ -32,13 +32,13 @@ export default async function UserBadge() {
 					<DropdownMenuLabel>내 계정</DropdownMenuLabel>
 					<DropdownMenuSeparator />
 					<Link href="/setting">
-						<DropdownMenuItem>설정</DropdownMenuItem>
+						<DropdownMenuItem className="cursor-pointer">설정</DropdownMenuItem>
 					</Link>
-					<DropdownMenuItem>고객지원</DropdownMenuItem>
+					<DropdownMenuItem className="cursor-pointer">고객지원</DropdownMenuItem>
 					<DropdownMenuSeparator />
 					<form action={signOut}>
 						<button type="submit">
-							<DropdownMenuItem>로그아웃</DropdownMenuItem>
+							<DropdownMenuItem className="cursor-pointer">로그아웃</DropdownMenuItem>
 						</button>
 					</form>
 				</DropdownMenuContent>
@@ -54,7 +54,7 @@ export default async function UserBadge() {
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
 				<Link href="/auth/login" className="py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover">
-					<DropdownMenuItem>로그인</DropdownMenuItem>
+					<DropdownMenuItem className="cursor-pointer">로그인</DropdownMenuItem>
 				</Link>
 				{/* <DropdownMenuItem
 				onClick={async () => {
