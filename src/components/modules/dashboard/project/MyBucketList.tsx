@@ -14,10 +14,10 @@ export default function MyBucketList({ bucketList, projectId }: { bucketList: Bu
 		<Card>
 			<CardHeader>
 				<CardTitle className="grid grid-cols-6">
-					<div className="col-start-1 col-span-2">내 Bucket</div>
+					<div className="col-start-1 col-span-2">내 버킷</div>
 					<div className="col-start-5 col-span-1">
 						<Link href={`/dashboard/bucket/create?project=${projectId}`}>
-							<Button>새 Bucket</Button>
+							<Button>새 버킷</Button>
 						</Link>
 					</div>
 					<div className="col-start-6 col-span-1">
@@ -33,9 +33,9 @@ export default function MyBucketList({ bucketList, projectId }: { bucketList: Bu
 				<Table>
 					<TableHeader>
 						<TableRow>
-							<TableHead>내 Bucket</TableHead>
+							<TableHead>내 버킷</TableHead>
 							<TableHead>상태</TableHead>
-							<TableHead className="hidden md:table-cell">Bucket 매니저</TableHead>
+							<TableHead className="hidden md:table-cell">버킷 매니저</TableHead>
 							<TableHead className="hidden md:table-cell">GitHub 연결</TableHead>
 							{/* <TableHead className="hidden md:table-cell">수행 기간</TableHead> */}
 							<TableHead>

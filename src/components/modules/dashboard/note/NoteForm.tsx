@@ -16,10 +16,10 @@ const NoteSchema = z.object({
 	title: z
 		.string()
 		.min(1, {
-			message: "Bucket 이름은 1자보다 길어야 합니다.",
+			message: "노트 이름은 1자보다 길어야 합니다.",
 		})
 		.max(1000, {
-			message: "Bucket 이름은 1,000자보다 짧아야 합니다.",
+			message: "노트 이름은 1,000자보다 짧아야 합니다.",
 		}),
 	description: z.string().min(1, { message: "노트 내용은 1자보다 길어야 합니다." }),
 	tags: z.string().optional(),
@@ -102,7 +102,7 @@ export default function NewNoteForm() {
 					<NoteFileField form={form} />
 					<BucketUUIDField form={form} />
 					<div className="flex justify-center">
-						<Button type="submit">새 Note 생성</Button>
+						<Button type="submit">새 노트 생성</Button>
 					</div>
 				</form>
 			</Form>
@@ -208,11 +208,11 @@ function BucketUUIDField({ form }: { form: any }) {
 			name="bucket_id"
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>Bucket UUID</FormLabel>
+					<FormLabel>버킷 UUID</FormLabel>
 					<FormControl>
 						<Input disabled {...field} />
 					</FormControl>
-					<FormDescription>Bucket UUID입니다.</FormDescription>
+					<FormDescription>버킷 UUID입니다.</FormDescription>
 					<FormMessage />
 				</FormItem>
 			)}

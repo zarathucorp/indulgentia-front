@@ -18,7 +18,7 @@ export default function FAQ() {
 							<AccordionTrigger className="text-lg font-medium">연구실록이 무엇인가요?</AccordionTrigger>
 							<AccordionContent>
 								<p className="text-gray-500 dark:text-gray-400">
-									연구실록은 전자연구노트 서비스입니다. GitHub Repository와 연동하여 프로젝트, Bucket, 노트를 생성하고 블록체인을 이용한 전자서명을 할 수 있습니다. 연구실록은 &apos;국가연구개발사업
+									연구실록은 전자연구노트 서비스입니다. GitHub Repository와 연동하여 프로젝트, 버킷, 노트를 생성하고 블록체인을 이용한 전자서명을 할 수 있습니다. 연구실록은 &apos;국가연구개발사업
 									연구노트 지침&apos;의 &apos;연구노트 요건&apos;을 준수합니다.
 								</p>
 							</AccordionContent>
@@ -27,7 +27,7 @@ export default function FAQ() {
 							<AccordionTrigger className="text-lg font-medium">GitHub와 연구실록은 어떻게 연동하나요?</AccordionTrigger>
 							<AccordionContent>
 								<p className="text-gray-500 dark:text-gray-400">
-									가입 후 우측 상단 &apos;사람 모양 아이콘-설정-계정&apos;에서 GitHub 계정을 연동할 수 있습니다. 연동 후 &apos;Bucket 설정&apos;에서 GitHub Repository를 선택하면 해당 Repository가
+									가입 후 우측 상단 &apos;사람 모양 아이콘-설정-계정&apos;에서 GitHub 계정을 연동할 수 있습니다. 연동 후 &apos;버킷 설정&apos;에서 GitHub Repository를 선택하면 해당 Repository가
 									연동됩니다. 연동 이후에는 해당 Repository의 Issue, Pull Request, Commit 등을 연구실록에서 확인할 수 있습니다.
 								</p>
 							</AccordionContent>

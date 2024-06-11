@@ -145,14 +145,14 @@ const NewProjectForm = () => {
 			await axios.post(apiUrl, payload, options);
 			console.log("Project created successfully");
 			toast({
-				title: "Project 생성 완료",
-				description: `Project ${data.title}이 성공적으로 생성되었습니다.`,
+				title: "프로젝트 생성 완료",
+				description: `프로젝트 ${data.title}이 성공적으로 생성되었습니다.`,
 			});
 		} catch (error: any) {
 			console.error(error);
 			toast({
-				title: "Project 수정 실패",
-				description: `Project ${data.title}의 수정에 실패하였습니다. ${error.message}`,
+				title: "프로젝트 수정 실패",
+				description: `프로젝트 ${data.title}의 수정에 실패하였습니다. ${error.message}`,
 			});
 		}
 	};
@@ -192,8 +192,8 @@ const EditProjectForm = ({ projectInfo, mutator }: { projectInfo: CreateProjectF
 			// mutator && mutator();
 			// console.log("Project updated successfully");
 			toast({
-				title: "Project 수정 완료",
-				description: `Project ${data.title}이 성공적으로 수정되었습니다.`,
+				title: "프로젝트 수정 완료",
+				description: `프로젝트 ${data.title}이 성공적으로 수정되었습니다.`,
 			});
 			const currentUrl = window.location.pathname;
 			const newUrl = currentUrl.substring(0, currentUrl.lastIndexOf("/"));
@@ -201,8 +201,8 @@ const EditProjectForm = ({ projectInfo, mutator }: { projectInfo: CreateProjectF
 		} catch (error: any) {
 			console.error(error);
 			toast({
-				title: "Project 수정 실패",
-				description: `Project ${data.title}의 수정에 실패하였습니다. ${error.message}`,
+				title: "프로젝트 수정 실패",
+				description: `프로젝트 ${data.title}의 수정에 실패하였습니다. ${error.message}`,
 			});
 		}
 	};
