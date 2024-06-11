@@ -10,7 +10,7 @@ import { useToast } from "@/components/ui/use-toast";
 type removeType = "Project" | "Bucket" | "Note";
 const removeTypeDescription = {
 	Project: "프로젝트",
-	Bucket: "Bucket",
+	Bucket: "버킷",
 	Note: "노트",
 };
 // ErrorMessage component

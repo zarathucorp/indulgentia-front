@@ -6,23 +6,23 @@ export default function NoteBreadcrumb() {
 		<Breadcrumb>
 			<BreadcrumbList>
 				<BreadcrumbItem>
-					<BreadcrumbLink href="/">Home</BreadcrumbLink>
+					<BreadcrumbLink href="/">홈</BreadcrumbLink>
 				</BreadcrumbItem>
 				<BreadcrumbSeparator />
 				<BreadcrumbItem>
-					<BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
+					<BreadcrumbLink href="/dashboard">대시보드</BreadcrumbLink>
 				</BreadcrumbItem>
 				<BreadcrumbSeparator />
 				<BreadcrumbItem>
-					<BreadcrumbLink href="/dashboard/project/dd">Project 이름</BreadcrumbLink>
+					<BreadcrumbLink href="/dashboard/project/dd">프로젝트 이름</BreadcrumbLink>
 				</BreadcrumbItem>
 				<BreadcrumbSeparator />
 				<BreadcrumbItem>
-					<BreadcrumbLink href="/dashboard/bucket/dd">Bucket 이름</BreadcrumbLink>
+					<BreadcrumbLink href="/dashboard/bucket/dd">버킷 이름</BreadcrumbLink>
 				</BreadcrumbItem>
 				<BreadcrumbSeparator />
 				<BreadcrumbItem>
-					<BreadcrumbPage>이 Note</BreadcrumbPage>
+					<BreadcrumbPage>이 노트</BreadcrumbPage>
 				</BreadcrumbItem>
 			</BreadcrumbList>
 		</Breadcrumb>

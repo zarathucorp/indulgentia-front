@@ -11,7 +11,7 @@ export default function MyNoteList() {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>내 Bucket</CardTitle>
+				<CardTitle>내 버킷</CardTitle>
 				<CardDescription>Manage your products and view their sales performance.</CardDescription>
 			</CardHeader>
 			<CardContent>
@@ -22,7 +22,7 @@ export default function MyNoteList() {
 							<TableHead className="hidden w-[100px] sm:table-cell">
 								<span className="sr-only">이미지</span>
 							</TableHead>
-							<TableHead>내 Bucket</TableHead>
+							<TableHead>내 버킷</TableHead>
 							<TableHead>상태</TableHead>
 							<TableHead className="hidden md:table-cell">연구책임자</TableHead>
 							<TableHead className="hidden md:table-cell">참여 연구원 수</TableHead>

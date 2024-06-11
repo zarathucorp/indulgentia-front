@@ -21,7 +21,7 @@ export default function PricingPage() {
 								<h3 className="text-xl font-bold">팀 플랜</h3>
 								<ul className="text-left list-disc pl-4">
 									<li>무제한 GitHub Repository 연동</li>
-									<li>무제한 프로젝트/Bucket/노트 생성</li>
+									<li>무제한 프로젝트/버킷/노트 생성</li>
 									<li>블록체인을 이용한 전자서명</li>
 								</ul>
 								<div className="mt-4">

@@ -23,12 +23,12 @@ const BucketSchema = z.object({
 	title: z
 		.string()
 		.min(1, {
-			message: "Bucket 이름은 1자보다 길어야 합니다.",
+			message: "버킷 이름은 1자보다 길어야 합니다.",
 		})
 		.max(1000, {
-			message: "Bucket 이름은 1,000자보다 짧아야 합니다.",
+			message: "버킷 이름은 1,000자보다 짧아야 합니다.",
 		}),
-	manager_id: z.string().min(1, { message: "Bucket 매니저 이름은 1자보다 길어야 합니다." }).max(1000, { message: "Bucket 매니저 이름은 1,000자보다 짧아야 합니다." }).optional(),
+	manager_id: z.string().min(1, { message: "버킷 매니저 이름은 1자보다 길어야 합니다." }).max(1000, { message: "버킷 매니저 이름은 1,000자보다 짧아야 합니다." }).optional(),
 	project_id: z.string().uuid(),
 });
 
@@ -66,8 +66,8 @@ export default function NewBucketForm() {
 			console.error(error);
 		}
 		toast({
-			title: "Bucket 생성 완료",
-			description: `Bucket ${data.title}이 성공적으로 생성되었습니다.`,
+			title: "버킷 생성 완료",
+			description: `버킷 ${data.title}이 성공적으로 생성되었습니다.`,
 		});
 		router.push(`/dashboard/project/${data.project_id}`);
 	}
@@ -87,7 +87,7 @@ export default function NewBucketForm() {
 									&nbsp;
 								</>
 							)}
-							새 Bucket 생성
+							새 버킷 생성
 						</Button>
 					</div>
 				</form>
@@ -128,8 +128,8 @@ export function EditBucketForm({ bucketInfo, mutate }: { bucketInfo: CreateBucke
 		try {
 			await axios.put(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/${bucketInfo.id}`, { id: bucketInfo.id, ...data }, { withCredentials: true });
 			toast({
-				title: "Bucket 수정 완료",
-				description: `Bucket ${data.title}이 성공적으로 수정되었습니다.`,
+				title: "버킷 수정 완료",
+				description: `버킷 ${data.title}이 성공적으로 수정되었습니다.`,
 			});
 			const currentUrl = window.location.pathname;
 			const newUrl = currentUrl.substring(0, currentUrl.lastIndexOf("/"));
@@ -137,8 +137,8 @@ export function EditBucketForm({ bucketInfo, mutate }: { bucketInfo: CreateBucke
 		} catch (error: any) {
 			console.error(error);
 			toast({
-				title: "Bucket 수정 실패",
-				description: `Bucket ${data.title}의 수정에 실패하였습니다. ${error.message}`,
+				title: "버킷 수정 실패",
+				description: `버킷 ${data.title}의 수정에 실패하였습니다. ${error.message}`,
 			});
 		}
 		mutate();
@@ -152,7 +152,7 @@ export function EditBucketForm({ bucketInfo, mutate }: { bucketInfo: CreateBucke
 					<BucketManagerField form={form} teamUserList={teamUserList || []} isLoading={isLoading} />
 					<ProjectUUIDField form={form} />
 					<div className="flex justify-center">
-						<Button type="submit">Bucket 수정</Button>
+						<Button type="submit">버킷 수정</Button>
 					</div>
 					<RemoveModal targetEntity={bucketInfo.title} removeType="Bucket" onRemoveConfirmed={() => handleRemove(bucketInfo)} parentUUID={bucketInfo.project_id} />
 				</form>
@@ -168,11 +168,11 @@ function BucketTitleField({ form }: { form: any }) {
 			name="title"
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>Bucket 이름</FormLabel>
+					<FormLabel>버킷 이름</FormLabel>
 					<FormControl>
-						<Input placeholder="Bucket 이름" {...field} />
+						<Input placeholder="버킷 이름" {...field} />
 					</FormControl>
-					<FormDescription>Bucket 이름을 입력합니다.</FormDescription>
+					<FormDescription>버킷 이름을 입력합니다.</FormDescription>
 					<FormMessage />
 				</FormItem>
 			)}
@@ -187,11 +187,11 @@ function BucketManagerField({ form, teamUserList, isLoading }: { form: any; team
 			name="manager_id"
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>Bucket 매니저</FormLabel>
+					<FormLabel>버킷 매니저</FormLabel>
 					<Select onValueChange={field.onChange} defaultValue={field.value}>
 						<FormControl>
 							<SelectTrigger>
-								<SelectValue placeholder="Bucket 매니저를 선택하세요." />
+								<SelectValue placeholder="버킷 매니저를 선택하세요." />
 							</SelectTrigger>
 						</FormControl>
 						<SelectContent>
@@ -226,7 +226,7 @@ function ProjectUUIDField({ form }: { form: any }) {
 					<FormControl>
 						<Input disabled {...field} />
 					</FormControl>
-					<FormDescription>Project UUID입니다.</FormDescription>
+					<FormDescription>프로젝트 UUID입니다.</FormDescription>
 					<FormMessage />
 				</FormItem>
 			)}

@@ -2,7 +2,7 @@ import axios from "axios";
 import { UUID } from "crypto";
 import useSWRImmutable from "swr/immutable";
 import useSWR from "swr";
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+const fetcher = (url: string) => axios.get(url, { withCredentials: true }).then((res) => res.data);
 import { createClient } from "@/utils/supabase/client";
 import { useState, useEffect } from "react";
 type DateTimeString = string;

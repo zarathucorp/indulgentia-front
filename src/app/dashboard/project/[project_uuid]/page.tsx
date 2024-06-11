@@ -38,8 +38,8 @@ export default function Project() {
 			const error = new Error("An error occurred while fetching the data.");
 			throw error;
 		}
-		console.log(result.data.data.title);
-		return { project_title: result.data.data.title };
+		console.log(result.data.data);
+		return result.data.data;
 	});
 	if (error)
 		return (
