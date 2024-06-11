@@ -21,7 +21,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import convertKST from "@/utils/time/convertKST";
 import { Label } from "@/components/ui/label";
 import RemoveModal from "@/components/global/RemoveModal";
-import { handleNoteRemove } from "../../note/[note_uuid]/page";
+import { handleNoteRemove } from "../../note/[note_uuid]/handleNoteRemove";
 const noteListFetcher = async (url: string) => {
 	const result = await axios.get(url, { withCredentials: true });
 	console.log(result.data.data);
