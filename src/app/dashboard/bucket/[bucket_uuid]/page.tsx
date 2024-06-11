@@ -68,12 +68,6 @@ export default function Note() {
 			</div> */}
 				<div className="space-y-4">
 					<div className="grid gap-2">
-						{/* <div className="flex items-center justify-between">
-							<div className="font-medium">노트 이름</div>
-							<div className="text-sm text-gray-500 dark:text-gray-400">작성자</div>
-							<div className="text-sm text-gray-500 dark:text-gray-400">작성 날짜</div>
-							<div className="text-sm text-gray-500 dark:text-gray-400"></div>
-						</div> */}
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
 							{data &&
 								data.map((note: NoteType, index: number) => (
@@ -104,32 +98,8 @@ export default function Note() {
 											</CardFooter>
 										</Card>
 									</div>
-									// <NoteThumbnail />
-									// <div key={index} className="flex items-center justify-between rounded-md bg-gray-100 px-4 py-3 dark:bg-gray-800">
-									// 	<div>{note.title}</div>
-									// 	<div>{note.user_id}</div>
-									// 	<div>{convertKST(note.created_at)}</div>
-									// 	<div>{note.is_github ? note.github_type : null}</div>
-									// 	<div>
-									// 		<DropdownMenu>
-									// 			<DropdownMenuTrigger asChild>
-									// 				<Button aria-haspopup="true" size="icon" variant="ghost">
-									// 					<MoreHorizontal className="h-4 w-4" />
-									// 					<span className="sr-only">메뉴 열기</span>
-									// 				</Button>
-									// 			</DropdownMenuTrigger>
-									// 			<DropdownMenuContent align="end">
-									// 				<DropdownMenuLabel>Actions</DropdownMenuLabel>
-									// 				<Link href={`/dashboard/note/${note.id}`}>
-									// 					<DropdownMenuItem>파일 보기</DropdownMenuItem>
-									// 				</Link>
-									// 				<DropdownMenuItem>Edit</DropdownMenuItem>
-									// 				<DropdownMenuItem>Delete</DropdownMenuItem>
-									// 			</DropdownMenuContent>
-									// 		</DropdownMenu>
-									// 	</div>
-									// </div>
 								))}
+							{data.length === 0 && <p>노트가 없습니다.</p>}
 						</div>
 					</div>
 				</div>
