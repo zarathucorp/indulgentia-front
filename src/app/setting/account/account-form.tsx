@@ -73,7 +73,7 @@ export function AccountForm() {
 			await axios.patch(process.env.NEXT_PUBLIC_API_URL + "/user/settings/info", {
 				first_name: processedData.firstName,
 				last_name: processedData.lastName,
-			});
+			}, { withCredentials: true });
 
 			toast({
 				title: "업데이트에 성공하였습니다.",

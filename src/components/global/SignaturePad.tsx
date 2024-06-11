@@ -11,7 +11,7 @@ const SignaturePad = () => {
 	const [initialSignatureUrl, setInitialSignatureUrl] = useState<string | null>(null);
 	const { toast } = useToast();
 	const { data: signatureData } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature", async (url: string) => {
-		const { data } = await axios.get(url);
+		const { data } = await axios.get(url, { withCredentials: true });
 		setInitialSignatureUrl(data.url);
 	});
 
