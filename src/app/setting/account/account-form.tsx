@@ -19,7 +19,7 @@ import { useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useVariable } from "@/hooks/useVariable";
 import { redirect } from "next/navigation";
-import useGithub from "@/hooks/fetch/useGithub";
+import useGithub, { disconnectGitHub } from "@/hooks/fetch/useGithub";
 import useUser from "@/hooks/fetch/useUser";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -33,7 +33,7 @@ type AccountFormValues = z.infer<typeof accountFormSchema>;
 
 export function AccountForm() {
 	const [userEmail, setUserEmail] = useVariable<string>("");
-	const { username: githubUsername, error: githubError, isLoading: isLoadingGithub } = useGithub();
+	const { username: githubUsername, error: githubError, isLoading: isLoadingGithub, mutate: mutateGithub } = useGithub();
 	const { userInfo, error: userInfoError, isLoading: isLoadingUserInfo } = useUser();
 
 	const values: AccountFormValues = {
@@ -142,8 +142,34 @@ export function AccountForm() {
 					<div className="mt-2 flex items-center gap-2">
 						<Input type="email" disabled value={isLoadingGithub ? "정보를 불러오는 중입니다." : githubError || githubUsername} />
 						<Link href={process.env.NEXT_PUBLIC_GITHUB_APP_INSTALL_URL || "#"}>
-							<Button onClick={(e) => e.preventDefault()}>깃허브 계정 연동</Button>
+							<Button type="button">깃허브 계정 연동</Button>
 						</Link>
+						<Link href={"https://github.com/login/oauth/authorize?client_id=Iv23li79mqTdxRfQ2tpK&redirect_uri=https://dev.rndsillog.com/next-api/github/callback" || "#"}>
+							<Button type="button">토큰 다시 받아오기</Button>
+						</Link>
+
+						<Button
+							type="button"
+							onClick={async () => {
+								try {
+									await disconnectGitHub();
+									toast({
+										title: "연동 해제에 성공하였습니다.",
+										description: `연동 해제에 성공하였습니다.`,
+									});
+								} catch (e: any) {
+									toast({
+										title: "연동 해제에 실패하였습니다.",
+										description: `연동 해제에 실패하였습니다: ${e.message}`,
+									});
+								} finally {
+									await mutateGithub();
+								}
+							}}
+							className="bg-red-500 hover:bg-red-700"
+						>
+							연동 해제
+						</Button>
 					</div>
 				</div>
 				<Button type="submit">설정 업데이트</Button>
