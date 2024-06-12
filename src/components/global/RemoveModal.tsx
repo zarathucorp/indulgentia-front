@@ -130,7 +130,7 @@ export default function RemoveModal({
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button className="bg-red-500">{removeTypeDescription[removeType]} 삭제</Button>
+				<Button className="bg-red-500 hover:bg-red-700">{removeTypeDescription[removeType]} 삭제</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-md">
 				<RemoveModalContent

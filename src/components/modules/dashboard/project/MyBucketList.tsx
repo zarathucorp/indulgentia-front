@@ -15,14 +15,14 @@ export default function MyBucketList({ bucketList, projectId }: { bucketList: Bu
 			<CardHeader>
 				<CardTitle className="grid grid-cols-3 md:grid-cols-4 xl:grid-cols-6">
 					<div className="col-span-1">내 버킷</div>
-					<Link href="/dashboard/project/create" className="col-start-2 md:col-start-3 xl:col-start-5">
-						<Button className="w-full righ">새 버킷</Button>
-					</Link>
-					<Link href={`/dashboard/project/${projectId}/setting`} className="col-start-3 md:col-start-4 xl:col-start-6">
+					<Link href={`/dashboard/project/${projectId}/setting`} className="col-start-2 md:col-start-3 xl:col-start-5">
 						<Button className="w-full righ">프로젝트 설정</Button>
 					</Link>
+					<Link href="/dashboard/project/create" className="col-start-3 md:col-start-4 xl:col-start-6">
+						<Button className="w-full righ">새 버킷</Button>
+					</Link>
 				</CardTitle>
-				<CardDescription>Manage your products and view their sales performance.</CardDescription>
+				<CardDescription>버킷 목록입니다.</CardDescription>
 			</CardHeader>
 			<CardContent>
 				{/* 나중에 서버에서 데이터 받아서 map으로 */}
