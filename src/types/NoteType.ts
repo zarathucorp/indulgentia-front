@@ -32,6 +32,7 @@ type NoteTypeDetail = NoteType & {
 	bucket_title: string;
 	project_title: string;
 	note_title: string;
+	note_id: UUID;
 };
 
 export default NoteType;
