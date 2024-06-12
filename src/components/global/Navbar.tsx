@@ -32,7 +32,7 @@ export default function Navbar() {
 						<Link href="/pricing" className="nav-link flex items-center gap-1">
 							<BadgeDollarSign className="h-5 w-5" /> 가격
 						</Link>
-						<Link href="/faq" className="nav-link flex items-center gap-1">
+						<Link href="/help/faq" className="nav-link flex items-center gap-1">
 							<FaRegQuestionCircle className="h-5 w-5" /> FAQ
 						</Link>
 					</div>
