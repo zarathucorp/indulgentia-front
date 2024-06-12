@@ -15,7 +15,7 @@ import RemoveModal from "@/components/global/RemoveModal";
 import { ErrorPage } from "@/components/global/Error/Error";
 import { NoteLoading } from "@/components/global/Loading/Note";
 import { handleNoteRemove } from "./handleNoteRemove";
-
+import NoteInfo from "./NoteInfo";
 const getDownloadURL = async (url: string): Promise<string> => {
 	const res = await fetch(url);
 	const blob = await res.blob();
@@ -67,14 +67,14 @@ export default function ViewNote() {
 			<div className="grid grid-cols-[3fr_1fr]">
 				<div className="px-2">{isLoading ? <NoteLoading /> : <>{<PDFViewer fileUrl={data} />}</>}</div>
 				<div className="flex flex-col">
+					<NoteInfo />
 					<a href={downloadURL || "#"} download={`Report_${params.note_uuid}.pdf`}>
-						<Button className="py-2">다운로드</Button>
+						<Button className="py-2 w-full">노트 다운로드</Button>
 					</a>
-					<Button className="bg-red-600 ">삭제</Button>
 					{breadcrumbData && (
 						<RemoveModal targetEntity={breadcrumbData.note_title} removeType="Note" onRemoveConfirmed={() => handleNoteRemove(params.note_uuid)} parentUUID={breadcrumbData.bucket_id} />
 					)}
-					<NoteAuditLog />
+					{/* <NoteAuditLog /> */}
 				</div>
 			</div>
 		</>
