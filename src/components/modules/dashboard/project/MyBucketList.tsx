@@ -13,18 +13,14 @@ export default function MyBucketList({ bucketList, projectId }: { bucketList: Bu
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle className="grid grid-cols-6">
-					<div className="col-start-1 col-span-2">내 버킷</div>
-					<div className="col-start-5 col-span-1">
-						<Link href={`/dashboard/bucket/create?project=${projectId}`}>
-							<Button>새 버킷</Button>
-						</Link>
-					</div>
-					<div className="col-start-6 col-span-1">
-						<Link href={`/dashboard/project/${projectId}/setting`}>
-							<Button>프로젝트 설정</Button>
-						</Link>
-					</div>
+				<CardTitle className="grid grid-cols-3 md:grid-cols-4 xl:grid-cols-6">
+					<div className="col-span-1">내 버킷</div>
+					<Link href="/dashboard/project/create" className="col-start-2 md:col-start-3 xl:col-start-5">
+						<Button className="w-full righ">새 버킷</Button>
+					</Link>
+					<Link href={`/dashboard/project/${projectId}/setting`} className="col-start-3 md:col-start-4 xl:col-start-6">
+						<Button className="w-full righ">프로젝트 설정</Button>
+					</Link>
 				</CardTitle>
 				<CardDescription>Manage your products and view their sales performance.</CardDescription>
 			</CardHeader>
@@ -39,14 +35,14 @@ export default function MyBucketList({ bucketList, projectId }: { bucketList: Bu
 							<TableHead className="hidden md:table-cell">GitHub 연결</TableHead>
 							{/* <TableHead className="hidden md:table-cell">수행 기간</TableHead> */}
 							<TableHead>
-								<span className="sr-only">Actions</span>
+								<span className="sr-only">관리 버튼</span>
 							</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
 						{bucketList.map((bucket: BucketType, index: number) => {
 							return (
-								<TableRow key={index}>
+								<TableRow key={bucket.id}>
 									<TableCell className="font-medium">{bucket.title}</TableCell>
 									<TableCell>
 										<Badge variant="outline">{bucket.bucket_status}</Badge>
@@ -55,7 +51,7 @@ export default function MyBucketList({ bucketList, projectId }: { bucketList: Bu
 									<TableCell className="hidden md:table-cell">{bucket.has_github ? <Link href={bucket.has_github && "https://www.zarathu.com"}>예</Link> : "아니오"}</TableCell>
 									<TableCell>
 										<Link href={`/dashboard/bucket/${bucket.id}`}>
-											<Button>관리</Button>
+											<Button className="w-full">보기/관리</Button>
 										</Link>
 									</TableCell>
 								</TableRow>

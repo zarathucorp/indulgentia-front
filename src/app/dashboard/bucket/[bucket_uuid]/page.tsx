@@ -34,8 +34,8 @@ const noteListFetcher = async (url: string) => {
 
 export default function Note() {
 	const params = useParams<{ bucket_uuid: string }>();
-	const { data, isValidating, error, mutate, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + `/dashboard/note/list/${params.bucket_uuid}`, noteListFetcher);
-	const { data: breadcrumbData, isLoading: isBreadcrumbLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/${params.bucket_uuid}/breadcrumb`, async (url) => {
+	const { data, isValidating, error, mutate: mutateNoteList, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + `/dashboard/note/list/${params.bucket_uuid}`, noteListFetcher);
+	const { data: breadcrumbData, isLoading: isBreadcrumbLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/${params.bucket_uuid}/breadcrumb`, async (url) => {
 		const result = await axios.get(url, { withCredentials: true });
 		if (result.status !== 200) {
 			const error = new Error("An error occurred while fetching the data.");
@@ -51,7 +51,7 @@ export default function Note() {
 	if (error)
 		return (
 			<>
-				<ErrorPage error={error} reset={() => mutate()} />
+				<ErrorPage error={error} reset={() => mutateNoteList()} />
 			</>
 		);
 	return (
@@ -60,12 +60,6 @@ export default function Note() {
 				{isBreadcrumbLoading ? <DashboardBreadCrumbLoading type="Bucket" /> : <DashboardBreadCrumb breadcrumbData={{ level: "Bucket", bucket_id: params.bucket_uuid, ...breadcrumbData }} />}
 			</div>
 			<div className="grid xs:grid-cols-1 sm:grid-cols-[3fr_1fr] gap-6 p-6 sm:p-10 ">
-				{/* <div>
-				{data ??
-					data.map((note: any, index: number) => {
-						<p key={index}>{note}</p>;
-					})}
-			</div> */}
 				<div className="space-y-4">
 					<div className="grid gap-2">
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -90,7 +84,15 @@ export default function Note() {
 												</form>
 											</CardContent>
 											<CardFooter className="flex justify-between">
-												<RemoveModal targetEntity={note.title} removeType="Note" onRemoveConfirmed={() => handleNoteRemove(note.id)} parentUUID={params.bucket_uuid} />
+												<RemoveModal
+													targetEntity={note.title}
+													removeType="Note"
+													onRemoveConfirmed={async () => {
+														await handleNoteRemove(note.id);
+														await mutateNoteList();
+													}}
+													parentUUID={params.bucket_uuid}
+												/>
 												{/* <Button variant="outline">삭제</Button> */}
 												<Link href={`/dashboard/note/${note.id}`}>
 													<Button>노트 보기</Button>

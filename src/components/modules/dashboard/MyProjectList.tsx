@@ -14,7 +14,7 @@ export default function MyProjectList({ projectList }: { projectList: ProjectTyp
 		<Card>
 			<CardHeader>
 				<CardTitle className="grid grid-cols-3 md:grid-cols-4 xl:grid-cols-6">
-					<div className="col-span-2">내 프로젝트</div>
+					<div className="col-span-1">내 프로젝트</div>
 					<Link href="/dashboard/project/create" className="col-start-3 md:col-start-4 xl:col-start-6">
 						<Button className="w-full righ">새 프로젝트</Button>
 					</Link>
@@ -37,7 +37,7 @@ export default function MyProjectList({ projectList }: { projectList: ProjectTyp
 					</TableHeader>
 					<TableBody>
 						{projectList.map((project: ProjectType, index: number) => (
-							<TableRow key={index}>
+							<TableRow key={project.id}>
 								<TableCell className="font-medium">{project.title}</TableCell>
 								<TableCell className="hidden md:table-cell">{project.project_leader}</TableCell>
 								<TableCell className="hidden md:table-cell">{project.grant_number}</TableCell>
@@ -45,7 +45,7 @@ export default function MyProjectList({ projectList }: { projectList: ProjectTyp
 								<TableCell className="hidden xl:table-cell">{typeof project.end_date === "string" ? project.end_date : null}</TableCell>
 								<TableCell>
 									<Link href={`/dashboard/project/${project.id}`}>
-										<Button className="w-full">관리</Button>
+										<Button className="w-full">보기/관리</Button>
 									</Link>
 								</TableCell>
 							</TableRow>
