@@ -26,7 +26,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({ typeString = "File", isFile
 		<div className="grid w-full max-w-sm items-center gap-1.5">
 			<Label htmlFor="file">{typeString}</Label>
 			<div className="flex items-center gap-1.5">
-				<Input id="file" type="file" accept="image/*,.txt,.pdf,text/*" ref={fileInputRef} {...props} />
+				<Input id="file" type="file" accept="image/*,.txt,.pdf,text/*,.hwp,.hwpx,application/msword,application/vnd.ms-excel,application/vnd.ms-powerpoint" ref={fileInputRef} {...props} />
 				{isFileSelected && (
 					<Button type="button" onClick={handleFileUnselect} className="text-red-500 hover:text-red-700">
 						파일 삭제
