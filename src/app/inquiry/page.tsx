@@ -25,7 +25,7 @@ const FormSchema = z.object({
 		.email({ message: "유효하지 않은 이메일 주소입니다." }),
 	phone: z.string().optional(),
 	description: z.string().optional(),
-	size: z.string({ required_error: "검토 규모는 필수 항목입니다." }),
+	num_users: z.string({ required_error: "검토 규모는 필수 항목입니다." }),
 });
 export default function Component() {
 	const form = useForm<z.infer<typeof FormSchema>>({
@@ -35,14 +35,11 @@ export default function Component() {
 	async function onSubmit(data: z.infer<typeof FormSchema>) {
 		try {
 			const { data: axiosResult } = await axios.post(process.env.NEXT_PUBLIC_INQUIRY_URL as string, data);
+			console.log(data);
 			if (axiosResult.status !== "succeed") throw new Error("문의 접수에 실패하였습니다.");
 			toast({
 				title: "문의 접수에 성공하였습니다.",
-				description: (
-					<p>
-						<IoIosCheckmarkCircleOutline /> 문의를 접수하였습니다. 최대한 빠르게 연락드리도록 하겠습니다.
-					</p>
-				),
+				description: <p>문의를 접수하였습니다. 최대한 빠르게 연락드리도록 하겠습니다.</p>,
 			});
 		} catch (error) {
 			console.error(error);
@@ -123,7 +120,7 @@ export default function Component() {
 						/>
 						<FormField
 							control={form.control}
-							name="size"
+							name="num_users"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>
@@ -157,7 +154,7 @@ export default function Component() {
 				<div className="text-center">
 					{/* <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-50 sm:text-4xl">문의하기</h1> */}
 					<Link href="mailto:office@zarathu.com">
-						<p className="mt-3 text-lg text-gray-500 dark:text-gray-400">또는 이메일로 문의하기</p>
+						<p className="mt-3 text-lg text-gray-500 dark:text-gray-400">또는 이메일로 문의하기(클릭)</p>
 					</Link>
 					<p className="mt-3 text-lg text-gray-500 dark:text-gray-400">우측 하단의 채널톡을 통해서도 문의 가능합니다.</p>
 				</div>
