@@ -11,7 +11,8 @@ import { useVariable } from "@/hooks/useVariable";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { useToast } from "@/components/ui/use-toast";
-
+import { RemoveRepositoryModal, GithubRepoType } from "./ConnectedGithubRepository";
+import useUser from "@/hooks/fetch/useUser";
 interface Installation {
 	id: number;
 	account: {
@@ -175,7 +176,39 @@ export default function BucketSetting() {
 				</div>
 				<div className="border rounded-lg overflow-hidden grid gap-4 lg:gap-px lg:bg-gray-100" />
 			</div>
-			{!isLoadingConnectedGithubRepos && connectedGithubRepos && <ConnectedGithubRepository connectedGithubRepos={connectedGithubRepos} mutateConnectedGithubRepos={mutateConnectedGithubRepos} />}
+			<div onClick={() => {}} className="max-w-6xl w-full mx-auto grid gap-2">
+				<h1 className="font-semibold text-3xl">연결된 GitHub Repository</h1>
+			</div>
+			{!isLoadingConnectedGithubRepos && connectedGithubRepos && (
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mx-auto max-w-6xl">
+					{connectedGithubRepos.map((repo: GithubRepoType) => {
+						return (
+							<>
+								<div className="bg-white rounded-lg shadow-md p-4 " key={repo.id}>
+									<div className="flex items-center justify-between">
+										<div>
+											<h3 className="text-lg font-bold">{repo.git_repository}</h3>
+											<p className="text-gray-500">{repo.git_username}</p>
+										</div>
+										<RemoveRepositoryModal repo={repo} mutateConnectedGithubRepos={mutateConnectedGithubRepos} />
+									</div>
+								</div>
+							</>
+						);
+					})}
+				</div>
+			)}
+			{/* {!isLoadingConnectedGithubRepos && connectedGithubRepos && <ConnectedGithubRepository connectedGithubRepos={connectedGithubRepos} mutateConnectedGithubRepos={mutateConnectedGithubRepos} />} */}
 		</div>
+	);
+}
+
+function TrashIcon(props: any) {
+	return (
+		<svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+			<path d="M3 6h18" />
+			<path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+			<path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+		</svg>
 	);
 }
