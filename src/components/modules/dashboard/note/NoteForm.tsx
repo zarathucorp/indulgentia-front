@@ -39,21 +39,6 @@ export default function NewNoteForm() {
 	const [userUUID, setUserUUID] = useState<string | null>(null);
 	const router = useRouter();
 	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-	// useEffect(() => {
-	// 	const supabase = createClient();
-	// 	const getUserUUID = async () => {
-	// 		const {
-	// 			data: { user },
-	// 		} = await supabase.auth.getUser();
-	// 		if (user) {
-	// 			setUserUUID(user.id);
-	// 		} else {
-	// 			console.log("No user is logged in");
-	// 		}
-	// 	};
-	// 	getUserUUID();
-	// }, []);
-
 	const searchParams = useSearchParams();
 	const bucketUUID: string = searchParams.get("bucket") as string;
 
@@ -85,6 +70,7 @@ export default function NewNoteForm() {
 		sendData.append("title", data.title);
 		sendData.append("file_name", data.title);
 		sendData.append("bucket_id", data.bucket_id);
+		sendData.append("description", data.description);
 		sendData.append("is_github", false.toString());
 
 		try {
