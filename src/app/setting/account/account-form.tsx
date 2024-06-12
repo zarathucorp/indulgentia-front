@@ -70,10 +70,18 @@ export function AccountForm() {
 		};
 
 		try {
-			await axios.patch(process.env.NEXT_PUBLIC_API_URL + "/user/settings/info", {
-				first_name: processedData.firstName,
-				last_name: processedData.lastName,
-			}, { withCredentials: true });
+			if (processedData.lastName === null && processedData.firstName === null) {
+				throw new Error("성과 이름 중 하나는 반드시 입력해야 합니다.");
+			}
+
+			await axios.patch(
+				process.env.NEXT_PUBLIC_API_URL + "/user/settings/info",
+				{
+					first_name: processedData.firstName,
+					last_name: processedData.lastName,
+				},
+				{ withCredentials: true }
+			);
 
 			toast({
 				title: "업데이트에 성공하였습니다.",
