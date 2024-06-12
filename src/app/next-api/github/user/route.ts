@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
 	});
 
 	if (!data.data.github_token) {
-		return new NextResponse(JSON.stringify({ error: "GitHub token not found" }), { status: 404 });
+		return new NextResponse(JSON.stringify({ error: "GitHub token not found" }), { status: 403 });
 	}
 
 	try {
