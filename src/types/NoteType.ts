@@ -26,4 +26,13 @@ interface NoteWithoutGitHub extends BaseNoteType {
 
 type NoteType = NoteWithGitHub | NoteWithoutGitHub;
 
+type NoteTypeDetail = NoteType & {
+	first_name?: string;
+	last_name?: string;
+	bucket_title: string;
+	project_title: string;
+	note_title: string;
+};
+
 export default NoteType;
+export type { NoteTypeDetail };
