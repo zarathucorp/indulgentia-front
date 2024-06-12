@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
 			}
 		);
 
-		return NextResponse.redirect(`https://dev.rndsillog.com/github/select-repo?token=${access_token}`);
+		return NextResponse.redirect(`https://dev.rndsillog.com/setting/account`);
 	} catch (error: any) {
 		console.error("Error exchanging code for access token:", error.response?.data || error.message);
 		return new NextResponse(JSON.stringify({ error: "Failed to exchange code for access token" }), { status: 500 });
