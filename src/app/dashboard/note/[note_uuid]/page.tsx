@@ -64,7 +64,7 @@ export default function ViewNote() {
 				{/* <NoteBreadcrumb /> */}
 				{isBreadcrumbLoading ? <DashboardBreadCrumbLoading type="Note" /> : <DashboardBreadCrumb breadcrumbData={{ level: "Note", note_id: params.note_uuid, ...breadcrumbData }} />}
 			</div>
-			<div className="grid grid-cols-[3fr_1fr]">
+			<div className="grid grid-cols-1 md:grid-cols-[3fr_2fr] lg:grid-cols-[3fr_1fr]">
 				<div className="px-2">{isLoading ? <NoteLoading /> : <>{<PDFViewer fileUrl={data} />}</>}</div>
 				<div className="flex flex-col">
 					<NoteInfo />

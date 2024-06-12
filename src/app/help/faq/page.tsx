@@ -46,11 +46,10 @@ export default function FAQ() {
 				<TabsContent value="pricing">
 					<Accordion className="space-y-4" collapsible type="single">
 						<AccordionItem value="pricing-1">
-							<AccordionTrigger className="text-lg font-medium">What are the pricing options?</AccordionTrigger>
+							<AccordionTrigger className="text-lg font-medium">비용은 얼마인가요?</AccordionTrigger>
 							<AccordionContent>
 								<p className="text-gray-500 dark:text-gray-400">
-									We offer a range of pricing options to suit your needs and budget. Our plans start at $9.99 per month for individuals, and we also have enterprise-level plans for larger
-									organizations.
+									연간 플랜 기준, 1인당 10만원입니다. 이는 경쟁사 대비 20% 이상 저렴한 가격입니다. 연구실록은 연구개발사업의 일환으로 사용되는 서비스이므로 연구개발사업 예산을 사용할 수 있습니다.
 								</p>
 							</AccordionContent>
 						</AccordionItem>
@@ -61,12 +60,9 @@ export default function FAQ() {
 							</AccordionContent>
 						</AccordionItem>
 						<AccordionItem value="pricing-3">
-							<AccordionTrigger className="text-lg font-medium">Do you offer a free trial?</AccordionTrigger>
+							<AccordionTrigger className="text-lg font-medium">무료 체험을 제공하나요?</AccordionTrigger>
 							<AccordionContent>
-								<p className="text-gray-500 dark:text-gray-400">
-									Yes, we offer a 14-day free trial for all of our plans. This gives you the opportunity to try out the product and see if it&apos;s a good fit for your needs before committing to a
-									subscription.
-								</p>
+								<p className="text-gray-500 dark:text-gray-400">무료 체험을 제공하지는 않지만, 고객이 서비스에 만족하지 못하는 경우 30일 이내 환불이 가능합니다.</p>
 							</AccordionContent>
 						</AccordionItem>
 					</Accordion>

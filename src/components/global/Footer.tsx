@@ -5,7 +5,7 @@ export default function Footer() {
 			<div className="container mx-auto px-4">
 				<div className="flex flex-col md:flex-row justify-between items-start md:items-center">
 					<div className="mb-6 md:mb-0 place-items-center">
-						<img src="/logo.png" alt="Zarathu Logo" className="h-12 mb-4" />
+						<img src="/logo.png" alt="Zarathu Logo" className="h-12 mb-4 mx-auto" />
 						<Link href="https://www.zarathu.com/">
 							<h1 className="text-xl font-bold">차라투 주식회사</h1>
 						</Link>
