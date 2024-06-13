@@ -17,10 +17,10 @@ const ProjectSchema = z
 		title: z.string().min(1, "프로젝트 이름은 1자보다 길어야 합니다.").max(1000, "프로젝트 이름은 1,000자보다 짧아야 합니다."),
 		project_leader: z.string().min(1, "연구책임자 이름은 1자보다 길어야 합니다.").max(1000, "연구책임자 이름은 1,000자보다 짧아야 합니다.").optional().nullable(),
 		grant_number: z.string().min(1, "과제 번호는 1자보다 길어야 합니다.").max(1000, "과제 번호는 1,000자보다 짧아야 합니다.").optional().nullable(),
-		start_date: z.date().optional().nullable(),
-		end_date: z.date().optional().nullable(),
+		start_date: z.string().date("날짜 형식이 아닙니다."),
+		end_date: z.string().date("날짜 형식이 아닙니다."),
 	})
-	.refine((data) => !data.start_date || !data.end_date || data.start_date <= data.end_date, {
+	.refine((data) => !data.start_date || !data.end_date || new Date(data.start_date) <= new Date(data.end_date), {
 		message: "연구 종료일은 연구 시작일보다 나중이어야 합니다.",
 		path: ["end_date"],
 	});
@@ -29,8 +29,8 @@ export type CreateProjectFormValues = z.infer<typeof ProjectSchema>;
 
 const preprocessValues = (values: CreateProjectFormValues & { id: string }) => ({
 	...values,
-	start_date: values.start_date ? new Date(values.start_date) : undefined,
-	end_date: values.end_date ? new Date(values.end_date) : undefined,
+	start_date: values.start_date ? new Date(values.start_date).toLocaleDateString('en-CA') : undefined,
+	end_date: values.end_date ? new Date(values.end_date).toLocaleDateString('en-CA') : undefined,
 });
 
 const useTeamId = () => {
@@ -91,7 +91,10 @@ const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValu
 			render={({ field }) => (
 				<FormItem className="flex flex-col">
 					<FormLabel>연구 시작일</FormLabel>
-					<DatePicker field={field} />
+					<DatePicker field={{
+						...field,
+						onChange: (date: Date) => field.onChange(date.toLocaleDateString('en-CA')),	// Convert to ISO date string
+					}} />
 					<FormDescription>연구 시작일을 선택하세요.</FormDescription>
 					<FormMessage />
 				</FormItem>
@@ -103,7 +106,10 @@ const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValu
 			render={({ field }) => (
 				<FormItem className="flex flex-col">
 					<FormLabel>연구 종료일</FormLabel>
-					<DatePicker field={field} />
+					<DatePicker field={{
+						...field,
+						onChange: (date: Date) => field.onChange(date.toLocaleDateString('en-CA')),	// Convert to ISO date string
+					}} />
 					<FormDescription>연구 종료일을 선택하세요.</FormDescription>
 					<FormMessage />
 				</FormItem>

@@ -18,7 +18,7 @@ export default function MyBucketList({ bucketList, projectId }: { bucketList: Bu
 					<Link href={`/dashboard/project/${projectId}/setting`} className="col-start-2 md:col-start-3 xl:col-start-5">
 						<Button className="w-full righ">프로젝트 설정</Button>
 					</Link>
-					<Link href="/dashboard/project/create" className="col-start-3 md:col-start-4 xl:col-start-6">
+					<Link href={`/dashboard/bucket/create?project=${projectId}`} className="col-start-3 md:col-start-4 xl:col-start-6">
 						<Button className="w-full righ">새 버킷</Button>
 					</Link>
 				</CardTitle>
