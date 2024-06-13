@@ -25,6 +25,7 @@ export default function NoteInfo() {
 				<>
 					<Card>
 						<CardHeader>
+							<p className="text-sm text-gray-500 dark:text-gray-400">노트 이름</p>
 							<CardTitle>{data.note_title}</CardTitle>
 						</CardHeader>
 						<CardContent className="space-y-4">
