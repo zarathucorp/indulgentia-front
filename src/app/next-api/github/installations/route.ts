@@ -13,7 +13,8 @@ export async function GET(req: NextRequest) {
 	try {
 		const response = await axios.get(installationsUrl, { headers });
 		return new NextResponse(JSON.stringify(response.data), { status: 200 });
-	} catch (error) {
-		return new NextResponse(JSON.stringify({ error: "Failed to fetch installations" }), { status: 500 });
+	} catch (error: any) {
+		console.log(error);
+		return new NextResponse(JSON.stringify({ error: `Failed to fetch installations: ${error}` }), { status: 500 });
 	}
 }
