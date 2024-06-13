@@ -1,11 +1,14 @@
 import Link from "next/link";
+import Image from "next/image";
 export default function Footer() {
 	return (
 		<footer className="bg-[#051f20] text-white py-8">
 			<div className="container mx-auto px-4">
 				<div className="flex flex-col md:flex-row justify-between items-start md:items-center">
 					<div className="mb-6 md:mb-0 place-items-center">
-						<img src="/logo.png" alt="Zarathu Logo" className="h-12 mb-4 mx-auto" />
+						<div className="relative h-12 w-12 mb-4 mx-auto">
+							<Image fill src="/logo.png" alt="Zarathu Logo" className="" />
+						</div>
 						<Link href="https://www.zarathu.com/">
 							<h1 className="text-xl font-bold">차라투 주식회사</h1>
 						</Link>

@@ -1,14 +1,14 @@
 "use client";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-
+import Image from "next/image";
 export default function FailPage() {
 	const searchParams = useSearchParams();
 
 	return (
 		<main className="flex flex-col items-center p-6">
 			<div className="box_section w-full max-w-xl p-6 bg-white shadow-md rounded-lg">
-				<img width={100} height={100} src="https://static.toss.im/lotties/error-spot-no-loop-space-apng.png" alt="에러 이미지" className="mx-auto" />
+				<Image width={100} height={100} src="https://static.toss.im/lotties/error-spot-no-loop-space-apng.png" alt="에러 이미지" className="mx-auto" />
 				<h2 className="text-2xl font-semibold mt-4 text-center">결제를 실패했어요</h2>
 
 				<div className="grid grid-cols-2 gap-4 mt-8 text-lg">
