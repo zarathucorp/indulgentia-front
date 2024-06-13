@@ -36,7 +36,7 @@ export default function MyProjectList({ projectList }: { projectList: ProjectTyp
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{projectList.map((project: ProjectType, index: number) => (
+						{projectList.map((project: ProjectType) => (
 							<TableRow key={project.id}>
 								<TableCell className="font-medium">{project.title}</TableCell>
 								<TableCell className="hidden md:table-cell">{project.project_leader}</TableCell>

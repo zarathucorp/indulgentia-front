@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useSearchParams } from "next/navigation";
 import FileUploader from "@/components/global/FileUploader";
-import getErrorMessage from "@/hooks/error.tsx";
+import { getErrorMessageToast } from "@/hooks/error.tsx";
 import { useToast } from "@/components/ui/use-toast";
 import { ActionButton } from "@/components/ui/actionbutton";
 import { useRouter } from "next/navigation";
@@ -89,7 +89,7 @@ export default function NewNoteForm() {
 		} catch (error: any) {
 			toast({
 				title: "노트를 생성하지 못했습니다.",
-				description: getErrorMessage(error),
+				description: getErrorMessageToast(error),
 			});
 			console.error(error);
 		} finally {

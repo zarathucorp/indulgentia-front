@@ -144,7 +144,7 @@ const NewProjectForm = () => {
 				title: "프로젝트 생성",
 				description: "프로젝트가 성공적으로 생성되었습니다.",
 			});
-		} catch (error) {
+		} catch (error: any) {
 			console.error(error);
 			toast({
 				title: "프로젝트 수정 실패",
@@ -166,7 +166,6 @@ const NewProjectForm = () => {
 		</div>
 	);
 };
-
 
 const EditProjectForm = ({ projectInfo, mutate }: { projectInfo: CreateProjectFormValues & { id: string }; mutate: any }) => {
 	const teamId = useTeamId();
