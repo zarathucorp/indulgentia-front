@@ -65,8 +65,8 @@ export default function ViewNote() {
 				{isBreadcrumbLoading ? <DashboardBreadCrumbLoading type="Note" /> : <DashboardBreadCrumb breadcrumbData={{ level: "Note", note_id: params.note_uuid, ...breadcrumbData }} />}
 			</div>
 			<div className="grid grid-cols-1 md:grid-cols-[3fr_2fr] lg:grid-cols-[3fr_1fr]">
-				<div className="px-2">{isLoading ? <NoteLoading /> : <>{<PDFViewer fileUrl={data} />}</>}</div>
-				<div className="flex flex-col">
+				<div className="px-2">{isLoading ? <NoteLoading /> : <>{<PDFViewer fileUrl={data} className="h-screen-minus-navbar" />}</>}</div>
+				<div className="flex flex-col ">
 					<NoteInfo />
 					<a href={downloadURL || "#"} download={`Report_${params.note_uuid}.pdf`}>
 						<Button className="py-2 w-full">노트 다운로드</Button>

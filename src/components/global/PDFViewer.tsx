@@ -13,7 +13,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ fileUrl, className }) => {
 	const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
 	return (
-		<div style={{ height: "750px" }} className={className}>
+		<div className={className}>
 			<Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}>
 				<Viewer fileUrl={fileUrl} plugins={[defaultLayoutPluginInstance]} />
 			</Worker>
