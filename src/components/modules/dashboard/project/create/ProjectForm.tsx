@@ -12,13 +12,14 @@ import useSWRImmutable from "swr/immutable";
 import RemoveModal from "@/components/global/RemoveModal";
 import { useToast } from "@/components/ui/use-toast";
 import { ActionButton } from "@/components/ui/actionbutton";
+import { useRouter } from "next/navigation";
 const ProjectSchema = z
 	.object({
 		title: z.string().min(1, "프로젝트 이름은 1자보다 길어야 합니다.").max(1000, "프로젝트 이름은 1,000자보다 짧아야 합니다."),
 		project_leader: z.string().min(1, "연구책임자 이름은 1자보다 길어야 합니다.").max(1000, "연구책임자 이름은 1,000자보다 짧아야 합니다.").optional().nullable(),
 		grant_number: z.string().min(1, "과제 번호는 1자보다 길어야 합니다.").max(1000, "과제 번호는 1,000자보다 짧아야 합니다.").optional().nullable(),
-		start_date: z.string().date("날짜 형식이 아닙니다."),
-		end_date: z.string().date("날짜 형식이 아닙니다."),
+		start_date: z.string().date("날짜 형식이 아닙니다.").optional().nullable(),
+		end_date: z.string().date("날짜 형식이 아닙니다.").optional().nullable(),
 	})
 	.refine((data) => !data.start_date || !data.end_date || new Date(data.start_date) <= new Date(data.end_date), {
 		message: "연구 종료일은 연구 시작일보다 나중이어야 합니다.",
@@ -29,8 +30,8 @@ export type CreateProjectFormValues = z.infer<typeof ProjectSchema>;
 
 const preprocessValues = (values: CreateProjectFormValues & { id: string }) => ({
 	...values,
-	start_date: values.start_date ? new Date(values.start_date).toLocaleDateString('en-CA') : undefined,
-	end_date: values.end_date ? new Date(values.end_date).toLocaleDateString('en-CA') : undefined,
+	start_date: values.start_date ? new Date(values.start_date).toLocaleDateString("en-CA") : undefined,
+	end_date: values.end_date ? new Date(values.end_date).toLocaleDateString("en-CA") : undefined,
 });
 
 const useTeamId = () => {
@@ -91,10 +92,12 @@ const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValu
 			render={({ field }) => (
 				<FormItem className="flex flex-col">
 					<FormLabel>연구 시작일</FormLabel>
-					<DatePicker field={{
-						...field,
-						onChange: (date: Date) => field.onChange(date.toLocaleDateString('en-CA')),	// Convert to ISO date string
-					}} />
+					<DatePicker
+						field={{
+							...field,
+							onChange: (date: Date) => field.onChange(date.toLocaleDateString("en-CA")), // Convert to ISO date string
+						}}
+					/>
 					<FormDescription>연구 시작일을 선택하세요.</FormDescription>
 					<FormMessage />
 				</FormItem>
@@ -106,10 +109,12 @@ const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValu
 			render={({ field }) => (
 				<FormItem className="flex flex-col">
 					<FormLabel>연구 종료일</FormLabel>
-					<DatePicker field={{
-						...field,
-						onChange: (date: Date) => field.onChange(date.toLocaleDateString('en-CA')),	// Convert to ISO date string
-					}} />
+					<DatePicker
+						field={{
+							...field,
+							onChange: (date: Date) => field.onChange(date.toLocaleDateString("en-CA")), // Convert to ISO date string
+						}}
+					/>
 					<FormDescription>연구 종료일을 선택하세요.</FormDescription>
 					<FormMessage />
 				</FormItem>
@@ -134,6 +139,7 @@ const handleRemove = async (values: (CreateProjectFormValues & { id: string }) |
 const NewProjectForm = () => {
 	const teamId = useTeamId();
 	const { toast } = useToast();
+	const router = useRouter();
 	const form = useForm<CreateProjectFormValues>({
 		resolver: zodResolver(ProjectSchema),
 	});
@@ -150,6 +156,8 @@ const NewProjectForm = () => {
 				title: "프로젝트 생성",
 				description: "프로젝트가 성공적으로 생성되었습니다.",
 			});
+
+			router.push("/dashboard");
 		} catch (error: any) {
 			console.error(error);
 			toast({
