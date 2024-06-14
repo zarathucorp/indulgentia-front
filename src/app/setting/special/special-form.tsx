@@ -39,8 +39,10 @@ export function SpecialForm() {
 							<FaRegCircleQuestion />
 						</TooltipTrigger>
 						<TooltipContent>
-							<p>GitHub 계정에 연구실록 앱을 설치하였으나, 연구실록상에서 연결을 해제한 경우, 다시 연동 버튼을 클릭해도 새로운 Organization에 연결하지 않는 경우 토큰을 받아올 수 없습니다.</p>
-							<p>이런 경우 &apos;토큰 다시 받아오기&apos; 버튼을 클릭하시기 바랍니다.</p>
+							<p>&apos;GitHub 계정 연동&apos; 버튼이 반응하지 않는 경우 &apos;토큰 다시 받아오기&apos;를 사용하시기 바랍니다.</p>
+							<p>
+								GitHub 계정 연동을 해제하고 GitHub 상에서는 연구실록을 삭제하지 않은 경우, 여러 개의 연구실록 계정에서 동일한 GitHub 계정으로 로그인 한 경우 등의 상황에서 발생할 수 있는 상황입니다.
+							</p>
 						</TooltipContent>
 					</Tooltip>
 				</Label>
@@ -48,7 +50,7 @@ export function SpecialForm() {
 			<div className="mt-2 flex items-center gap-2">
 				<Input type="email" disabled value={isLoadingGithub ? "정보를 불러오는 중입니다." : githubError || githubUsername} />
 				<Link href={process.env.NEXT_PUBLIC_GITHUB_APP_INSTALL_URL || "#"}>
-					<Button type="button">깃허브 계정 연동</Button>
+					<Button type="button">GitHub 계정 연동</Button>
 				</Link>
 				<Link href={"https://github.com/login/oauth/authorize?client_id=Iv23li79mqTdxRfQ2tpK&redirect_uri=https://dev.rndsillog.com/next-api/github/callback" || "#"}>
 					<Button type="button">토큰 다시 받아오기</Button>

@@ -23,7 +23,8 @@ import useGithub, { disconnectGitHub } from "@/hooks/fetch/useGithub";
 import useUser from "@/hooks/fetch/useUser";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { FaRegCircleQuestion } from "react-icons/fa6";
 const accountFormSchema = z.object({
 	lastName: z.string().max(30, { message: "30자 이하로 입력해주세요" }).nullable(),
 	firstName: z.string().max(30, { message: "30자 이하로 입력해주세요" }).nullable(),
@@ -144,13 +145,31 @@ export function AccountForm() {
 				/>
 				<div className="">
 					<div>
-						<FormLabel>GitHub 계정 연결</FormLabel>
+						<TooltipProvider>
+							<FormLabel className="flex">
+								GitHub 계정 연결&nbsp;{" "}
+								<Tooltip>
+									<TooltipTrigger>
+										<FaRegCircleQuestion />
+									</TooltipTrigger>
+									<TooltipContent>
+										<p>
+											&apos;GitHub 계정 연동&apos; 버튼을 눌러도 계정을 연결할 수 없는 경우{" "}
+											<Link href="/setting/special">
+												<u>&apos;특수 설정&apos;</u>
+											</Link>{" "}
+											탭으로 가시기 바랍니다.
+										</p>
+									</TooltipContent>
+								</Tooltip>
+							</FormLabel>
+						</TooltipProvider>
 						{/* <Label>연결된 계정</Label> */}
 					</div>
 					<div className="mt-2 flex items-center gap-2">
 						<Input type="email" disabled value={isLoadingGithub ? "정보를 불러오는 중입니다." : githubError || githubUsername} />
 						<Link href={process.env.NEXT_PUBLIC_GITHUB_APP_INSTALL_URL || "#"}>
-							<Button type="button">깃허브 계정 연동</Button>
+							<Button type="button">GitHub 계정 연동</Button>
 						</Link>
 						{/* <Link href={"https://github.com/login/oauth/authorize?client_id=Iv23li79mqTdxRfQ2tpK&redirect_uri=https://dev.rndsillog.com/next-api/github/callback" || "#"}>
 							<Button type="button">토큰 다시 받아오기</Button>
