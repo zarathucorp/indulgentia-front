@@ -198,6 +198,7 @@ function BucketManagerField({ form, teamUserList, isLoading }: { form: any; team
 							{isLoading ? (
 								<p>Loading</p>
 							) : (
+								teamUserList &&
 								teamUserList.map((user: TeamUserType, index: number) => (
 									<SelectItem key={index} value={user.id}>
 										{/* {user.id} */}
