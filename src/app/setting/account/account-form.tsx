@@ -152,9 +152,9 @@ export function AccountForm() {
 						<Link href={process.env.NEXT_PUBLIC_GITHUB_APP_INSTALL_URL || "#"}>
 							<Button type="button">깃허브 계정 연동</Button>
 						</Link>
-						<Link href={"https://github.com/login/oauth/authorize?client_id=Iv23li79mqTdxRfQ2tpK&redirect_uri=https://dev.rndsillog.com/next-api/github/callback" || "#"}>
+						{/* <Link href={"https://github.com/login/oauth/authorize?client_id=Iv23li79mqTdxRfQ2tpK&redirect_uri=https://dev.rndsillog.com/next-api/github/callback" || "#"}>
 							<Button type="button">토큰 다시 받아오기</Button>
-						</Link>
+						</Link> */}
 
 						<Button
 							type="button"

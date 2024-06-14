@@ -26,6 +26,10 @@ const sidebarNavItems = [
 		title: "노트",
 		href: "/setting/note",
 	},
+	{
+		title: "특수 설정",
+		href: "/setting/special",
+	},
 	// {
 	// 	title: "Display",
 	// 	href: "/setting/display",
