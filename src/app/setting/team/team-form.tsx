@@ -15,7 +15,8 @@ import { TeamMemberLoading } from "@/components/global/Loading/TeamMember";
 import { useToast } from "@/components/ui/use-toast";
 import { createClient } from "@/utils/supabase/client";
 import { UUID } from "crypto";
-
+import { LeaderTeamExitModal } from "@/components/global/RemoveModal";
+import { useState } from "react";
 export function TeamForm() {
 	const { toast } = useToast();
 	const { teamInfo, hasTeam, isLoading: teamLoading, mutate: teamMutate, isLeader } = useTeamInfo();
@@ -25,12 +26,15 @@ export function TeamForm() {
 	const { invitationSendList, isLoading: invitationSendListLoading, mutate: invitationSendListMutate } = getInvitationSendList();
 	const supabase = createClient();
 	const onSettingUpdate = () => {};
+	const [leaderExitModalOpen, setLeaderExitModalOpen] = useState<boolean>(false);
 	const onLeaveButtonClick = async () => {
 		try {
 			let axiosResult;
 			if (isLeader) {
-				const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/user/team/${teamInfo?.id}`);
-				axiosResult = response.data;
+				setLeaderExitModalOpen(true);
+				return;
+				// const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/user/team/${teamInfo?.id}`);
+				// axiosResult = response.data;
 			} else if (!isLeader) {
 				const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/user/team/${teamInfo?.id}/exit`);
 				axiosResult = response.data;
@@ -343,6 +347,7 @@ export function TeamForm() {
 					팀 탈퇴
 				</Button>
 			</div>
+			{teamInfo && <LeaderTeamExitModal isOpen={leaderExitModalOpen} setIsOpen={setLeaderExitModalOpen} teamInfo={teamInfo} />}
 		</>
 	);
 }

@@ -157,5 +157,5 @@ const useInvitationSendList = () => {
 		mutate,
 	};
 };
-export type { TeamMemberType, InvitationReceiveType, InvitationSendType };
+export type { TeamMemberType, InvitationReceiveType, InvitationSendType, TeamInfoType };
 export { useTeamInfo, useTeamMemberList, createTeam, inviteUser, useInvitationReceiveList as getInvitationReceiveList, useInvitationSendList as getInvitationSendList };

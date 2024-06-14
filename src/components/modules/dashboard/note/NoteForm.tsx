@@ -196,7 +196,14 @@ function NoteFileField({ form }: { form: any }) {
 				<FormItem>
 					<FormLabel>노트 파일</FormLabel>
 					<FormControl>
-						<FileUploader typeString="" multiple onChange={handleFileChange} isFileSelected={isFileSelected} fileUnselectHandling={handleFileUnselect} />
+						<FileUploader
+							typeString=""
+							multiple
+							onChange={handleFileChange}
+							isFileSelected={isFileSelected}
+							fileUnselectHandling={handleFileUnselect}
+							accept="image/*,.txt,.pdf,text/*,.hwp,.hwpx,application/msword,application/vnd.ms-excel,application/vnd.ms-powerpoint"
+						/>
 					</FormControl>
 					<FormDescription>노트 파일을 업로드합니다.</FormDescription>
 					<FormMessage />
