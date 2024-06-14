@@ -22,6 +22,7 @@ import convertKST from "@/utils/time/convertKST";
 import { Label } from "@/components/ui/label";
 import RemoveModal from "@/components/global/RemoveModal";
 import { handleNoteRemove } from "../../note/[note_uuid]/handleNoteRemove";
+import { NoNote } from "@/components/global/NoContent";
 const noteListFetcher = async (url: string) => {
 	const result = await axios.get(url, { withCredentials: true });
 	console.log(result.data.data);
@@ -101,8 +102,8 @@ export default function Note() {
 										</Card>
 									</div>
 								))}
-							{data && data?.length === 0 && <p>노트가 없습니다.</p>}
 						</div>
+						<div className="w-full h-full ">{data && data?.length === 0 && <NoNote />}</div>
 					</div>
 				</div>
 				<div className="space-y-4">
