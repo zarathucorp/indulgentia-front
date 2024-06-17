@@ -109,7 +109,8 @@ type InvitationSendType = {
 };
 
 const useTeamMemberList = () => {
-	const { data, error, isLoading, mutate } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/team/list", fetcher, { onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+	const { hasTeam } = useTeamInfo();
+	const { data, error, isLoading, mutate } = useSWRImmutable(hasTeam ? process.env.NEXT_PUBLIC_API_URL + "/user/team/list" : null, fetcher, { onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
 		if (retryCount >= 3) return;
 		if (error.status === 404) return;
 		setTimeout(() => revalidate({ retryCount }), 5000)
@@ -180,7 +181,8 @@ const useInvitationReceiveList = () => {
 	};
 };
 const useInvitationSendList = () => {
-	const { data, error, mutate, isLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/team/invite/send/list", fetcher, { onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+	const { hasTeam } = useTeamInfo();
+	const { data, error, mutate, isLoading } = useSWRImmutable(hasTeam ? process.env.NEXT_PUBLIC_API_URL + "/user/team/invite/send/list" : null, fetcher, { onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
 		if (retryCount >= 3) return;
 		if (error.status === 404) return;
 		setTimeout(() => revalidate({ retryCount }), 5000)
