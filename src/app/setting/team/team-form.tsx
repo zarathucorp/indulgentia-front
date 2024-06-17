@@ -347,7 +347,7 @@ export function TeamForm() {
 					팀 탈퇴
 				</Button>
 			</div>
-			{teamInfo && <LeaderTeamExitModal isOpen={leaderExitModalOpen} setIsOpen={setLeaderExitModalOpen} teamInfo={teamInfo} />}
+			{teamInfo && <LeaderTeamExitModal isOpen={leaderExitModalOpen} setIsOpen={setLeaderExitModalOpen} teamInfo={teamInfo} teamMutate={teamMutate} />}
 		</>
 	);
 }
