@@ -88,8 +88,15 @@ type InvitationSendType = {
 
 const useTeamMemberList = () => {
 	const { data, error, isLoading, mutate } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/team/list", fetcher);
+	if ( data?.data === null ) {
+		return {
+			memberList: [],
+			isLoading,
+			error,
+			mutate,
+		};	
+	}
 	console.log(data?.data.map((member: any) => member.id));
-
 	const memberList: TeamMemberType[] = data?.data.map((member: any) => {
 		const eachMember = {
 			id: member.id,

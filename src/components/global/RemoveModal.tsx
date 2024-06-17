@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { Dispatch, SetStateAction } from "react";
 import axios from "axios";
+import { KeyedMutator } from "swr";
 type removeType = "Project" | "Bucket" | "Note";
 const removeTypeDescription = {
 	Project: "프로젝트",
@@ -149,7 +150,7 @@ export default function RemoveModal({
 	);
 }
 import { TeamInfoType } from "@/hooks/fetch/useTeam";
-export function LeaderTeamExitModal({ isOpen, setIsOpen, teamInfo }: { isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>>; teamInfo: TeamInfoType }) {
+export function LeaderTeamExitModal({ isOpen, setIsOpen, teamInfo, teamMutate }: { isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>>; teamInfo: TeamInfoType; teamMutate: KeyedMutator<any> }) {
 	const [confirmEntityName, setConfirmEntityName] = useState<string>("");
 	const { toast } = useToast();
 	return (
@@ -184,6 +185,8 @@ export function LeaderTeamExitModal({ isOpen, setIsOpen, teamInfo }: { isOpen: b
 									title: "삭제 완료",
 									description: `팀 ${teamInfo.name}의 삭제가 완료되었습니다.`,
 								});
+								teamMutate();
+								setIsOpen(false);
 							} catch (e: any) {
 								toast({
 									title: "삭제 실패",

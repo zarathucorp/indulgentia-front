@@ -59,6 +59,7 @@ export function CreateTeamModal() {
 									});
 
 									mutate();
+									setOpenModal(false);
 								} catch (e: any) {
 									toast({
 										title: "팀 생성 실패",
