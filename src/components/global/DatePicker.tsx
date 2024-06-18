@@ -22,7 +22,7 @@ export default function DatePicker(props: { field: any }) {
 				</FormControl>
 			</PopoverTrigger>
 			<PopoverContent className="w-auto p-0" align="start">
-				<Calendar mode="single" selected={props.field.value} onSelect={props.field.onChange} initialFocus locale={ko} />
+				<Calendar mode="single" selected={props.field.value} onSelect={props.field.onChange} initialFocus locale={ko} fixedWeeks/>
 				{/* disabled={(date) => date > new Date() || date < new Date("1900-01-01")} */}
 			</PopoverContent>
 		</Popover>
