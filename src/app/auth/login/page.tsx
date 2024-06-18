@@ -68,11 +68,11 @@ export default function SigninPage({ searchParams }: { searchParams: { message: 
 									<Input name="password" id="password" type="password" required />
 								</div>
 
-								<SubmitButton formAction={signIn} className="w-full outline" pendingText="Signing In...">
+								<SubmitButton formAction={signIn} className="w-full outline mt-2" pendingText="Signing In...">
 									로그인
 								</SubmitButton>
 								<Link href="/auth/join">
-									<SubmitButton className="w-full outline" pendingText="Signing Up...">
+									<SubmitButton className="w-full outline mt-2" pendingText="Signing Up...">
 										회원가입
 									</SubmitButton>
 								</Link>
