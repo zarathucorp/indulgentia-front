@@ -33,12 +33,13 @@ export default function SigninPage({ searchParams }: { searchParams: { message: 
 					title: "로그인에 실패하였습니다.",
 					description: "이메일과 비밀번호를 정확히 확인해주세요",
 				});
+			} else if (searchParams.message === undefined) {
+				return;
 			} else {
 				toast({
 					title: "알 수 없는 상황입니다.",
 					description: decodeURI(searchParams.message),
-				});
-			}
+				});}
 		}, 0);
 	}, [searchParams.message]);
 
@@ -67,11 +68,11 @@ export default function SigninPage({ searchParams }: { searchParams: { message: 
 									<Input name="password" id="password" type="password" required />
 								</div>
 
-								<SubmitButton formAction={signIn} className="w-full outline" pendingText="Signing In...">
+								<SubmitButton formAction={signIn} className="w-full outline mt-2" pendingText="Signing In...">
 									로그인
 								</SubmitButton>
 								<Link href="/auth/join">
-									<SubmitButton className="w-full outline" pendingText="Signing Up...">
+									<SubmitButton className="w-full outline mt-2" pendingText="Signing Up...">
 										회원가입
 									</SubmitButton>
 								</Link>
