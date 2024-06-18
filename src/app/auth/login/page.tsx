@@ -33,12 +33,13 @@ export default function SigninPage({ searchParams }: { searchParams: { message: 
 					title: "로그인에 실패하였습니다.",
 					description: "이메일과 비밀번호를 정확히 확인해주세요",
 				});
+			} else if (searchParams.message === undefined) {
+				return;
 			} else {
 				toast({
 					title: "알 수 없는 상황입니다.",
 					description: decodeURI(searchParams.message),
-				});
-			}
+				});}
 		}, 0);
 	}, [searchParams.message]);
 
