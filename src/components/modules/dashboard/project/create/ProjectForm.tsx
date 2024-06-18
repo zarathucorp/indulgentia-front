@@ -189,6 +189,7 @@ const EditProjectForm = ({ projectInfo, mutate }: { projectInfo: CreateProjectFo
 		// defaultValues: preprocessValues(projectInfo),
 		values: preprocessValues(projectInfo),
 	});
+	const router = useRouter();
 
 	const onSubmit = async (data: CreateProjectFormValues) => {
 		const apiUrl = process.env.NEXT_PUBLIC_API_URL + `/dashboard/project/${projectInfo.id}`;
@@ -203,6 +204,9 @@ const EditProjectForm = ({ projectInfo, mutate }: { projectInfo: CreateProjectFo
 				title: "프로젝트 업데이트 완료",
 				description: "프로젝트가 성공적으로 업데이트되었습니다.",
 			});
+			const currentUrl = window.location.pathname;
+			const newUrl = currentUrl.substring(0, currentUrl.lastIndexOf("/"));
+			router.push(newUrl);
 		} catch (error) {
 			console.error(error);
 			toast({
