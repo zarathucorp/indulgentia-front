@@ -73,7 +73,7 @@ export default function NewBucketForm() {
 	}
 
 	return (
-		<div className="w-full lg:w-1/2 mx-auto">
+		<div className="w-full lg:w-1/2 my-4 mx-4 sm:mx-4 lg:mx-auto">
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 					<BucketTitleField form={form} />
@@ -145,7 +145,7 @@ export function EditBucketForm({ bucketInfo, mutate }: { bucketInfo: CreateBucke
 	}
 
 	return (
-		<div className="w-full lg:w-1/2 mx-auto">
+		<div className="w-full lg:w-1/2 my-4 mx-4 sm:mx-4 lg:mx-auto">
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 					<BucketTitleField form={form} />
