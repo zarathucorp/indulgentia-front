@@ -168,7 +168,7 @@ const NewProjectForm = () => {
 	};
 
 	return (
-		<div className="w-full lg:w-1/2 mx-auto">
+		<div className="w-full lg:w-1/2 my-4 mx-4 sm:mx-4 lg:mx-auto">
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 					<ProjectFormFields form={form} />
@@ -189,6 +189,7 @@ const EditProjectForm = ({ projectInfo, mutate }: { projectInfo: CreateProjectFo
 		// defaultValues: preprocessValues(projectInfo),
 		values: preprocessValues(projectInfo),
 	});
+	const router = useRouter();
 
 	const onSubmit = async (data: CreateProjectFormValues) => {
 		const apiUrl = process.env.NEXT_PUBLIC_API_URL + `/dashboard/project/${projectInfo.id}`;
@@ -203,6 +204,9 @@ const EditProjectForm = ({ projectInfo, mutate }: { projectInfo: CreateProjectFo
 				title: "프로젝트 업데이트 완료",
 				description: "프로젝트가 성공적으로 업데이트되었습니다.",
 			});
+			const currentUrl = window.location.pathname;
+			const newUrl = currentUrl.substring(0, currentUrl.lastIndexOf("/"));
+			router.push(newUrl);
 		} catch (error) {
 			console.error(error);
 			toast({
@@ -213,7 +217,7 @@ const EditProjectForm = ({ projectInfo, mutate }: { projectInfo: CreateProjectFo
 	};
 
 	return (
-		<div className="w-full lg:w-1/2 mx-auto">
+		<div className="w-full lg:w-1/2 my-4 mx-4 sm:mx-4 lg:mx-auto">
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 					<ProjectFormFields form={form} />

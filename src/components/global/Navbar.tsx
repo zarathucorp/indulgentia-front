@@ -72,7 +72,7 @@ export default function Navbar() {
 									</Link>
 								</SheetClose>
 								<SheetClose asChild>
-									<Link href="/faq" className="flex items-center gap-1">
+									<Link href="/help/faq" className="flex items-center gap-1">
 										<FaRegQuestionCircle className="h-5 w-5" />
 										FAQ
 									</Link>

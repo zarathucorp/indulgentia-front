@@ -36,7 +36,7 @@ const noteListFetcher = async (url: string) => {
 export default function Note() {
 	const params = useParams<{ bucket_uuid: string }>();
 	const { data, isValidating, error, mutate: mutateNoteList, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + `/dashboard/note/list/${params.bucket_uuid}`, noteListFetcher);
-	const { data: breadcrumbData, isLoading: isBreadcrumbLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/${params.bucket_uuid}/breadcrumb`, async (url) => {
+	const { data: breadcrumbData, isLoading: isBreadcrumbLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/${params.bucket_uuid}/breadcrumb`, async (url) => {
 		const result = await axios.get(url, { withCredentials: true });
 		if (result.status !== 200) {
 			const error = new Error("An error occurred while fetching the data.");

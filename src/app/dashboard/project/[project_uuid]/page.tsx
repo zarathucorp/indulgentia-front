@@ -32,7 +32,7 @@ const projectListFetcher = async (url: string) => {
 export default function Project() {
 	const params = useParams<{ project_uuid: string }>();
 	const { data, isValidating, error, mutate, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/list/${params.project_uuid}`, projectListFetcher);
-	const { data: breadcrumbData, isLoading: isBreadcrumbLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + `/dashboard/project/${params.project_uuid}`, async (url) => {
+	const { data: breadcrumbData, isLoading: isBreadcrumbLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + `/dashboard/project/${params.project_uuid}`, async (url) => {
 		const result = await axios.get(url, { withCredentials: true });
 		if (result.status !== 200) {
 			const error = new Error("An error occurred while fetching the data.");

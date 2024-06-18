@@ -6,7 +6,7 @@ type DashboardLevel = {
 
 type ProjectLevel = {
 	level: "Project";
-	project_title: string;
+	title: string;
 	project_id: string;
 };
 
@@ -56,7 +56,7 @@ export function DashboardBreadCrumb({ breadcrumbData }: { breadcrumbData: Dashbo
 					<>
 						<BreadcrumbSeparator />
 						{breadcrumbData.level === "Project" ? (
-							<BreadcrumbItem>{breadcrumbData.project_title}</BreadcrumbItem>
+							<BreadcrumbItem>{breadcrumbData.title}</BreadcrumbItem>
 						) : (
 							<BreadcrumbLink href={`/dashboard/project/${breadcrumbData.project_id}`}>{breadcrumbData.project_title}</BreadcrumbLink>
 						)}
