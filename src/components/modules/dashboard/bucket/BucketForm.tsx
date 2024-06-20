@@ -19,6 +19,7 @@ import { Spinner } from "@/components/global/Spinner";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
+import { useTeamMemberList } from '@/hooks/fetch/useTeam';
 const BucketSchema = z.object({
 	title: z
 		.string()
@@ -118,11 +119,12 @@ export function EditBucketForm({ bucketInfo, mutate }: { bucketInfo: CreateBucke
 		defaultValues: bucketInfo,
 	});
 
-	const { data: teamUserList, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + "/user/team/list", async (url) => {
-		const result = await axios.get(url, { withCredentials: true });
-		console.log(result.data.data);
-		return result.data.data as TeamUserType[];
-	});
+	const { memberList: teamUserList, isLoading } = useTeamMemberList()
+	// const { data: teamUserList, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + "/user/team/list", async (url) => {
+	// 	const result = await axios.get(url, { withCredentials: true });
+	// 	console.log(result.data.data);
+	// 	return result.data.data as TeamUserType[];
+	// });
 
 	async function onSubmit(data: CreateBucketFormValues) {
 		try {
@@ -149,7 +151,7 @@ export function EditBucketForm({ bucketInfo, mutate }: { bucketInfo: CreateBucke
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 					<BucketTitleField form={form} />
-					<BucketManagerField form={form} teamUserList={teamUserList || []} isLoading={isLoading} />
+					<BucketManagerField form={form} teamUserList={isLoading ? [] : teamUserList } isLoading={isLoading} />
 					<ProjectUUIDField form={form} />
 					<div className="flex justify-center">
 						<Button type="submit">버킷 수정</Button>
@@ -180,7 +182,9 @@ function BucketTitleField({ form }: { form: any }) {
 	);
 }
 
-function BucketManagerField({ form, teamUserList, isLoading }: { form: any; teamUserList: TeamUserType[]; isLoading: boolean }) {
+function BucketManagerField({ form, teamUserList = [], isLoading }: { form: any; teamUserList: TeamUserType[]; isLoading: boolean }) {
+	const validTeamUserList = Array.isArray(teamUserList) ? teamUserList : [];
+
 	return (
 		<FormField
 			control={form.control}
@@ -196,13 +200,13 @@ function BucketManagerField({ form, teamUserList, isLoading }: { form: any; team
 						</FormControl>
 						<SelectContent>
 							{isLoading ? (
-								<p>Loading</p>
+								<p>Loading...</p>
 							) : (
-								teamUserList &&
-								teamUserList.map((user: TeamUserType, index: number) => (
+								validTeamUserList.map((user: TeamUserType, index: number) => (
 									<SelectItem key={index} value={user.id}>
-										{/* {user.id} */}
-										{user?.last_name === null && user?.first_name === null ? user.email : (user?.last_name ?? "") + (user?.first_name ?? "")}
+										{user?.last_name === null && user?.first_name === null
+											? user.email
+											: `${user?.last_name ?? ''}${user?.first_name ?? ''}`}
 									</SelectItem>
 								))
 							)}

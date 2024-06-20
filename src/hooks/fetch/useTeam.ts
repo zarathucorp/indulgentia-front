@@ -109,30 +109,35 @@ type InvitationSendType = {
 
 const useTeamMemberList = () => {
 	const { hasTeam } = useTeamInfo();
-	const { data, error, isLoading, mutate } = useSWRImmutable(hasTeam ? process.env.NEXT_PUBLIC_API_URL + "/user/team/list" : null, fetcher, { onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-		if (retryCount >= 3) return;
-		if (error.status === 404) return;
-		setTimeout(() => revalidate({ retryCount }), 5000)
+	const { data, error, isLoading, mutate } = useSWRImmutable(
+		hasTeam ? process.env.NEXT_PUBLIC_API_URL + "/user/team/list" : null,
+		fetcher,
+		{
+			onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+				if (retryCount >= 3) return;
+				if (error.status === 404) return;
+				setTimeout(() => revalidate({ retryCount }), 2000);
+			},
 		}
-	});
-	console.log(data?.data.map((member: any) => member.id));
+	);
 
-	const memberList: TeamMemberType[] = data?.data.map((member: any) => {
-		const eachMember = {
-			id: member.id,
-			email: member.email,
-			first_name: member.first_name || "",
-			last_name: member.last_name || "",
-		};
+	// Check if data is available and is an array before mapping
+	const memberList: TeamMemberType[] = data?.data && Array.isArray(data.data)
+		? data.data.map((member: any) => {
+				const eachMember = {
+					id: member.id,
+					email: member.email,
+					first_name: member.first_name || "",
+					last_name: member.last_name || "",
+				};
 
-		if (member.first_name === null && member.last_name === null) {
-			eachMember.last_name = member.email.split("@")[0];
-		}
+				if (member.first_name === null && member.last_name === null) {
+					eachMember.last_name = member.email.split("@")[0];
+				}
 
-		return eachMember;
-	});
-
-	// console.log(memberList);
+				return eachMember;
+			})
+		: [];
 
 	return {
 		memberList,
@@ -141,7 +146,6 @@ const useTeamMemberList = () => {
 		mutate,
 	};
 };
-
 const createTeam = async (team_name: string) => {
 	await axios.post(
 		process.env.NEXT_PUBLIC_API_URL + "/user/team",
