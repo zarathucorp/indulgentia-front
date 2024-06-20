@@ -49,12 +49,12 @@ export function SpecialForm() {
 			</TooltipProvider>
 			<div className="mt-2 flex items-center gap-2">
 				<Input type="email" disabled value={isLoadingGithub ? "정보를 불러오는 중입니다." : githubError || githubUsername} />
-				<Link href={process.env.NEXT_PUBLIC_GITHUB_APP_INSTALL_URL || "#"}>
+				<a target="_blank" href={process.env.NEXT_PUBLIC_GITHUB_APP_INSTALL_URL || "#"}>
 					<Button type="button">GitHub 계정 연동</Button>
-				</Link>
-				<Link href={"https://github.com/login/oauth/authorize?client_id=Iv23li79mqTdxRfQ2tpK&redirect_uri=https://dev.rndsillog.com/next-api/github/callback" || "#"}>
+				</a>
+				<a href={"https://github.com/login/oauth/authorize?client_id=Iv23li79mqTdxRfQ2tpK&redirect_uri=https://dev.rndsillog.com/next-api/github/callback" || "#"}>
 					<Button type="button">토큰 다시 받아오기</Button>
-				</Link>
+				</a>
 
 				{/* <Button
 					type="button"
