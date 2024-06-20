@@ -17,8 +17,10 @@ import { useRouter } from "next/navigation";
 
 
 const SignatureSchema = z.object({
-	file: z.instanceof(File)
-});
+	file: z.custom((file) => file instanceof File, {
+	  message: "유효한 파일이 업로드 되지 않았습니다"
+	})
+  });
 
 export type CreateSignatureFormValues = z.infer<typeof SignatureSchema>;
 
@@ -210,7 +212,7 @@ const SignaturePad = () => {
 						<div className="flex justify-center">
 							<SignatureFileField form={form} />
 							<ActionButton type="submit" className="my-1.5">{isSubmitting && <Spinner />}&nbsp;서명 파일 업로드</ActionButton>
-						</div>
+						</div>	
 					</form>
 				</Form>
 			</div>
