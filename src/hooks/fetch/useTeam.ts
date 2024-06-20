@@ -37,7 +37,6 @@ const useTeamInfo = () => {
 		}
 	});
 	const supabase = createClient();
-	// const isLoading = !error && !data;
 	const [isLeader, setIsLeader] = useState(false);
 	const teamInfo: TeamInfoType | null = data?.data ?? null;
 	const hasTeam: boolean = !!teamInfo;

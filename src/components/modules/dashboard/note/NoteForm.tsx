@@ -75,6 +75,7 @@ export default function NewNoteForm() {
 
 		try {
 			const result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/dashboard/note/", sendData, {
+				timeout: 120000,
 				withCredentials: true,
 				headers: {
 					"Content-Type": "multipart/form-data",
@@ -202,7 +203,7 @@ function NoteFileField({ form }: { form: any }) {
 							onChange={handleFileChange}
 							isFileSelected={isFileSelected}
 							fileUnselectHandling={handleFileUnselect}
-							accept="image/*,.txt,.pdf,text/*,.hwp,.hwpx,application/msword,application/vnd.ms-excel,application/vnd.ms-powerpoint"
+							accept="application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/x-hwp,application/x-hwpx,image/jpeg,image/png,application/pdf,.hwp,.hwpx"
 						/>
 					</FormControl>
 					<FormDescription>노트 파일을 업로드합니다.</FormDescription>
