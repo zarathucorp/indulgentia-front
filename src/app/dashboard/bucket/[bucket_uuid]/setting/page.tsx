@@ -147,7 +147,18 @@ export default function BucketSetting() {
 			git_repository,
 		};
 
+		function hasMatchingRepo(connectedGithubRepos: GithubRepoType[], git_username: string, git_repository: string) {
+			return connectedGithubRepos.some((repo: GithubRepoType) => 
+				repo.git_username.toLowerCase() === git_username.toLowerCase() &&
+				repo.git_repository.toLowerCase() === git_repository.toLowerCase()
+			);
+		}
+		
 		try {
+			if (hasMatchingRepo(connectedGithubRepos, git_username, git_repository)) {
+				throw new Error("이미 해당 GitHub Repository가 연결되어 있습니다.")
+			}
+
 			await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/bucket/${params.bucket_uuid}/github_repo`, createNewRepo, { withCredentials: true });
 			toast({
 				title: "GitHub Repository 연결 성공",

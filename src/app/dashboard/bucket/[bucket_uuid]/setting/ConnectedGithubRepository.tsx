@@ -33,11 +33,11 @@ export function RemoveRepositoryModal({ repo, mutateConnectedGithubRepos }: { re
 			});
 			mutateConnectedGithubRepos();
 			setIsOpen(false);
-		} catch (e) {
+		} catch (e: any) {
 			console.error(e);
 			toast({
 				title: "Repository 연결 해제 실패",
-				description: "Repository의 연결 해제에 실패하였습니다.",
+				description: `Repository의 연결 해제에 실패하였습니다. ${e.message}`,
 			});
 		}
 	};
