@@ -2,18 +2,81 @@ import React, { useState, useRef, useEffect } from "react";
 import SignatureCanvas from "react-signature-canvas";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
+import useSWR, { mutate } from "swr";
 import useSWRImmutable from "swr/immutable";
 import { useToast } from "@/components/ui/use-toast";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import FileUploader from "@/components/global/FileUploader";
+import { ActionButton } from "@/components/ui/actionbutton";
+import { Spinner } from "@/components/global/Spinner";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { getErrorMessageToast } from "@/hooks/error.tsx";
+import { useRouter } from "next/navigation";
+
+
+const SignatureSchema = z.object({
+	file: z.instanceof(File)
+});
+
+export type CreateSignatureFormValues = z.infer<typeof SignatureSchema>;
 
 const SignaturePad = () => {
 	const canvasRef = useRef<any>(null);
 	const [isSigned, setIsSigned] = useState<boolean>(false);
 	const [initialSignatureUrl, setInitialSignatureUrl] = useState<string | null>(null);
 	const { toast } = useToast();
-	const { data: signatureData } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature", async (url: string) => {
+	const { data: signatureData } = useSWR(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature", async (url: string) => {
 		const { data } = await axios.get(url, { withCredentials: true });
 		setInitialSignatureUrl(data.url);
 	});
+
+	const router = useRouter();
+	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+	const form = useForm<CreateSignatureFormValues>({
+		resolver: zodResolver(SignatureSchema)
+	});
+
+	async function onSubmit(data: CreateSignatureFormValues) {
+		setIsSubmitting(true);
+		const validationResult = SignatureSchema.safeParse(data);
+		if (!validationResult.success) {
+			console.error(validationResult.error.errors);
+			return;
+		}
+
+		const sendData = new FormData();
+		if (data.file) {
+			console.log(data.file);
+			sendData.append("file", data.file);
+			};
+		
+
+		try {
+			const result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature/file", sendData, {
+				timeout: 120000,
+				withCredentials: true,
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+			});
+			console.log(result);
+			toast({
+				title: "서명을 업로드했습니다.",
+				description: `서명이 성공적으로 업로드되었습니다.`,
+			});
+			mutate(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature");
+		} catch (error: any) {
+			toast({
+				title: "서명을 업로드하지 못했습니다.",
+				description: getErrorMessageToast(error),
+			});
+			console.error(error);
+		} finally {
+			setIsSubmitting(false);
+		}
+	}
 
 	useEffect(() => {
 		if (initialSignatureUrl) {
@@ -141,8 +204,58 @@ const SignaturePad = () => {
 					저장
 				</Button>
 			</div>
+			<div className="relative max-w-[500px] h-[200px] w-full my-4 mx-4 sm:mx-4 lg:mx-auto">
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+						<div className="flex justify-center">
+							<SignatureFileField form={form} />
+							<ActionButton type="submit" className="my-1.5">{isSubmitting && <Spinner />}&nbsp;서명 파일 업로드</ActionButton>
+						</div>
+					</form>
+				</Form>
+			</div>
 		</div>
 	);
 };
+
+function SignatureFileField({ form }: { form: any }) {
+	const [isFileSelected, setIsFileSelected] = useState<boolean>(false);
+
+	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const files = event.target.files;
+		if (files && files.length > 0) {
+			form.setValue("file", files[0]);
+			setIsFileSelected(true);
+		}
+	};
+
+	const handleFileUnselect = () => {
+		form.setValue("file", null);
+		setIsFileSelected(false);
+	};
+
+	return (
+		<FormField
+			control={form.control}
+			name="file"
+			render={({ field }) => (
+				<FormItem className="relative">
+					<FormControl>
+						<FileUploader
+							typeString=""
+							multiple={false}
+							onChange={handleFileChange}
+							isFileSelected={isFileSelected}
+							fileUnselectHandling={handleFileUnselect}
+							accept="image/jpeg,image/png,image/gif"
+						/>
+					</FormControl>
+					<FormDescription className="absolute top-11 left-0 whitespace-nowrap overflow-visible w-max">서명 파일을 업로드할 수 있습니다.</FormDescription>
+					<FormMessage className="absolute top-16 left-0 whitespace-nowrap overflow-visible w-max"/>
+				</FormItem>
+			)}
+		/>
+	);
+}
 
 export default SignaturePad;
