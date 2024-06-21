@@ -33,6 +33,7 @@ type NoteTypeDetail = NoteType & {
 	project_title: string;
 	note_title: string;
 	note_id: UUID;
+	timestamp_transaction_id: string;
 };
 
 export default NoteType;
