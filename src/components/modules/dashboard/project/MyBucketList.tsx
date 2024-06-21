@@ -46,10 +46,12 @@ export default function MyBucketList({ bucketList, projectId }: { bucketList: Bu
 								<TableRow key={bucket.id}>
 									<TableCell className="font-medium">{bucket.title}</TableCell>
 									<TableCell className="hidden md:table-cell">
-										<Badge variant="outline">{bucket.bucket_status}</Badge>
+										<Badge variant="outline">활성</Badge>
 									</TableCell>
-									<TableCell className="hidden md:table-cell">{bucket.bucket_owner}</TableCell>
-									<TableCell className="hidden xl:table-cell">{bucket.has_github ? <Link href={bucket.has_github && "https://www.zarathu.com"}>예</Link> : "아니오"}</TableCell>
+									<TableCell className="hidden md:table-cell">
+										{!bucket.manager_first_name && !bucket.manager_last_name ? "이름 미설정" : (bucket.manager_last_name ?? "") + (bucket.manager_first_name ?? "")}
+									</TableCell>
+									<TableCell className="hidden xl:table-cell">{bucket.gitrepos === null ? "아니오" : "예"}</TableCell>
 									{/* <TableCell className="hidden xl:table-cell">dd</TableCell> */}
 									<TableCell>
 										<Link href={`/dashboard/bucket/${bucket.id}`}>
