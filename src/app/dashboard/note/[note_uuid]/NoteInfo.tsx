@@ -66,8 +66,16 @@ export default function NoteInfo() {
 									</div>
 								</div>
 							</div>
+							<div className="flex items-center justify-between">
+								<div className="flex items-center space-x-2">
+									<div>
+										<p className="text-sm text-gray-500 dark:text-gray-400">블록체인 기록 ID</p>
+										<p className="font-medium">{data.timestamp_transaction_id}</p>
+									</div>
+								</div>
+							</div>
 						</CardContent>
 					</Card>
 				</>
-		  );
+			);
 }
