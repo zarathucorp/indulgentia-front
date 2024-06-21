@@ -1,3 +1,4 @@
+import { GitRepoType } from "./GitRepoType";
 export interface BaseBucketType {
 	id: string;
 	title: string;
@@ -5,6 +6,10 @@ export interface BaseBucketType {
 	bucket_owner?: string;
 	is_github: boolean;
 	github_link?: string;
+	manager_first_name: string;
+	manager_last_name: string;
+	note_num: number;
+	gitrepos: GitRepoType[] | null;
 }
 
 interface BucketWithGitHub extends BaseBucketType {
