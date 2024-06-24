@@ -72,7 +72,13 @@ export default function Home() {
 				<CardContent>
 					<form onSubmit={handleSubmit} className="mt-4">
 						<Label htmlFor="file">PDF 파일</Label>
-						<Input id="file" type="file" onChange={handleFileChange} className="block w-full text-sm text-gray-500 border border-gray-300 rounded-lg cursor-pointer focus:outline-none" />
+						<Input
+							id="file"
+							type="file"
+							accept="application/pdf"
+							onChange={handleFileChange}
+							className="block w-full text-sm text-gray-500 border border-gray-300 rounded-lg cursor-pointer focus:outline-none"
+						/>
 						<Button type="submit" className="w-full mt-4 text-white font-bold py-2 px-4 rounded">
 							{isLoading && (
 								<>
