@@ -2,6 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { FaRegQuestionCircle } from "react-icons/fa";
+import { GrValidate } from "react-icons/gr";
 import { Menu, Package2, Search, FileText, User, Handshake, LayoutDashboard, AtSign, BadgeDollarSign } from "lucide-react";
 import Link from "next/link";
 import UserBadge from "./Navbar/UserBadge";
@@ -34,6 +35,9 @@ export default function Navbar() {
 						</Link>
 						<Link href="/help/faq" className="nav-link flex items-center gap-1">
 							<FaRegQuestionCircle className="h-5 w-5" /> FAQ
+						</Link>
+						<Link href="/validate" className="nav-link flex items-center gap-1">
+							<GrValidate className="h-5 w-5" /> 연구노트 검증
 						</Link>
 					</div>
 				</div>
@@ -75,6 +79,12 @@ export default function Navbar() {
 									<Link href="/help/faq" className="flex items-center gap-1">
 										<FaRegQuestionCircle className="h-5 w-5" />
 										FAQ
+									</Link>
+								</SheetClose>
+								<SheetClose asChild>
+									<Link href="/validate" className="flex items-center gap-1">
+										<GrValidate className="h-5 w-5" />
+										연구노트 검증
 									</Link>
 								</SheetClose>
 							</nav>
