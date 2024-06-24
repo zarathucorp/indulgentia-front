@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
 	};
 
 	const jwtToken = generateJWT();
-	console.log(jwtToken);
+	// console.log(jwtToken);
 	const headers = {
 		Authorization: `Bearer ${jwtToken}`,
 		Accept: "application/vnd.github.v3+json",
@@ -60,10 +60,10 @@ export async function GET(req: NextRequest) {
 		// Sort allRepositories by the 'name' property
 		allRepositories.sort((a, b) => a.name.localeCompare(b.name));
 
-		allRepositories.forEach((repo: Repository) => console.log(repo.name));
+		// allRepositories.forEach((repo: Repository) => console.log(repo.name));
 		return new NextResponse(JSON.stringify({ repositories: allRepositories }), { status: 200 });
 	} catch (error) {
-		console.error("Error fetching repositories:", error);
+		// console.error("Error fetching repositories:", error);
 		return new NextResponse(JSON.stringify({ error: "Failed to fetch repositories" }), { status: 500 });
 	}
 }
