@@ -1,60 +1,70 @@
 "use client";
+
+import { useState, useCallback } from "react";
+import { useParams } from "next/navigation";
+import Link from "next/link";
+import useSWR from "swr";
+import axios from "axios";
+import { format } from "date-fns";
+import { ko } from "date-fns/locale"; // 한국어 로케일 추가
+import { DateRange } from "react-day-picker";
+
 import { Button } from "@/components/ui/button";
 import { PopoverTrigger, PopoverContent, Popover } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { useState, Fragment } from "react";
-import { MoreHorizontal } from "lucide-react";
-import { DateRange } from "react-day-picker";
-import FileUploader from "@/components/global/FileUploader";
-import NoteType from "@/types/NoteType";
-import Link from "next/link";
-import { useParams } from "next/navigation";
-import useSWR from "swr";
-import axios from "axios";
-import useSWRImmutable from "swr/immutable";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import { DashboardBreadCrumb } from "@/components/modules/dashboard/DashboardBreadCrumb";
 import { DashboardBreadCrumbLoading } from "@/components/global/Loading/BreadCrumb";
 import { ErrorPage } from "@/components/global/Error/Error";
-import NoteThumbnail from "./NoteThumbnail";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import convertKST from "@/utils/time/convertKST";
-import { Label } from "@/components/ui/label";
 import RemoveModal from "@/components/global/RemoveModal";
-import { handleNoteRemove } from "../../note/[note_uuid]/handleNoteRemove";
 import { NoNote } from "@/components/global/NoContent";
-const noteListFetcher = async (url: string) => {
+
+import { handleNoteRemove } from "../../note/[note_uuid]/handleNoteRemove";
+import convertKST from "@/utils/time/convertKST";
+import NoteType from "@/types/NoteType";
+
+// API fetcher 함수
+const fetcher = async (url: string) => {
 	const result = await axios.get(url, { withCredentials: true });
-	console.log(result.data.data);
 	if (result.status !== 200) {
-		const error = new Error("An error occurred while fetching the data.");
-		throw error;
+		throw new Error("An error occurred while fetching the data.");
 	}
 	return result.data.data;
 };
 
 export default function Note() {
 	const params = useParams<{ bucket_uuid: string }>();
-	const { data, isValidating, error, mutate: mutateNoteList, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + `/dashboard/note/list/${params.bucket_uuid}`, noteListFetcher);
-	const { data: breadcrumbData, isLoading: isBreadcrumbLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/${params.bucket_uuid}/breadcrumb`, async (url) => {
-		const result = await axios.get(url, { withCredentials: true });
-		if (result.status !== 200) {
-			const error = new Error("An error occurred while fetching the data.");
-			throw error;
-		}
-		return result.data.data;
-	});
-	const defaultSelected: DateRange = {
-		from: new Date(2024, 5, 1),
-		to: new Date(),
+	const [dateRange, setDateRange] = useState<DateRange | undefined>();
+
+	// SWR을 사용한 데이터 fetching
+	const { data: notes, error: noteError, mutate: mutateNoteList } = useSWR<NoteType[]>(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/note/list/${params.bucket_uuid}`, fetcher);
+
+	const { data: breadcrumbData, isLoading: isBreadcrumbLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/bucket/${params.bucket_uuid}/breadcrumb`, fetcher);
+
+	// 날짜 범위 선택 핸들러
+	const handleDateRangeSelect = useCallback((range: DateRange | undefined) => {
+		setDateRange(range);
+	}, []);
+
+	// 날짜 범위에 따른 노트 필터링
+	const filteredNotes =
+		dateRange?.from && dateRange?.to
+			? notes?.filter((note) => {
+					const noteDate = new Date(note.created_at);
+					return noteDate >= dateRange.from! && noteDate <= dateRange.to!;
+				})
+			: notes;
+
+	// 선택된 날짜 범위를 한국어로 표시하는 함수
+	const formatDateRange = (range: DateRange | undefined) => {
+		if (!range?.from) return "조회할 날짜 범위를 선택하세요";
+		if (!range.to) return format(range.from, "yyyy년 MM월 dd일", { locale: ko });
+		return `${format(range.from, "yyyy년 MM월 dd일", { locale: ko })} - ${format(range.to, "yyyy년 MM월 dd일", { locale: ko })}`;
 	};
-	const [dateRange, setDateRange] = useState<DateRange | undefined>(defaultSelected);
-	if (error)
-		return (
-			<>
-				<ErrorPage error={error} reset={() => mutateNoteList()} />
-			</>
-		);
+
+	if (noteError) return <ErrorPage error={noteError} reset={() => mutateNoteList()} />;
+
 	return (
 		<>
 			<div className="py-3 pl-4">
@@ -64,51 +74,44 @@ export default function Note() {
 				<div className="space-y-4">
 					<div className="grid gap-2">
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-							{data &&
-								data.map((note: NoteType, index: number) => (
-									<div key={note.id}>
-										<Card className="">
-											<CardHeader>
-												<CardTitle>{note.title}</CardTitle>
-												<CardDescription>노트 ID: {note.id}</CardDescription>
-											</CardHeader>
-											<CardContent>
-												<form>
-													<div className="grid w-full items-center gap-4">
-														<div className="flex flex-col space-y-1.5">
-															<Label htmlFor="name">생성일시 {convertKST(note.created_at)}</Label>
-														</div>
-														<div className="flex flex-col space-y-1.5">
-															<Label htmlFor="name">작성자 {note.user_id}</Label>
-														</div>
-													</div>
-												</form>
-											</CardContent>
-											<CardFooter className="flex justify-between">
-												<RemoveModal
-													targetEntity={note.title}
-													removeType="Note"
-													onRemoveConfirmed={async () => {
-														await handleNoteRemove(note.id);
-														await mutateNoteList();
-													}}
-													parentUUID={params.bucket_uuid}
-												/>
-												{/* <Button variant="outline">삭제</Button> */}
-												<Link href={`/dashboard/note/${note.id}`}>
-													<Button>노트 보기</Button>
-												</Link>
-											</CardFooter>
-										</Card>
-									</div>
-								))}
+							{filteredNotes?.map((note: NoteType) => (
+								<Card key={note.id}>
+									<CardHeader>
+										<CardTitle>{note.title}</CardTitle>
+										<CardDescription>노트 ID: {note.id}</CardDescription>
+									</CardHeader>
+									<CardContent>
+										<div className="grid w-full items-center gap-4">
+											<div className="flex flex-col space-y-1.5">
+												<Label>생성일시: {convertKST(note.created_at)}</Label>
+											</div>
+											<div className="flex flex-col space-y-1.5">
+												<Label>작성자: {note.user_id}</Label>
+											</div>
+										</div>
+									</CardContent>
+									<CardFooter className="flex justify-between">
+										<RemoveModal
+											targetEntity={note.title}
+											removeType="Note"
+											onRemoveConfirmed={async () => {
+												await handleNoteRemove(note.id);
+												await mutateNoteList();
+											}}
+											parentUUID={params.bucket_uuid}
+										/>
+										<Link href={`/dashboard/note/${note.id}`}>
+											<Button>노트 보기</Button>
+										</Link>
+									</CardFooter>
+								</Card>
+							))}
 						</div>
-						<div className="w-full h-full ">{data && data?.length === 0 && <NoNote />}</div>
+						{filteredNotes?.length === 0 && <NoNote />}
 					</div>
 				</div>
 				<div className="space-y-4">
 					<div>
-						{/* <FileUploader /> */}
 						<Link href={`/dashboard/note/create?bucket=${params.bucket_uuid}`}>
 							<Button className="w-full">노트 생성</Button>
 						</Link>
@@ -120,11 +123,17 @@ export default function Note() {
 						<PopoverTrigger asChild>
 							<Button className="w-full justify-start text-left font-normal" variant="outline">
 								<CalendarDaysIcon className="mr-1 h-4 w-4 -translate-x-1" />
-								조회할 날짜 범위를 선택하세요
+								{formatDateRange(dateRange)}
 							</Button>
 						</PopoverTrigger>
 						<PopoverContent align="center" className="w-auto p-0">
-							<Calendar mode="range" selected={dateRange} onSelect={setDateRange} />
+							<Calendar
+								mode="range"
+								selected={dateRange}
+								onSelect={handleDateRangeSelect}
+								initialFocus
+								locale={ko} // 캘린더에 한국어 로케일 적용
+							/>
 						</PopoverContent>
 					</Popover>
 				</div>
@@ -133,7 +142,7 @@ export default function Note() {
 	);
 }
 
-function CalendarDaysIcon(props: any) {
+function CalendarDaysIcon(props: React.SVGProps<SVGSVGElement>) {
 	return (
 		<svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
 			<path d="M8 2v4" />
