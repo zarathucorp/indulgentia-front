@@ -30,6 +30,10 @@ const sidebarNavItems = [
 		title: "특수 설정",
 		href: "/setting/special",
 	},
+	{
+		title: "결제",
+		href: "/setting/payment",
+	},
 	// {
 	// 	title: "Display",
 	// 	href: "/setting/display",
@@ -50,7 +54,7 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
 			<div className="space-y-6 p-10 pb-16 md:block">
 				<div className="space-y-0.5">
 					<h2 className="text-2xl font-bold tracking-tight">설정</h2>
-					<p className="text-muted-foreground">계정, 팀, 노트 관련 설정입니다.</p>
+					<p className="text-muted-foreground">연구실록 설정입니다.</p>
 				</div>
 				<Separator className="my-6" />
 				<div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
