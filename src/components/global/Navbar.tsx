@@ -1,3 +1,4 @@
+import React from "react";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,43 @@ import { Menu, Package2, Search, FileText, User, Handshake, LayoutDashboard, AtS
 import Link from "next/link";
 import UserBadge from "./Navbar/UserBadge";
 import Image from "next/image";
-export default function Navbar() {
+
+// 네비게이션 링크 타입 정의
+interface NavLink {
+	href: string;
+	icon: React.ReactNode;
+	text: string;
+}
+
+// 네비게이션 링크 배열
+const navLinks: NavLink[] = [
+	{ href: "/dashboard", icon: <LayoutDashboard className="h-5 w-5" />, text: "대시보드" },
+	{ href: "/inquiry", icon: <AtSign className="h-5 w-5" />, text: "문의하기" },
+	{ href: "/pricing", icon: <BadgeDollarSign className="h-5 w-5" />, text: "가격" },
+	{ href: "/help/faq", icon: <FaRegQuestionCircle className="h-5 w-5" />, text: "FAQ" },
+	{ href: "/validate", icon: <GrValidate className="h-5 w-5" />, text: "연구노트 검증" },
+];
+
+const Navbar: React.FC = () => {
+	// 네비게이션 링크 렌더링 함수
+	const renderNavLinks = (mobile: boolean = false) => {
+		return navLinks.map((link, index) => (
+			<React.Fragment key={link.href}>
+				{mobile ? (
+					<SheetClose asChild>
+						<Link href={link.href} className="flex items-center gap-1">
+							{link.icon} {link.text}
+						</Link>
+					</SheetClose>
+				) : (
+					<Link href={link.href} className="nav-link flex items-center gap-1">
+						{link.icon} {link.text}
+					</Link>
+				)}
+			</React.Fragment>
+		));
+	};
+
 	return (
 		<header className="sticky top-0 flex h-16 items-center gap-4 bg-[#051f20] text-white px-6 z-50">
 			<nav className="flex flex-grow items-center justify-between">
@@ -19,33 +56,11 @@ export default function Navbar() {
 						</Link>
 					</div>
 					<div className="hidden md:flex items-center gap-4">
-						{/* <Link href="/" className="flex-none items-center">
-							<Image src="/logo.png" alt="Logo" width={40} height={40} />
-							<span className="sr-only">RnDSillog Home</span>
-						</Link> */}
 						&nbsp;
-						<Link href="/dashboard" className="nav-link flex items-center gap-1">
-							<LayoutDashboard className="h-5 w-5" /> 대시보드
-						</Link>
-						<Link href="/inquiry" className="nav-link flex items-center gap-1">
-							<AtSign className="h-5 w-5" /> 문의하기
-						</Link>
-						<Link href="/pricing" className="nav-link flex items-center gap-1">
-							<BadgeDollarSign className="h-5 w-5" /> 가격
-						</Link>
-						<Link href="/help/faq" className="nav-link flex items-center gap-1">
-							<FaRegQuestionCircle className="h-5 w-5" /> FAQ
-						</Link>
-						<Link href="/validate" className="nav-link flex items-center gap-1">
-							<GrValidate className="h-5 w-5" /> 연구노트 검증
-						</Link>
+						{renderNavLinks()}
 					</div>
 				</div>
 				<div className="flex items-center gap-4">
-					{/* <form className="relative">
-						<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-						<Input type="search" placeholder="연구노트 검색" className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]" />
-					</form> */}
 					<UserBadge />
 					<Sheet>
 						<SheetTrigger asChild>
@@ -55,43 +70,13 @@ export default function Navbar() {
 							</Button>
 						</SheetTrigger>
 						<SheetContent side="right">
-							<nav className="grid gap-6 text-lg font-medium">
-								{/* <Link href="/" className="flex items-center">
-									<Image src="/logo.png" alt="Logo" width={40} height={40} />
-									<span className="sr-only">연구실록 홈</span>
-								</Link> */}
-								<SheetClose asChild>
-									<Link href="/dashboard" className="flex items-center gap-1">
-										<LayoutDashboard className="h-5 w-5" /> 대시보드
-									</Link>
-								</SheetClose>
-								<SheetClose asChild>
-									<Link href="/inquiry" className="flex items-center gap-1">
-										<AtSign className="h-5 w-5" /> 문의하기
-									</Link>
-								</SheetClose>
-								<SheetClose asChild>
-									<Link href="/pricing" className="flex items-center gap-1">
-										<BadgeDollarSign className="h-5 w-5" /> 가격
-									</Link>
-								</SheetClose>
-								<SheetClose asChild>
-									<Link href="/help/faq" className="flex items-center gap-1">
-										<FaRegQuestionCircle className="h-5 w-5" />
-										FAQ
-									</Link>
-								</SheetClose>
-								<SheetClose asChild>
-									<Link href="/validate" className="flex items-center gap-1">
-										<GrValidate className="h-5 w-5" />
-										연구노트 검증
-									</Link>
-								</SheetClose>
-							</nav>
+							<nav className="grid gap-6 text-lg font-medium">{renderNavLinks(true)}</nav>
 						</SheetContent>
 					</Sheet>
 				</div>
 			</nav>
 		</header>
 	);
-}
+};
+
+export default Navbar;
