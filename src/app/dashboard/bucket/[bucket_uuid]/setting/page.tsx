@@ -1,18 +1,18 @@
 "use client";
-import { EditBucketForm, CreateBucketFormValues } from "@/components/modules/dashboard/bucket/BucketForm";
+
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { UUID } from "crypto";
-import ConnectedGithubRepository from "./ConnectedGithubRepository";
 import { useParams } from "next/navigation";
 import useSWRImmutable from "swr/immutable";
+import { useToast } from "@/components/ui/use-toast";
+import { EditBucketForm, CreateBucketFormValues } from "@/components/modules/dashboard/bucket/BucketForm";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useVariable } from "@/hooks/useVariable";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { useToast } from "@/components/ui/use-toast";
 import { RemoveRepositoryModal, GithubRepoType } from "./ConnectedGithubRepository";
-import useUser from "@/hooks/fetch/useUser";
+
+// 타입 정의
 interface Installation {
 	id: number;
 	account: {
@@ -25,17 +25,21 @@ interface Repo {
 	name: string;
 }
 
+// API 요청을 위한 fetcher 함수
 const fetcher = (url: string) => axios.get(url, { withCredentials: true }).then((res) => res.data.data.github_token);
 
-const InstallationRepoSelector = ({ setGitUsername, setGitRepository }: { setGitUsername: Dispatch<SetStateAction<string>>; setGitRepository: Dispatch<SetStateAction<string>> }) => {
+// GitHub 설치 및 Repository 선택 컴포넌트
+const InstallationRepoSelector: React.FC<{
+	setGitUsername: React.Dispatch<React.SetStateAction<string>>;
+	setGitRepository: React.Dispatch<React.SetStateAction<string>>;
+}> = ({ setGitUsername, setGitRepository }) => {
 	const { data: token, error: tokenError, isLoading: isTokenLoading } = useSWRImmutable<string>(`${process.env.NEXT_PUBLIC_API_URL}/user/settings/github/token`, fetcher);
 	const [selectedInstallation, setSelectedInstallation] = useState<number | null>(null);
 	const [repos, setRepos] = useState<Repo[]>([]);
-	const [isGetRepoLoading, setIsGetRepoLoading] = useState<boolean>(false);
 	const [installations, setInstallations] = useState<Installation[]>([]);
+	const [isGetRepoLoading, setIsGetRepoLoading] = useState<boolean>(false);
 
 	useEffect(() => {
-		console.log(token);
 		if (token) {
 			axios
 				.get(`/next-api/github/installations?token=${token}`)
@@ -45,7 +49,7 @@ const InstallationRepoSelector = ({ setGitUsername, setGitRepository }: { setGit
 	}, [token]);
 
 	useEffect(() => {
-		if (selectedInstallation) {
+		if (selectedInstallation && token) {
 			setIsGetRepoLoading(true);
 			axios
 				.get(`/next-api/github/repos?token=${token}&installation_id=${selectedInstallation}`)
@@ -56,63 +60,59 @@ const InstallationRepoSelector = ({ setGitUsername, setGitRepository }: { setGit
 	}, [selectedInstallation, token]);
 
 	const getGitHubUsernameById = (targetId: number) => installations.find((installation) => installation.id === targetId)?.account.login || "";
-
 	const getGitHubRepoById = (targetId: number) => repos.find((repo) => repo.id === targetId)?.name || "";
+
+	if (isTokenLoading) return <p>Loading token...</p>;
+	if (tokenError) return <p>No github account is connected to this account</p>;
 
 	return (
 		<>
-			{isTokenLoading ? (
-				<p>Loading token...</p>
-			) : tokenError ? (
-				<p>No github account is connected to this account</p>
-			) : (
-				<>
-					<Select
-						onValueChange={(value) => {
-							const id = parseInt(value);
-							setSelectedInstallation(id);
-							setGitUsername(getGitHubUsernameById(id));
-						}}
-					>
-						<SelectTrigger>
-							<SelectValue placeholder="GitHub 계정(Organization을 선택하세요)" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectGroup>
-								{installations.map((installation) => (
-									<SelectItem value={installation.id.toString()} key={installation.account.login}>
-										{installation.account.login}
-									</SelectItem>
-								))}
-							</SelectGroup>
-						</SelectContent>
-					</Select>
-					<Select disabled={isGetRepoLoading || selectedInstallation === null} onValueChange={(value) => setGitRepository(getGitHubRepoById(parseInt(value)))}>
-						<SelectTrigger>
-							<SelectValue placeholder={isGetRepoLoading ? "Repository를 불러오는 중입니다." : "Repository를 선택하세요."} />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectGroup>
-								{repos.map((repo) => (
-									<SelectItem value={repo.id.toString()} key={repo.id}>
-										{repo.name}
-									</SelectItem>
-								))}
-							</SelectGroup>
-						</SelectContent>
-					</Select>
-				</>
-			)}
+			<Select
+				onValueChange={(value) => {
+					const id = parseInt(value);
+					setSelectedInstallation(id);
+					setGitUsername(getGitHubUsernameById(id));
+				}}
+			>
+				<SelectTrigger>
+					<SelectValue placeholder="GitHub 계정(Organization을 선택하세요)" />
+				</SelectTrigger>
+				<SelectContent>
+					<SelectGroup>
+						{installations.map((installation) => (
+							<SelectItem value={installation.id.toString()} key={installation.account.login}>
+								{installation.account.login}
+							</SelectItem>
+						))}
+					</SelectGroup>
+				</SelectContent>
+			</Select>
+			<Select disabled={isGetRepoLoading || selectedInstallation === null} onValueChange={(value) => setGitRepository(getGitHubRepoById(parseInt(value)))}>
+				<SelectTrigger>
+					<SelectValue placeholder={isGetRepoLoading ? "Repository를 불러오는 중입니다." : "Repository를 선택하세요."} />
+				</SelectTrigger>
+				<SelectContent>
+					<SelectGroup>
+						{repos.map((repo) => (
+							<SelectItem value={repo.id.toString()} key={repo.id}>
+								{repo.name}
+							</SelectItem>
+						))}
+					</SelectGroup>
+				</SelectContent>
+			</Select>
 		</>
 	);
 };
 
-export default function BucketSetting() {
+// 메인 BucketSetting 컴포넌트
+const BucketSetting: React.FC = () => {
 	const params = useParams<{ bucket_uuid: UUID }>();
-	const [git_username, setGitUsername] = useVariable<string>("");
-	const [git_repository, setGitRepository] = useVariable<string>("");
+	const [gitUsername, setGitUsername] = useState<string>("");
+	const [gitRepository, setGitRepository] = useState<string>("");
 	const { toast } = useToast();
 
+	// 버킷 정보 fetch
 	const {
 		data: bucketInfo,
 		isLoading: isLoadingBucketInfo,
@@ -122,6 +122,7 @@ export default function BucketSetting() {
 		return data.data;
 	});
 
+	// 연결된 GitHub 저장소 fetch
 	const {
 		data: connectedGithubRepos,
 		isLoading: isLoadingConnectedGithubRepos,
@@ -131,8 +132,9 @@ export default function BucketSetting() {
 		return data.data;
 	});
 
+	// GitHub 저장소 연결 함수
 	const handleConnectRepository = async () => {
-		if (!git_username || !git_repository) {
+		if (!gitUsername || !gitRepository) {
 			toast({
 				title: "GitHub Repository 연결 실패",
 				description: "GitHub Repository를 선택해주세요.",
@@ -142,17 +144,17 @@ export default function BucketSetting() {
 
 		const createNewRepo = {
 			bucket_id: params.bucket_uuid,
-			repo_url: `https://github.com/${git_username}/${git_repository}`,
-			git_username,
-			git_repository,
+			repo_url: `https://github.com/${gitUsername}/${gitRepository}`,
+			git_username: gitUsername,
+			git_repository: gitRepository,
 		};
 
-		function hasMatchingRepo(connectedGithubRepos: GithubRepoType[], git_username: string, git_repository: string) {
-			return connectedGithubRepos.some((repo: GithubRepoType) => repo.git_username.toLowerCase() === git_username.toLowerCase() && repo.git_repository.toLowerCase() === git_repository.toLowerCase());
-		}
+		// 이미 연결된 저장소인지 확인
+		const hasMatchingRepo = (repos: GithubRepoType[], username: string, repository: string) =>
+			repos.some((repo) => repo.git_username.toLowerCase() === username.toLowerCase() && repo.git_repository.toLowerCase() === repository.toLowerCase());
 
 		try {
-			if (hasMatchingRepo(connectedGithubRepos, git_username, git_repository)) {
+			if (connectedGithubRepos && hasMatchingRepo(connectedGithubRepos, gitUsername, gitRepository)) {
 				throw new Error("이미 해당 GitHub Repository가 연결되어 있습니다.");
 			}
 
@@ -182,41 +184,27 @@ export default function BucketSetting() {
 					<InstallationRepoSelector setGitUsername={setGitUsername} setGitRepository={setGitRepository} />
 					<Button onClick={handleConnectRepository}>Repository 연결</Button>
 				</div>
-				<div className="border rounded-lg overflow-hidden grid gap-4 lg:gap-px lg:bg-gray-100" />
 			</div>
-			<div onClick={() => {}} className="max-w-6xl w-full mx-auto grid gap-2">
+			<div className="max-w-6xl w-full mx-auto grid gap-2">
 				<h1 className="font-semibold text-3xl">연결된 GitHub Repository</h1>
 			</div>
 			{!isLoadingConnectedGithubRepos && connectedGithubRepos && (
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mx-auto max-w-6xl">
-					{connectedGithubRepos.map((repo: GithubRepoType) => {
-						return (
-							<>
-								<div className="bg-white rounded-lg shadow-md p-4 " key={repo.id}>
-									<div className="flex items-center justify-between">
-										<div>
-											<h3 className="text-lg font-bold">{repo.git_repository}</h3>
-											<p className="text-gray-500">{repo.git_username}</p>
-										</div>
-										<RemoveRepositoryModal repo={repo} mutateConnectedGithubRepos={mutateConnectedGithubRepos} />
-									</div>
+					{connectedGithubRepos.map((repo: GithubRepoType) => (
+						<div className="bg-white rounded-lg shadow-md p-4" key={repo.id}>
+							<div className="flex items-center justify-between">
+								<div>
+									<h3 className="text-lg font-bold">{repo.git_repository}</h3>
+									<p className="text-gray-500">{repo.git_username}</p>
 								</div>
-							</>
-						);
-					})}
+								<RemoveRepositoryModal repo={repo} mutateConnectedGithubRepos={mutateConnectedGithubRepos} />
+							</div>
+						</div>
+					))}
 				</div>
 			)}
-			{/* {!isLoadingConnectedGithubRepos && connectedGithubRepos && <ConnectedGithubRepository connectedGithubRepos={connectedGithubRepos} mutateConnectedGithubRepos={mutateConnectedGithubRepos} />} */}
 		</div>
 	);
-}
+};
 
-function TrashIcon(props: any) {
-	return (
-		<svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-			<path d="M3 6h18" />
-			<path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-			<path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-		</svg>
-	);
-}
+export default BucketSetting;

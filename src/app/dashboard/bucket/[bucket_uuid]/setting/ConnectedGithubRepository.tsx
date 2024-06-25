@@ -1,32 +1,40 @@
 "use client";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { UUID } from "crypto";
-import { useVariable } from "@/hooks/useVariable";
-import { KeyedMutator } from "swr";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ActionButton } from "@/components/ui/actionbutton";
-type GithubRepoType = {
+import axios from "axios";
+import { KeyedMutator } from "swr";
+import { UUID } from "crypto";
+
+// GitHub 저장소 타입 정의
+export interface GithubRepoType {
 	id: UUID;
 	bucket_id: UUID;
 	git_repository: string;
 	git_username: string;
 	repo_url: string;
 	user_id: UUID;
-};
+}
 
-export function RemoveRepositoryModal({ repo, mutateConnectedGithubRepos }: { repo: GithubRepoType; mutateConnectedGithubRepos: KeyedMutator<any> }) {
+// 저장소 제거 모달 컴포넌트
+interface RemoveRepositoryModalProps {
+	repo: GithubRepoType;
+	mutateConnectedGithubRepos: KeyedMutator<any>;
+}
+
+export const RemoveRepositoryModal: React.FC<RemoveRepositoryModalProps> = ({ repo, mutateConnectedGithubRepos }) => {
 	const { toast } = useToast();
-	const [isOpen, setIsOpen] = useState(false); // State to manage modal open/close
+	const [isOpen, setIsOpen] = useState(false);
+
+	// 저장소 연결 해제 함수
 	const disconnectRepository = async () => {
 		try {
-			const { data } = await axios.delete(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/${repo.bucket_id}/github_repo/${repo.id}`, { withCredentials: true });
+			await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/bucket/${repo.bucket_id}/github_repo/${repo.id}`, { withCredentials: true });
 			toast({
 				title: "Repository 연결 해제",
 				description: "Repository의 연결이 해제되었습니다.",
@@ -59,7 +67,7 @@ export function RemoveRepositoryModal({ repo, mutateConnectedGithubRepos }: { re
 						<Label htmlFor="username" className="text-right">
 							삭제 대상
 						</Label>
-						<Label className="col-span-3">{repo.git_username + "/" + repo.git_repository} </Label>
+						<Label className="col-span-3">{`${repo.git_username}/${repo.git_repository}`}</Label>
 					</div>
 				</div>
 				<DialogFooter>
@@ -68,36 +76,41 @@ export function RemoveRepositoryModal({ repo, mutateConnectedGithubRepos }: { re
 			</DialogContent>
 		</Dialog>
 	);
+};
+
+// 연결된 GitHub 저장소 컴포넌트
+interface ConnectedGithubRepositoryProps {
+	connectedGithubRepos: GithubRepoType[];
+	mutateConnectedGithubRepos: KeyedMutator<any>;
 }
 
-export default function ConnectedGithubRepository({ connectedGithubRepos, mutateConnectedGithubRepos }: { connectedGithubRepos: GithubRepoType[]; mutateConnectedGithubRepos: KeyedMutator<any> }) {
+const ConnectedGithubRepository: React.FC<ConnectedGithubRepositoryProps> = ({ connectedGithubRepos, mutateConnectedGithubRepos }) => {
 	return (
 		<>
-			<div onClick={() => {}} className="max-w-6xl w-full mx-auto grid gap-2">
+			<div className="max-w-6xl w-full mx-auto grid gap-2">
 				<h1 className="font-semibold text-3xl">연결된 GitHub Repository</h1>
 			</div>
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mx-auto">
-				{connectedGithubRepos.map((repo: GithubRepoType, index: number) => {
-					return (
-						<>
-							<div className="bg-white rounded-lg shadow-md p-4" key={index}>
-								<div className="flex items-center justify-between">
-									<div>
-										<h3 className="text-lg font-bold">{repo.git_repository}</h3>
-										<p className="text-gray-500">{repo.git_username}</p>
-									</div>
-									<RemoveRepositoryModal repo={repo} mutateConnectedGithubRepos={mutateConnectedGithubRepos} />
-								</div>
+				{connectedGithubRepos.map((repo: GithubRepoType) => (
+					<div className="bg-white rounded-lg shadow-md p-4" key={repo.id.toString()}>
+						<div className="flex items-center justify-between">
+							<div>
+								<h3 className="text-lg font-bold">{repo.git_repository}</h3>
+								<p className="text-gray-500">{repo.git_username}</p>
 							</div>
-						</>
-					);
-				})}
+							<RemoveRepositoryModal repo={repo} mutateConnectedGithubRepos={mutateConnectedGithubRepos} />
+						</div>
+					</div>
+				))}
 			</div>
 		</>
 	);
-}
+};
 
-function TrashIcon(props: any) {
+// 휴지통 아이콘 컴포넌트
+interface TrashIconProps extends React.SVGProps<SVGSVGElement> {}
+
+const TrashIcon: React.FC<TrashIconProps> = (props) => {
 	return (
 		<svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
 			<path d="M3 6h18" />
@@ -105,6 +118,6 @@ function TrashIcon(props: any) {
 			<path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
 		</svg>
 	);
-}
+};
 
-export type { GithubRepoType };
+export default ConnectedGithubRepository;
