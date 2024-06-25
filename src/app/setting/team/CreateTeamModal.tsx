@@ -40,12 +40,12 @@ export function CreateTeamModal() {
 							</Label>
 							<Input type="text" id="team_name" placeholder="개발팀" className="col-span-3" value={teamName} onChange={handleTeamName} />
 						</div>
-						<div className="grid grid-cols-4 items-center gap-4">
+						{/* <div className="grid grid-cols-4 items-center gap-4">
 							<Label htmlFor="text" className="text-right">
 								조직
 							</Label>
 							<Input type="text" id="org_name" placeholder="연구실록" className="col-span-3" value={orgName} onChange={handleOrgName} />
-						</div>
+						</div> */}
 					</div>
 					<DialogFooter>
 						<ActionButton
