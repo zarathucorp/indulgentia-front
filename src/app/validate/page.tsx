@@ -7,7 +7,7 @@ import axios from "axios";
 import React, { useState, useCallback } from "react";
 import { Spinner } from "@/components/global/Spinner";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-
+import { FileUploaderDrag } from "@/components/global/FileUploader";
 export default function ValidatePDF() {
 	// 상태 관리
 	const [file, setFile] = useState<File | null>(null);
@@ -62,8 +62,8 @@ export default function ValidatePDF() {
 					error instanceof Error && error.message === "PDF is modified"
 						? "PDF가 변조되었습니다."
 						: axios.isAxiosError(error)
-							? (error.response?.data as string) || "알 수 없는 오류가 발생했습니다."
-							: "알 수 없는 오류가 발생했습니다."
+						? (error.response?.data as string) || "알 수 없는 오류가 발생했습니다."
+						: "알 수 없는 오류가 발생했습니다."
 				);
 			} finally {
 				setIsLoading(false);
@@ -123,15 +123,16 @@ export default function ValidatePDF() {
 				</CardHeader>
 				<CardContent>
 					<form onSubmit={handleSubmit} className="mt-4">
-						<Label htmlFor="file">PDF 파일</Label>
+						<FileUploaderDrag maxFiles={1} allowedFileTypes={["application/pdf"]} onFilesChange={(files: File[]) => setFile(files[0] ? files[0] : null)} />
+						{/* <Label htmlFor="file">PDF 파일</Label>
 						<Input
 							id="file"
 							type="file"
 							accept="application/pdf"
 							onChange={handleFileChange}
 							className="block w-full text-sm text-gray-500 border border-gray-300 rounded-lg cursor-pointer focus:outline-none"
-						/>
-						<Button type="submit" className="w-full mt-4 text-white font-bold py-2 px-4 rounded" disabled={isLoading}>
+						/> */}
+						<Button type="submit" className="w-full mt-4 text-white font-bold py-2 px-4 rounded" disabled={isLoading || file === null}>
 							{isLoading ? (
 								<>
 									<Spinner />
