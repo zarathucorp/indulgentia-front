@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import ProcessingPayment from "./ProcessingPayment";
+import { FaCheck } from "react-icons/fa";
 interface Payment {
 	orderName: string;
 	approvedAt: string;
@@ -30,8 +32,13 @@ export default function SuccessPage() {
 		if (paymentKey && orderId && amount) {
 			axios
 				.post(
-					"/next-api/confirm-payment",
-					{ paymentKey, orderId, amount },
+					process.env.NEXT_PUBLIC_API_URL + "/payment/toss/confirm",
+					// "/next-api/confirm-payment",
+					{
+						paymentKey: paymentKey,
+						orderId: orderId,
+						amount: amount,
+					},
 					{
 						headers: {
 							"Content-Type": "application/json",
@@ -39,28 +46,29 @@ export default function SuccessPage() {
 					}
 				)
 				.then((response) => {
-					if (response.data.payment) {
-						setPayment(response.data.payment);
+					if (response.data.data.payment) {
+						setPayment(response.data.data.payment);
 					} else {
 						router.push(`/payment/fail?code=${response.data.error.code}&message=${encodeURIComponent(response.data.error.message)}`);
 					}
 				})
 				.catch((error) => {
 					console.error("Error:", error);
-					router.push(`/payment/fail?message=${encodeURIComponent(error.message)}`);
+					router.push(`/payment/fail?message=${encodeURIComponent(error.message)}&orderId=${orderId}`);
 				});
 		}
 	}, [searchParams, router]);
 
 	if (!payment) {
-		return <div>Loading...</div>;
+		return <ProcessingPayment />;
 	}
 
 	return (
 		<div className="flex flex-col items-center p-6">
 			<div className="box_section w-full max-w-xl p-6 bg-white shadow-md rounded-lg">
-				<Image width={100} height={100} src="https://static.toss.im/illusts/check-blue-spot-ending-frame.png" alt="결제 완료" />
-				<h2 className="text-2xl font-semibold mt-4">결제를 완료했어요</h2>
+				<FaCheck width={100} height={100} className="mx-auto text-5xl" />
+				<h2 className="text-2xl font-semibold mt-4">결제가 완료되었습니다.</h2>
+				<h3 className="text-xl font-semibold mt-4">설정-결제에서 결제내역을 확인하실 수 있습니다.</h3>
 				<div className="grid grid-cols-2 gap-4 mt-8 text-lg">
 					<div className="text-left font-medium">결제금액</div>
 					<div className="text-right">{payment.totalAmount.toLocaleString()}원</div>
@@ -69,22 +77,6 @@ export default function SuccessPage() {
 					<div className="text-left font-medium">주문번호</div>
 					<div className="text-right">{payment.orderId}</div>
 				</div>
-				<div className="grid grid-cols-2 gap-4 mt-4 text-lg">
-					<div className="text-left font-medium">PaymentKey</div>
-					<div className="text-right break-all">{payment.paymentKey}</div>
-				</div>
-				<div className="flex justify-between mt-6">
-					<Link href="https://docs.tosspayments.com/guides/payment-widget/integration">
-						<Button className="px-4 py-2 bg-blue-500 text-white rounded-md">연동 문서</Button>
-					</Link>
-					<Link href="https://discord.gg/A4fRFXQhRu">
-						<Button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-md">실시간 문의</Button>
-					</Link>
-				</div>
-			</div>
-			<div className="box_section w-full max-w-xl mt-6 p-6 bg-white shadow-md rounded-lg">
-				<b>Response Data:</b>
-				<div className="mt-2">{payment && <pre className="whitespace-pre-wrap">{JSON.stringify(payment, null, 4)}</pre>}</div>
 			</div>
 		</div>
 	);
