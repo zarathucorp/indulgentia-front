@@ -17,7 +17,7 @@ import { createClient } from "@/utils/supabase/client";
 import { UUID } from "crypto";
 import { LeaderTeamExitModal } from "@/components/global/RemoveModal";
 import { useState } from "react";
-import { useCurrentPlan, useCurrentPlanAxios } from "@/hooks/fetch/usePayment";
+import { useCurrentPlan, getCurrentPlanAxios } from "@/hooks/fetch/usePayment";
 export function TeamForm() {
 	const { toast } = useToast();
 	const { teamInfo, hasTeam, isLoading: teamLoading, mutate: teamMutate, isLeader } = useTeamInfo();
@@ -372,7 +372,7 @@ export function TeamForm() {
 }
 
 const teamExceedMaximumMember = async (currentMemberNumber: number): Promise<boolean> => {
-	const { currentPlan } = await useCurrentPlanAxios();
+	const { currentPlan } = await getCurrentPlanAxios();
 
 	if (currentPlan?.max_members <= currentMemberNumber) {
 		return true;

@@ -40,7 +40,7 @@ export default function Payment() {
 	if (params.get("type") === "New" && parseInt(numUser) < 10) router.push("/pricing");
 	const paymentType: PaymentTypeType = getPaymentType(params.get("type"));
 
-	let price: number;
+	let price: number = 0;
 	if (paymentType === "New") {
 		price = parseInt(numUser) * 100_000;
 	} else if (paymentType === "AddUser") {
@@ -49,7 +49,6 @@ export default function Payment() {
 		price = Math.round(100_000 / 365 / 100) * 100 * subscribeLeftDays * parseInt(numUser);
 	} else {
 		router.push("/pricing");
-		return;
 	}
 	const { data: paymentWidget, error } = useSWRImmutable({ clientKey, customerKey }, fetcher);
 	const paymentMethodsWidgetRef = useRef<any>(null);

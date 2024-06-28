@@ -44,7 +44,7 @@ const useCurrentPlan = () => {
 		error,
 	};
 };
-const useCurrentPlanAxios = async () => {
+const getCurrentPlanAxios = async () => {
 	const { data } = await axios.get(process.env.NEXT_PUBLIC_API_URL + "/payment/order/subscription");
 
 	return {
@@ -81,4 +81,4 @@ const usePaymentHistory = () => {
 
 export type { PaymentHistoryType };
 
-export { useCurrentPlan, useCurrentPlanAxios, usePaymentHistory };
+export { useCurrentPlan, getCurrentPlanAxios, usePaymentHistory };
