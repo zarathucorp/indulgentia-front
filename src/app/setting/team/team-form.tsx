@@ -83,12 +83,17 @@ export function TeamForm() {
 					case "400: Email not found":
 						errorMessage = "해당 이메일을 가진 유저가 없습니다.";
 						break;
-					case "400: User already in team":
+					case "A1530 User is already in team":
 						errorMessage = "이미 팀에 속한 유저입니다.";
 						break;
-					case "403: Not a team leader":
+					case "A1520 User is not this team leader":
 						errorMessage = "팀장만 유저를 초대할 수 있습니다.";
 						break;
+					case "A1560 Team membership limit exceeded":
+						errorMessage = "최대 팀 멤버 수를 초과했습니다.";
+						break;
+					default:
+						errorMessage = error.response.data.detail;
 				}
 			} else {
 				errorMessage = error.message;
