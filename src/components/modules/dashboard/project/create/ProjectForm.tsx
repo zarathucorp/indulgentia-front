@@ -16,8 +16,8 @@ import { useRouter } from "next/navigation";
 const ProjectSchema = z
 	.object({
 		title: z.string().min(1, "프로젝트 이름은 1자보다 길어야 합니다.").max(1000, "프로젝트 이름은 1,000자보다 짧아야 합니다."),
-		project_leader: z.string().min(1, "연구책임자 이름은 1자보다 길어야 합니다.").max(1000, "연구책임자 이름은 1,000자보다 짧아야 합니다.").optional().nullable(),
-		grant_number: z.string().min(1, "과제 번호는 1자보다 길어야 합니다.").max(1000, "과제 번호는 1,000자보다 짧아야 합니다.").optional().nullable(),
+		project_leader: z.string().max(1000, "연구책임자 이름은 1,000자보다 짧아야 합니다.").optional().nullable(),
+		grant_number: z.string().max(1000, "과제 번호는 1,000자보다 짧아야 합니다.").optional().nullable(),
 		start_date: z.string().date("날짜 형식이 아닙니다.").optional().nullable(),
 		end_date: z.string().date("날짜 형식이 아닙니다.").optional().nullable(),
 	})
