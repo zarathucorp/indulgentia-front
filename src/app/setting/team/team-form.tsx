@@ -17,6 +17,7 @@ import { createClient } from "@/utils/supabase/client";
 import { UUID } from "crypto";
 import { LeaderTeamExitModal } from "@/components/global/RemoveModal";
 import { useState } from "react";
+import { useCurrentPlan, useCurrentPlanAxios } from "@/hooks/fetch/usePayment";
 export function TeamForm() {
 	const { toast } = useToast();
 	const { teamInfo, hasTeam, isLoading: teamLoading, mutate: teamMutate, isLeader } = useTeamInfo();
@@ -62,7 +63,13 @@ export function TeamForm() {
 		e.preventDefault();
 		// Implement user invite logic
 		// Once done, update the team info to reflect the changes
+
 		try {
+			// throw new Error("팀 최대 멤버 수에 도달했습니다. 멤버 수를 줄이거나 플랜을 업그레이드하세요(고객센터).");
+			console.log(invitationSendList.length, memberList.length);
+			if (await teamExceedMaximumMember(invitationSendList.length + memberList.length)) {
+				throw new Error("팀 최대 멤버 수에 도달했습니다. 멤버 수를 줄이거나 플랜을 업그레이드하세요(고객센터).");
+			}
 			await inviteUser(inviteUserEmail);
 
 			toast({
@@ -70,23 +77,25 @@ export function TeamForm() {
 				description: "유저가 초대되었습니다.",
 			});
 		} catch (error: any) {
-			console.error(error);
-			console.error(error.response.data.detail);
 			let errorMessage = "";
-			switch (error.response.data.detail) {
-				case "400: Email not found":
-					errorMessage = "해당 이메일을 가진 유저가 없습니다.";
-					break;
-				case "400: User already in team":
-					errorMessage = "이미 팀에 속한 유저입니다.";
-					break;
-				case "403: Not a team leader":
-					errorMessage = "팀장만 유저를 초대할 수 있습니다.";
-					break;
+			if (error?.response?.data?.detail) {
+				switch (error.response.data.detail) {
+					case "400: Email not found":
+						errorMessage = "해당 이메일을 가진 유저가 없습니다.";
+						break;
+					case "400: User already in team":
+						errorMessage = "이미 팀에 속한 유저입니다.";
+						break;
+					case "403: Not a team leader":
+						errorMessage = "팀장만 유저를 초대할 수 있습니다.";
+						break;
+				}
+			} else {
+				errorMessage = error.message;
 			}
 			toast({
 				title: "유저 초대 실패",
-				description: `유저가 초대되지 않았습니다. ${error.response.data.detail}`,
+				description: `유저가 초대되지 않았습니다. ${errorMessage}`,
 			});
 		}
 		teamMutate();
@@ -231,34 +240,39 @@ export function TeamForm() {
 				</div>
 				{hasTeam && (
 					<div>
-						{isLeader && (
-							<>
-								<h3 className="text-lg font-medium">보낸 초대 목록</h3>
-								<div className="mt-2 space-y-2">
-									{teamMemberLoading && <TeamMemberLoading />}
-									{invitationSendList &&
-										invitationSendList.map((invitation: InvitationSendType) => (
-											<div key={invitation.id} className="flex items-center justify-between rounded-md border border-gray-200 bg-gray-100 p-3 dark:border-gray-800 dark:bg-gray-800">
-												<div className="flex items-center gap-3">
-													<Avatar>
-														<AvatarImage src="/avatars/01.png" />
-														<AvatarFallback>dd</AvatarFallback>
-													</Avatar>
-													<div>
-														<p className="text-sm font-medium">dd</p>
-														<p className="text-sm text-gray-500 dark:text-gray-400">이메일</p>
+						<div className="py-2">
+							{isLeader && (
+								<>
+									<h3 className="text-lg font-medium">보낸 초대 목록</h3>
+									<div className="mt-2 space-y-2">
+										{teamMemberLoading && <TeamMemberLoading />}
+										{invitationSendList &&
+											invitationSendList.map((invitation: InvitationSendType) => (
+												<div key={invitation.id} className="flex items-center justify-between rounded-md border border-gray-200 bg-gray-100 p-3 dark:border-gray-800 dark:bg-gray-800">
+													<div className="flex items-center gap-3">
+														{/* <Avatar>
+															<AvatarImage src="/avatars/01.png" />
+															<AvatarFallback>{}</AvatarFallback>
+														</Avatar> */}
+														<div>
+															<p className="text-sm font-medium">
+																{invitation.invited_user.last_name || invitation.invited_user.first_name
+																	? (invitation.invited_user.last_name ?? "") + (invitation.invited_user.first_name ?? "")
+																	: "이름이 지정되지 않았습니다."}
+															</p>
+															<p className="text-sm text-gray-500 dark:text-gray-400">이메일 {invitation.invited_user.email}</p>
+														</div>
 													</div>
+													<Button size="sm" variant="ghost" onClick={() => onCancelInvite(invitation.id)}>
+														초대 취소
+													</Button>
 												</div>
-												<Button size="sm" variant="ghost" onClick={() => onCancelInvite(invitation.id)}>
-													초대 취소
-												</Button>
-											</div>
-										))}
-									{invitationSendList && invitationSendList.length === 0 && <Label className="rounded-md bg-gray-100 px-2 py-1 font-mono text-sm dark:bg-gray-800">보낸 초대가 없습니다.</Label>}
-								</div>
-							</>
-						)}
-
+											))}
+										{invitationSendList && invitationSendList.length === 0 && <Label className="rounded-md bg-gray-100 px-2 py-1 font-mono text-sm dark:bg-gray-800">보낸 초대가 없습니다.</Label>}
+									</div>
+								</>
+							)}
+						</div>
 						<h3 className="text-lg font-medium">{isLeader ? "팀장 권한 이전" : "팀원"}</h3>
 						<div className="mt-2 space-y-2">
 							{teamMemberLoading && <TeamMemberLoading />}
@@ -272,7 +286,7 @@ export function TeamForm() {
 											</Avatar>
 											<div>
 												<p className="text-sm font-medium">
-													{member.last_name + " " + member.first_name} {member.id === teamInfo?.team_leader_id && "(팀 리더)"}
+													{member.last_name + member.first_name} {member.id === teamInfo?.team_leader_id && "(팀 리더)"}
 												</p>
 												<p className="text-sm text-gray-500 dark:text-gray-400">{member.email}</p>
 											</div>
@@ -351,3 +365,13 @@ export function TeamForm() {
 		</>
 	);
 }
+
+const teamExceedMaximumMember = async (currentMemberNumber: number): Promise<boolean> => {
+	const { currentPlan } = await useCurrentPlanAxios();
+
+	if (currentPlan?.max_members <= currentMemberNumber) {
+		return true;
+	} else {
+		return false;
+	}
+};
