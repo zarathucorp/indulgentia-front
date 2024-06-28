@@ -2,19 +2,23 @@ import axios from "axios";
 import { UUID } from "crypto";
 import useSWRImmutable from "swr/immutable";
 import useSWR from "swr";
-const fetcher = (url: string) => axios.get(url, { withCredentials: true }).then((res) => res.data).catch(function (error) {
-	if (error.response) {
-		console.log("서버에서 오류가 발생했습니다.")
-		console.error(error.response.data);
-		throw new Error(error.response.data.message);
-	} else if (error.request) {
-		console.error(error.request);
-		throw new Error("서버와 통신 중 문제가 발생했습니다.");
-	} else {
-		console.error("Error", error.message);
-		throw new Error("알 수 없는 오류가 발생했습니다.");	
-	}
-});
+const fetcher = (url: string) =>
+	axios
+		.get(url, { withCredentials: true })
+		.then((res) => res.data)
+		.catch(function (error) {
+			if (error.response) {
+				console.log("서버에서 오류가 발생했습니다.");
+				console.error(error.response.data);
+				throw new Error(error.response.data.message);
+			} else if (error.request) {
+				console.error(error.request);
+				throw new Error("서버와 통신 중 문제가 발생했습니다.");
+			} else {
+				console.error("Error", error.message);
+				throw new Error("알 수 없는 오류가 발생했습니다.");
+			}
+		});
 import { createClient } from "@/utils/supabase/client";
 import { useState, useEffect } from "react";
 type DateTimeString = string;
@@ -30,11 +34,12 @@ type TeamInfoType = {
 };
 
 const useTeamInfo = () => {
-	const { data, error, mutate, isLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/team", fetcher, { onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-		if (retryCount >= 3) return;
-		if (error.status === 404) return;
-		setTimeout(() => revalidate({ retryCount }), 5000)
-		}
+	const { data, error, mutate, isLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/team", fetcher, {
+		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+			if (retryCount >= 3) return;
+			if (error.status === 404) return;
+			setTimeout(() => revalidate({ retryCount }), 5000);
+		},
 	});
 	const supabase = createClient();
 	const [isLeader, setIsLeader] = useState(false);
@@ -67,11 +72,12 @@ const useTeamInfo = () => {
 };
 
 const useTeamName = () => {
-	const { data, error, mutate } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/team", fetcher, { onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-		if (retryCount >= 3) return;
-		if (error.status === 404) return;
-		setTimeout(() => revalidate({ retryCount }), 5000)
-		}
+	const { data, error, mutate } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/team", fetcher, {
+		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+			if (retryCount >= 3) return;
+			if (error.status === 404) return;
+			setTimeout(() => revalidate({ retryCount }), 5000);
+		},
 	});
 };
 
@@ -103,41 +109,44 @@ type InvitationSendType = {
 	updated_at: DateTimeString;
 	team_id: UUID;
 	invited_user_id: UUID;
-	is_accepted: boolean;
+	invited_user: {
+		id: UUID;
+		first_name: string | null;
+		last_name: string | null;
+		email: string;
+	};
+	is_accepted: boolean | null;
 	is_deleted: boolean;
 };
 
 const useTeamMemberList = () => {
 	const { hasTeam } = useTeamInfo();
-	const { data, error, isLoading, mutate } = useSWRImmutable(
-		hasTeam ? process.env.NEXT_PUBLIC_API_URL + "/user/team/list" : null,
-		fetcher,
-		{
-			onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-				if (retryCount >= 3) return;
-				if (error.status === 404) return;
-				setTimeout(() => revalidate({ retryCount }), 2000);
-			},
-		}
-	);
+	const { data, error, isLoading, mutate } = useSWR(hasTeam ? process.env.NEXT_PUBLIC_API_URL + "/user/team/list" : null, fetcher, {
+		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+			if (retryCount >= 3) return;
+			if (error.status === 404) return;
+			setTimeout(() => revalidate({ retryCount }), 2000);
+		},
+	});
 
 	// Check if data is available and is an array before mapping
-	const memberList: TeamMemberType[] = data?.data && Array.isArray(data.data)
-		? data.data.map((member: any) => {
-				const eachMember = {
-					id: member.id,
-					email: member.email,
-					first_name: member.first_name || "",
-					last_name: member.last_name || "",
-				};
+	const memberList: TeamMemberType[] =
+		data?.data && Array.isArray(data.data)
+			? data.data.map((member: any) => {
+					const eachMember = {
+						id: member.id,
+						email: member.email,
+						first_name: member.first_name || "",
+						last_name: member.last_name || "",
+					};
 
-				if (member.first_name === null && member.last_name === null) {
-					eachMember.last_name = member.email.split("@")[0];
-				}
+					if (member.first_name === null && member.last_name === null) {
+						eachMember.last_name = member.email.split("@")[0];
+					}
 
-				return eachMember;
-			})
-		: [];
+					return eachMember;
+			  })
+			: [];
 
 	return {
 		memberList,
@@ -169,11 +178,12 @@ const inviteUser = async (invitee_email: string): Promise<void> => {
 };
 
 const useInvitationReceiveList = () => {
-	const { data, error, mutate, isLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/team/invite/receive/list", fetcher, { onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-		if (retryCount >= 3) return;
-		if (error.status === 404) return;
-		setTimeout(() => revalidate({ retryCount }), 5000)
-		}
+	const { data, error, mutate, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + "/user/team/invite/receive/list", fetcher, {
+		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+			if (retryCount >= 3) return;
+			if (error.status === 404) return;
+			setTimeout(() => revalidate({ retryCount }), 5000);
+		},
 	});
 
 	return {
@@ -185,12 +195,15 @@ const useInvitationReceiveList = () => {
 };
 const useInvitationSendList = () => {
 	const { hasTeam } = useTeamInfo();
-	const { data, error, mutate, isLoading } = useSWRImmutable(hasTeam ? process.env.NEXT_PUBLIC_API_URL + "/user/team/invite/send/list" : null, fetcher, { onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-		if (retryCount >= 3) return;
-		if (error.status === 404) return;
-		setTimeout(() => revalidate({ retryCount }), 5000)
-		}
+	const { data, error, mutate, isLoading } = useSWRImmutable(hasTeam ? process.env.NEXT_PUBLIC_API_URL + "/user/team/invite/send/list" : null, fetcher, {
+		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+			if (retryCount >= 3) return;
+			if (error.status === 404) return;
+			setTimeout(() => revalidate({ retryCount }), 5000);
+		},
 	});
+
+	console.log(data?.data);
 
 	return {
 		invitationSendList: data?.data,
