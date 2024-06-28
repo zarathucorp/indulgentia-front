@@ -7,10 +7,22 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { map } from "zod";
 import { UsePeriodPolicy, RefundPolicy } from "@/components/global/UsePeriodRefundPolicy";
 import { useState } from "react";
+import { createClient } from "@/utils/supabase/client";
+import { useEffect } from "react";
 export default function PricingPage() {
 	const numbers = Array.from({ length: 41 }, (_, i) => i + 10);
 	const [numUser, setNumUser] = useState<string>("10");
 	const totalPrice = parseInt(numUser) * 100_000;
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	useEffect(() => {
+		const getUser = async () => {
+			const supabase = createClient();
+			const { data: user } = await supabase.auth.getUser();
+			if (user) setIsLoggedIn(true);
+		};
+
+		getUser();
+	}, []);
 	return (
 		<>
 			<section className="w-full py-12 ">
@@ -50,7 +62,7 @@ export default function PricingPage() {
 										선택하기
 									</Button>
 								</Link> */}
-								<Link href={`/setting/payment`}>
+								<Link href={isLoggedIn ? `/payment?type=New&user=${numUser}` : "/auth/login"}>
 									<Button size="lg" className="w-full text-white">
 										시작하기
 									</Button>
