@@ -62,6 +62,26 @@ const ERROR_CODE = {
 		"610": { message: "이미 팀 초대를 수락하였습니다" },
 		"620": { message: "이미 팀 초대를 거절하였습니다" },
 		"630": { message: "팀 초대 요청이 아직 남아 있습니다" },
+
+		"700": { message: "Unauthorized user access to Order" },
+		"710": { message: "User is not in this order" },
+
+		"800": { message: "Unauthorized user access to Subscription" },
+		"810": { message: "User is not in this subscription" },
+		"820": {
+			message: "팀 플랜을 사용하고 있지 않습니다.",
+			screen: (
+				<>
+					<div>
+						<p>연구실록을 아직 구매하지 않았습니다..</p>
+						<p>&quot;설정 - 결제&quot; 에서 연구실록을 구매할 수 있습니다.</p>
+						<Link href="/setting/payment">
+							<Button className="px-8 text-sm font-medium">구매 바로가기</Button>
+						</Link>
+					</div>
+				</>
+			),
+		},
 	},
 	A3: {
 		"000": { message: "접근이 제한되었습니다" },
