@@ -5,6 +5,7 @@ const nextConfig = {
 		defaultLocale: "ko",
 	},
 	reactStrictMode: false,
+	output: "standalone",
 	images: {
 		remotePatterns: [
 			{
