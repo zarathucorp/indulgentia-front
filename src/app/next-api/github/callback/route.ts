@@ -4,8 +4,10 @@ import { createClient } from "@/utils/supabase/server";
 export async function GET(req: NextRequest) {
 	const { searchParams } = new URL(req.url);
 	const code = searchParams.get("code");
-	const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, REDIRECT_URI } = process.env;
-
+	const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
+	const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
+	const REDIRECT_URI = process.env.REDIRECT_URI;
+	console.log(GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, REDIRECT_URI, process.env.NEXT_PUBLIC_API_URL);
 	const supabase = createClient();
 
 	const { data: user, error } = await supabase.auth.getUser();
@@ -45,6 +47,7 @@ export async function GET(req: NextRequest) {
 
 		return NextResponse.redirect(`https://dev.rndsillog.com/setting/account`);
 	} catch (error: any) {
+		console.error(error)
 		console.error("Error exchanging code for access token:", error.response?.data || error.message);
 		return new NextResponse(JSON.stringify({ error: "Failed to exchange code for access token" }), { status: 500 });
 	}
