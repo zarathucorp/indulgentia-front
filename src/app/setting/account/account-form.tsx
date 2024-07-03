@@ -25,6 +25,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { FaRegCircleQuestion } from "react-icons/fa6";
+import { SendPasswordResetMailModal } from "@/app/auth/login/SendPasswordResetMailModal";
 const accountFormSchema = z.object({
 	lastName: z.string().max(30, { message: "30자 이하로 입력해주세요" }).nullable(),
 	firstName: z.string().max(30, { message: "30자 이하로 입력해주세요" }).nullable(),
@@ -140,6 +141,7 @@ export function AccountForm() {
 							</FormControl>
 							<FormDescription>이메일은 변경할 수 없습니다.</FormDescription>
 							<FormMessage />
+							<SendPasswordResetMailModal/>
 						</FormItem>
 					)}
 				/>
