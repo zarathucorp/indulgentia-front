@@ -26,6 +26,8 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { FaRegCircleQuestion } from "react-icons/fa6";
 import { SendPasswordResetMailModal } from "@/app/auth/login/SendPasswordResetMailModal";
+import { AccountRemoveModal } from "@/components/global/RemoveModal";
+import { useState } from "react";
 const accountFormSchema = z.object({
 	lastName: z.string().max(30, { message: "30자 이하로 입력해주세요" }).nullable(),
 	firstName: z.string().max(30, { message: "30자 이하로 입력해주세요" }).nullable(),
@@ -36,7 +38,20 @@ type AccountFormValues = z.infer<typeof accountFormSchema>;
 export function AccountForm() {
 	const [userEmail, setUserEmail] = useVariable<string>("");
 	const { username: githubUsername, error: githubError, isLoading: isLoadingGithub, mutate: mutateGithub } = useGithub();
-	const { userInfo, error: userInfoError, isLoading: isLoadingUserInfo } = useUser();
+	const { userInfo, isUser, error: userInfoError, isLoading: isLoadingUserInfo, mutate: userMutate } = useUser();
+	const [ accountRemoveModalOpen, setAccountRemoveModalOpen] = useState<boolean>(false);
+	const onLeaveButtonClick = async () => {
+		try {
+			setAccountRemoveModalOpen(true);
+			return;
+		} catch (error: any) {
+			console.error("Error account remove:", error.response.data.detail);
+			toast({
+				title: "계정 탈퇴 실패",
+				description: "계정이 탈퇴되지 않았습니다.",
+			});
+		}
+	};
 
 	const values: AccountFormValues = {
 		firstName: userInfo?.first_name || null,
@@ -56,6 +71,7 @@ export function AccountForm() {
 		};
 
 		getUser();
+		userMutate();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -202,6 +218,10 @@ export function AccountForm() {
 					</div>
 				</div>
 				<Button type="submit">설정 업데이트</Button>
+				<Button type="button" disabled={!isUser} className="bg-red-500 hover:bg-red-700" onClick={onLeaveButtonClick}>
+					계정 탈퇴
+				</Button>
+				{userInfo && <AccountRemoveModal isOpen={accountRemoveModalOpen} setIsOpen={setAccountRemoveModalOpen} userInfo={userInfo} userMutate={userMutate} />}
 			</form>
 		</Form>
 	);

@@ -16,15 +16,19 @@ type UserInfoType = {
 const fetcher = async (url: string) => await axios.get(url, { withCredentials: true }).then((res) => res.data.data as UserInfoType);
 
 const useUser = () => {
-	const { data: userInfo, error, isLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/settings/info", fetcher);
+	const { data: userInfo, error, mutate, isLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/settings/info", fetcher);
+	const isUser: boolean = !!userInfo;
 
 	// const isLoading = !error && !userInfo;
 	// console.log(userInfo);
 	return {
 		userInfo,
+		isUser,
 		error: error ? error : null,
+		mutate,
 		isLoading,
 	};
 };
 
 export default useUser;
+export type { UserInfoType };
