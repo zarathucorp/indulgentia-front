@@ -81,6 +81,7 @@ export function SendPasswordResetMailModal() {
 				}}
 				className="text-black hover:text-black bg-transparent hover:bg-transparent outline-none p-0"
 				type="button"
+				tabIndex="-1"
 			>
 				비밀번호 초기화
 			</Button>
