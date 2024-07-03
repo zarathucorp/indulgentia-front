@@ -28,6 +28,7 @@ import { FaRegCircleQuestion } from "react-icons/fa6";
 import { SendPasswordResetMailModal } from "@/app/auth/login/SendPasswordResetMailModal";
 import { AccountRemoveModal } from "@/components/global/RemoveModal";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 const accountFormSchema = z.object({
 	lastName: z.string().max(30, { message: "30자 이하로 입력해주세요" }).nullable(),
 	firstName: z.string().max(30, { message: "30자 이하로 입력해주세요" }).nullable(),
@@ -40,6 +41,7 @@ export function AccountForm() {
 	const { username: githubUsername, error: githubError, isLoading: isLoadingGithub, mutate: mutateGithub } = useGithub();
 	const { userInfo, isUser, error: userInfoError, isLoading: isLoadingUserInfo, mutate: userMutate } = useUser();
 	const [ accountRemoveModalOpen, setAccountRemoveModalOpen] = useState<boolean>(false);
+	const router = useRouter();
 	const onLeaveButtonClick = async () => {
 		try {
 			setAccountRemoveModalOpen(true);
@@ -63,7 +65,15 @@ export function AccountForm() {
 			const supabase = createClient();
 			const {
 				data: { user },
-			} = await supabase.auth.getUser();
+			} = await supabase.auth.getUser();			
+
+			if (!user) {
+				toast({
+					title: "로그인이 필요합니다.",
+					description: "계정 설정은 로그인 후 가능합니다.",
+				});
+				router.push("/auth/login");
+			}
 
 			if (!user?.email) redirect("/auth/login");
 

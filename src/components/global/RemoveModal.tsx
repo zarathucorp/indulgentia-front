@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { Dispatch, SetStateAction } from "react";
 import axios from "axios";
@@ -207,6 +207,7 @@ import { UserInfoType } from "@/hooks/fetch/useUser";
 export function AccountRemoveModal({ isOpen, setIsOpen, userInfo, userMutate }: { isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>>; userInfo: UserInfoType; userMutate: KeyedMutator<any>  }) {
 	const [confirmEntityName, setConfirmEntityName] = useState<string>("");
 	const { toast } = useToast();
+	const router = useRouter();
 	return (
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
 			{/* <DialogTrigger>
@@ -232,13 +233,20 @@ export function AccountRemoveModal({ isOpen, setIsOpen, userInfo, userMutate }: 
 						onClick={async () => {
 							try {
 								const supabase = createClient();
+								const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/auth/remove`, { withCredentials: true });							
+
 								const { error: signoutError } = await supabase.auth.signOut();
-								console.log("pretend account remove")
 								// 로그아웃 후 계정 삭제; 필요 없을 수 있음
-								if (signoutError) {
+								if (response.status !== 200) {
 									toast({
 										title: "회원 탈퇴에 실패하였습니다.",
-										description: `회원 탈퇴에 실패하였습니다: ${signoutError.message}`,
+										description: `회원 탈퇴에 실패하였습니다: ${response.data.message}`,
+									});
+									throw new Error("계정 삭제에 실패하였습니다.");
+								} else if (signoutError) {
+									toast({
+										title: "로그아웃에 실패하였습니다. 계정 삭제는 완료되었습니다.",
+										description: `회원 탈퇴 후 로그아웃에 실패하였습니다: ${signoutError.message}`,
 									});
 								} else {
 									toast({
@@ -249,11 +257,15 @@ export function AccountRemoveModal({ isOpen, setIsOpen, userInfo, userMutate }: 
 								console.log("Account remove successfully");
 								userMutate();
 								setIsOpen(false);
-								return redirect("/");
+								router.push("/");
+								return
 							} catch (error) {
 								console.error(error);
+								toast({
+									title: "회원 탈퇴에 실패하였습니다.",
+									description: `회원 탈퇴에 실패하였습니다: ${error}`,
+								});
 							}
-							throw new Error("Cannot remove account");
 						}}
 					>
 						삭제하기
