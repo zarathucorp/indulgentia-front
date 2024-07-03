@@ -212,5 +212,17 @@ const useInvitationSendList = () => {
 		mutate,
 	};
 };
+
+const useCurrentUserWithPending = () => {
+	const { memberList, isLoading: memberListLoading, error: memberListError, mutate: memberListMutate } = useTeamMemberList();
+	const { invitationSendList, error: invitationSendListError, isLoading: invitationSendListLoading, mutate: invitationSendListMutate } = useInvitationSendList();
+
+	return {
+		numberCurrentUserWithPending: !memberListLoading && !invitationSendListLoading && memberList && invitationSendList && memberList.length + invitationSendList.length,
+		isLoading: memberListLoading || invitationSendListLoading,
+		isError: memberListError || invitationSendListError,
+	};
+};
+
 export type { TeamMemberType, InvitationReceiveType, InvitationSendType, TeamInfoType };
-export { useTeamInfo, useTeamMemberList, createTeam, inviteUser, useInvitationReceiveList as getInvitationReceiveList, useInvitationSendList as getInvitationSendList };
+export { useTeamInfo, useTeamMemberList, createTeam, inviteUser, useInvitationReceiveList as getInvitationReceiveList, useInvitationSendList as getInvitationSendList, useCurrentUserWithPending };

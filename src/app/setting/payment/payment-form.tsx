@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { StartTeamPlanButton, AddUserButton } from "./payment-button";
 import UserAddModal from "./UserAddModal";
+import { useCurrentUserWithPending } from "@/hooks/fetch/useTeam";
 import { useCurrentPlan, usePaymentHistory } from "@/hooks/fetch/usePayment";
 import { PaymentHistoryType } from "@/hooks/fetch/usePayment";
 const leftDays = (expireAt: string) => {
@@ -45,7 +46,7 @@ function PaymentForm() {
 
 function CurrentPlan() {
 	const { currentPlan, isLoading, error } = useCurrentPlan();
-
+	const { numberCurrentUserWithPending, isLoading: numberCurrentUserWithPendingLoading, isError: numberCurrentUserWithPendingError } = useCurrentUserWithPending();
 	return (
 		<div className="bg-card rounded-lg shadow-md p-6">
 			<div className="flex items-center justify-between">
@@ -66,7 +67,7 @@ function CurrentPlan() {
 								<div>
 									<h3 className="text-lg font-medium">{currentPlan.is_active ? "Team 플랜" : "플랜 없음"}</h3>
 									<p className="text-muted-foreground">
-										{1}명/{currentPlan.max_members}명
+										{numberCurrentUserWithPendingLoading ? "" : numberCurrentUserWithPending}명/{currentPlan.max_members}명
 									</p>
 								</div>
 								<Badge variant="outline">이용 기간 {leftDays(currentPlan.expired_at.toString())}일 남음</Badge>
