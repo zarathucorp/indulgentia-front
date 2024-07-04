@@ -228,6 +228,7 @@ function SignatureFileField({ form }: { form: any }) {
 		if (files && files.length > 0) {
 			form.setValue("file", files[0]);
 			setIsFileSelected(true);
+			form.trigger("file");
 		}
 	};
 
