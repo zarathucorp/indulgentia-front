@@ -207,7 +207,7 @@ const EditProjectForm = ({ projectInfo, mutate }: { projectInfo: CreateProjectFo
 			const currentUrl = window.location.pathname;
 			const newUrl = currentUrl.substring(0, currentUrl.lastIndexOf("/"));
 			router.push(newUrl);
-		} catch (error) {
+		} catch (error: any) {
 			console.error(error);
 			toast({
 				title: "프로젝트 업데이트 실패",
