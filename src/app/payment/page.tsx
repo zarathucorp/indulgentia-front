@@ -143,8 +143,8 @@ export default function Payment() {
 							} catch (error: any) {
 								console.error(error);
 								toast({
-									title: "결제 요청에 실패했습니다.",
-									description: error.message,
+									title: "결제 요청 실패",
+									description: `결제 요청에 실패했습니다. ${error?.response?.data?.detail ?? error.message}`,
 								});
 							}
 						}}

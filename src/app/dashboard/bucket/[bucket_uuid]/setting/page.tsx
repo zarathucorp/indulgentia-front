@@ -168,7 +168,7 @@ const BucketSetting: React.FC = () => {
 			console.error(error);
 			toast({
 				title: "GitHub Repository 연결 실패",
-				description: error?.response?.data?.detail ?? error.message,
+				description: `GitHub Repository 연결에 실패하였습니다. ${error?.response?.data?.detail ?? error.message}`,
 			});
 		}
 	};

@@ -45,7 +45,7 @@ export const RemoveRepositoryModal: React.FC<RemoveRepositoryModalProps> = ({ re
 			console.error(e);
 			toast({
 				title: "Repository 연결 해제 실패",
-				description: `Repository의 연결 해제에 실패하였습니다. ${e.message}`,
+				description: `Repository의 연결 해제에 실패하였습니다. ${e.response?.data?.detail ?? e.message}`,
 			});
 		}
 	};

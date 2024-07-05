@@ -54,7 +54,7 @@ export function TeamForm() {
 			console.error("Error during team leave:", error.response.data.detail);
 			toast({
 				title: "팀 탈퇴 실패",
-				description: "팀에서 탈퇴되지 않았습니다.",
+				description: `팀에서 탈퇴되지 않았습니다. ${error?.response?.data?.detail ?? error.message}`,
 			});
 		}
 	};
@@ -126,7 +126,7 @@ export function TeamForm() {
 			console.error("Error during team leader transfer:", error);
 			toast({
 				title: "팀장 권한 이전 실패",
-				description: "팀장 권한이 이전되지 않았습니다.",
+				description: `팀장 권한이 이전되지 않았습니다. ${error?.data?.detail ?? error.message}`,
 			});
 		}
 	};
@@ -152,7 +152,7 @@ export function TeamForm() {
 		} catch (error: any) {
 			toast({
 				title: "초대 수락 실패",
-				description: "초대를 수락하지 못했습니다.",
+				description: `초대를 수락하지 못했습니다. ${error?.data?.detail ?? error.message}`,
 			});
 		}
 	};
@@ -177,7 +177,7 @@ export function TeamForm() {
 		} catch (error: any) {
 			toast({
 				title: "초대 거절 실패",
-				description: "초대를 거절하지 못했습니다.",
+				description: `초대를 거절하지 못했습니다. ${error?.data?.detail ?? error.message}`,
 			});
 		}
 	};
@@ -198,7 +198,7 @@ export function TeamForm() {
 		} catch (error: any) {
 			toast({
 				title: "초대 취소 실패",
-				description: "초대를 취소하지 못했습니다.",
+				description: `초대를 취소하지 못했습니다. ${error?.data?.detail ?? error.message}`,
 			});
 		} finally {
 			invitationMutate();

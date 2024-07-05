@@ -140,7 +140,7 @@ export function EditBucketForm({ bucketInfo, mutate }: { bucketInfo: CreateBucke
 			console.error(error);
 			toast({
 				title: "버킷 수정 실패",
-				description: `버킷 ${data.title}의 수정에 실패하였습니다. ${error.message}`,
+				description: `버킷 ${data.title}의 수정에 실패하였습니다. ${error?.response?.data?.detail ?? error.message}`,
 			});
 		}
 		mutate();
