@@ -39,13 +39,13 @@ export default function Component() {
 			if (axiosResult.status !== "succeed") throw new Error("문의 접수에 실패하였습니다.");
 			toast({
 				title: "문의 접수에 성공하였습니다.",
-				description: <p>문의를 접수하였습니다. 최대한 빠르게 연락드리도록 하겠습니다.</p>,
+				description: `문의를 접수하였습니다. 최대한 빠르게 연락드리도록 하겠습니다.<`,
 			});
-		} catch (error) {
+		} catch (error: any) {
 			console.error(error);
 			toast({
 				title: "문의 접수에 실패하였습니다.",
-				description: <p>잠시 후 다시 시도하여 주십시오. 오류가 지속되는 경우 limcw@zarathu.com 으로 연락주시면 빠르게 응대해 드리겠습니다.</p>,
+				description: `잠시 후 다시 시도하여 주십시오. 오류가 지속되는 경우 limcw@zarathu.com 으로 연락주시면 빠르게 응대해 드리겠습니다.`,
 			});
 		}
 	}

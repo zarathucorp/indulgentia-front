@@ -162,7 +162,7 @@ const NewProjectForm = () => {
 			console.error(error);
 			toast({
 				title: "프로젝트 수정 실패",
-				description: `프로젝트 ${data.title}의 수정에 실패하였습니다. ${error.message}`,
+				description: `프로젝트 ${data.title}의 수정에 실패하였습니다. ${error?.response?.data?.detail ?? error.message}`,
 			});
 		}
 	};
@@ -211,7 +211,7 @@ const EditProjectForm = ({ projectInfo, mutate }: { projectInfo: CreateProjectFo
 			console.error(error);
 			toast({
 				title: "프로젝트 업데이트 실패",
-				description: "프로젝트가 업데이트되지 않았습니다.",
+				description: `프로젝트가 업데이트되지 않았습니다. ${error?.response?.data?.detail ?? error.message}`,
 			});
 		}
 	};

@@ -63,7 +63,7 @@ export function CreateTeamModal() {
 								} catch (e: any) {
 									toast({
 										title: "팀 생성 실패",
-										description: `팀 생성에 실패하였습니다: ${e.message}`,
+										description: `팀 생성에 실패하였습니다: ${e?.response?.data?.detail ?? e.message}`,
 									});
 								}
 							}}

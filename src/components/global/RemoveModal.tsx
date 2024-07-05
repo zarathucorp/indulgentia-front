@@ -181,7 +181,7 @@ export function LeaderTeamExitModal({ isOpen, setIsOpen, teamInfo, teamMutate }:
 								if (teamInfo.name !== confirmEntityName) {
 									throw new Error("입력한 값이 삭제할 대상과 일치하지 않습니다.");
 								}
-								const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/user/team/${teamInfo?.id}`);
+								await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/user/team/${teamInfo?.id}`);
 								toast({
 									title: "삭제 완료",
 									description: `팀 ${teamInfo.name}의 삭제가 완료되었습니다.`,
@@ -191,7 +191,7 @@ export function LeaderTeamExitModal({ isOpen, setIsOpen, teamInfo, teamMutate }:
 							} catch (e: any) {
 								toast({
 									title: "삭제 실패",
-									description: `팀 ${teamInfo.name}의 삭제가 실패하였습니다. ${e.message}`,
+									description: `팀 ${teamInfo.name}의 삭제가 실패하였습니다. ${e?.response?.data?.detail ?? e.message}`,
 								});
 							}
 						}}
@@ -240,7 +240,7 @@ export function AccountRemoveModal({ isOpen, setIsOpen, userInfo, userMutate }: 
 								if (response.status !== 200) {
 									toast({
 										title: "회원 탈퇴에 실패하였습니다.",
-										description: `회원 탈퇴에 실패하였습니다: ${response.data.message}`,
+										description: `회원 탈퇴에 실패하였습니다: ${response?.data?.detail ?? response.data.message}`,
 									});
 									throw new Error("계정 삭제에 실패하였습니다.");
 								} else if (signoutError) {
@@ -259,11 +259,11 @@ export function AccountRemoveModal({ isOpen, setIsOpen, userInfo, userMutate }: 
 								setIsOpen(false);
 								router.push("/");
 								return
-							} catch (error) {
+							} catch (error: any) {
 								console.error(error);
 								toast({
 									title: "회원 탈퇴에 실패하였습니다.",
-									description: `회원 탈퇴에 실패하였습니다: ${error}`,
+									description: `회원 탈퇴에 실패하였습니다: ${error?.response?.data?.detail ?? error.message}`,
 								});
 							}
 						}}

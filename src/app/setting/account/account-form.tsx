@@ -50,7 +50,7 @@ export function AccountForm() {
 			console.error("Error account remove:", error.response.data.detail);
 			toast({
 				title: "계정 탈퇴 실패",
-				description: "계정이 탈퇴되지 않았습니다.",
+				description: `계정이 탈퇴되지 않았습니다. ${error?.response?.data?.detail ?? error.message}`,
 			});
 		}
 	};
@@ -102,7 +102,7 @@ export function AccountForm() {
 				throw new Error("성과 이름 중 하나는 반드시 입력해야 합니다.");
 			}
 
-			await axios.patch(
+			const response = await axios.patch(
 				process.env.NEXT_PUBLIC_API_URL + "/user/settings/info",
 				{
 					first_name: processedData.firstName,
@@ -120,7 +120,7 @@ export function AccountForm() {
 
 			toast({
 				title: "업데이트에 실패하였습니다.",
-				description: `설정 업데이트에 실패하였습니다: ${error.message}`,
+				description: `설정 업데이트에 실패하였습니다: ${error?.response?.data?.detail ?? error.message}`,
 			});
 		}
 	};

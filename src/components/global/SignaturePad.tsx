@@ -153,7 +153,7 @@ const SignaturePad = () => {
 			console.error(error);
 			toast({
 				title: "서명이 저장되지 않았습니다.",
-				description: `에러: ${error.message}.`,
+				description: `서명이 저장되지 않았습니다. ${error?.response?.data?.detail}`,
 			});
 		}
 	};
