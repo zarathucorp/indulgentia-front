@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
 			}
 		);
 
-		return NextResponse.redirect(`https://dev.rndsillog.com/setting/account`);
+		return NextResponse.redirect(`https://rndsillog.com/setting/account`);
 	} catch (error: any) {
 		console.error(error)
 		console.error("Error exchanging code for access token:", error.response?.data || error.message);

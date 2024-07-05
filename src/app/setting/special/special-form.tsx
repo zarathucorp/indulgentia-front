@@ -52,7 +52,7 @@ export function SpecialForm() {
 				<a target="_blank" href={process.env.NEXT_PUBLIC_GITHUB_APP_INSTALL_URL || "#"}>
 					<Button type="button">GitHub 계정 연동</Button>
 				</a>
-				<a href={"https://github.com/login/oauth/authorize?client_id=Iv23li79mqTdxRfQ2tpK&redirect_uri=https://dev.rndsillog.com/next-api/github/callback" || "#"}>
+				<a href={"https://github.com/login/oauth/authorize?client_id=Iv23li79mqTdxRfQ2tpK&redirect_uri=https://rndsillog.com/next-api/github/callback" || "#"}>
 					<Button type="button">토큰 다시 받아오기</Button>
 				</a>
 
