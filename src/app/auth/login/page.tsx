@@ -39,7 +39,8 @@ export default function SigninPage({ searchParams }: { searchParams: { message: 
 				toast({
 					title: "알 수 없는 상황입니다.",
 					description: decodeURI(searchParams.message),
-				});}
+				});
+			}
 		}, 0);
 	}, [searchParams.message]);
 
@@ -83,7 +84,7 @@ export default function SigninPage({ searchParams }: { searchParams: { message: 
 							{/* <KakaoLoginButton /> */}
 						</div>
 						<div className="mt-4 text-center text-sm">
-							계졍이 없으신가요?{" "}
+							계정이 없으신가요?{" "}
 							<Link href="/auth/join" className="underline">
 								회원가입
 							</Link>
