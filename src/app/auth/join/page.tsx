@@ -1,44 +1,63 @@
+"use client";
+
+// import { useActionState } from "react";
+import { useForm, useFormState } from "react-hook-form";
+import { JoinAction } from "./actions.ts";
 import Link from "next/link";
-import { headers } from "next/headers";
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import SubmitButton from "../login/submit-button";
+import { useEffect } from "react";
+import { useToast } from "@/components/ui/use-toast";
+
+
+type FormData = {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+};
 
 export default function JoinForm() {
-	const signUp = async (formData: FormData) => {
-		// 유저가 이미 가입되어있는지 체크 필요함.
-		"use server";
+	// // react 19 
+	// const [state, formAction] = useActionState(JoinAction, initialState);
 
-		const origin = headers().get("origin");
-		const email = formData.get("email") as string;
-		const password = formData.get("password") as string;
-		const lastName = formData.get("last-name") as string;
-		const firstName = formData.get("first-name") as string;
-		// console.log(email, password);
-		const supabase = createClient();
-		const { data, error } = await supabase.auth.signUp({
-			email,
-			password,
-			options: {
-				data: {
-					first_name: firstName,
-					last_name: lastName,
-				},
-				emailRedirectTo: `${origin}/auth/callback`,
-			},
-		});
-		console.log(data, error);
-		if (error) {
-			console.log(error);
-			return redirect("/auth/login?message=Could not authenticate user");
-		}
+	// react 18
+  const { register, handleSubmit, control, setError } = useForm<FormData>();
+  const { isSubmitting, errors } = useFormState({ control });
 
-		return redirect("/auth/login?message=Check email to continue sign in process");
-	};
+	const { toast } = useToast();
+
+  const signUp = async (data: FormData) => {
+    const formData = new FormData();
+    formData.append("email", data.email);
+    formData.append("password", data.password);
+    formData.append("first-name", data.firstName);
+    formData.append("last-name", data.lastName);
+
+    const result = await JoinAction({ message: "" }, formData);
+
+    if (result.message === "Check email to continue sign in process") {
+      console.log(result.message);
+      toast({
+        title: "회원가입 성공",
+        description: "이메일을 확인하여 계속 진행하세요.",
+      });
+    } else if (result.message === "weak_password") {
+      console.log(result.message);
+      toast({
+        title: "회원가입에 실패하였습니다.",
+        description: "6자 이상의 비밀번호를 입력해주세요.",
+      });
+    } else {
+      console.log(result.message);
+			toast({
+				title: "회원가입에 실패하였습니다.",
+				description: "다시 시도해주세요.",
+			});
+		};
+	}
 
 	return (
 		<Card className="mx-auto max-w-sm">
@@ -46,39 +65,43 @@ export default function JoinForm() {
 				<CardTitle className="text-xl">회원가입</CardTitle>
 				<CardDescription>간편하게 회원가입하세요</CardDescription>
 			</CardHeader>
-			<CardContent>
-				<div className="grid gap-4">
-					<form>
-						<div className="grid grid-cols-2 gap-4">
-							<div className="grid gap-2">
-								<Label htmlFor="last-name">성</Label>
-								<Input id="last-name" name="last-name" placeholder="홍" required />
-							</div>
-							<div className="grid gap-2">
-								<Label htmlFor="first-name">이름</Label>
-								<Input id="first-name" name="first-name" placeholder="길동" required />
-							</div>
-						</div>
-						<div className="grid gap-2">
-							<Label htmlFor="email">이메일</Label>
-							<Input id="email" name="email" type="email" placeholder="user@example.com" required />
-						</div>
-						<div className="grid gap-2">
-							<Label htmlFor="password">비밀번호</Label>
-							<Input id="password" name="password" type="password" required />
-						</div>
-						<SubmitButton formAction={signUp} className="w-full outline" pendingText="Signing Up...">
-							회원가입
-						</SubmitButton>
-					</form>
-				</div>
-				<div className="mt-4 text-center text-sm">
-					이미 계정이 있으신가요?{" "}
-					<Link href="/auth/login" className="underline">
-						로그인
-					</Link>
-				</div>
-			</CardContent>
-		</Card>
+      <CardContent>
+        <div className="grid gap-4">
+          <form onSubmit={handleSubmit(signUp)}>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="last-name">성</Label>
+                <Input id="last-name" {...register("lastName", { required: true })} placeholder="홍" />
+                {/* {errors.lastName && <span>{errors.lastName.message}</span>} */}
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="first-name">이름</Label>
+                <Input id="first-name" {...register("firstName", { required: true })} placeholder="길동" />
+                {/* {errors.firstName && <span>{errors.firstName.message}</span>} */}
+              </div>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="email">이메일</Label>
+              <Input id="email" type="email" {...register("email", { required: true })} placeholder="user@example.com" />
+              {/* {errors.email && <span>{errors.email.message}</span>} */}
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="password">비밀번호</Label>
+              <Input id="password" type="password" {...register("password", { required: true })} />
+              {/* {errors.password && <span>{errors.password.message}</span>} */}
+            </div>
+            <SubmitButton type="submit" className="w-full outline" pendingText="Signing Up..." disabled={isSubmitting}>
+              회원가입
+            </SubmitButton>
+          </form>
+        </div>
+        <div className="mt-4 text-center text-sm">
+          이미 계정이 있으신가요?{" "}
+          <Link href="/auth/login" className="underline">
+            로그인
+          </Link>
+        </div>
+      </CardContent>
+    </Card>
 	);
 }
