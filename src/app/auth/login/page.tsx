@@ -42,7 +42,7 @@ export default function SigninPage({ searchParams }: { searchParams: { message: 
 				});
 			}
 		}, 0);
-	}, [searchParams.message]);
+	}, [searchParams.message, toast]);
 
 	return (
 		<>
