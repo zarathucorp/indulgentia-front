@@ -29,12 +29,17 @@ export async function JoinAction(
     });
 		console.log("Data from JoinAction");
 		console.log(data);
+        console.log(data?.user?.identities);
     if (error) {
         console.log("Error occured!");
         console.log(error);
         console.log(error.code);
         return { message: error.code };
     }
-
-    return { message: "Check email to continue sign in process" };
+    if (data?.user?.identities?.length === 0) {
+        console.log("No identities found");
+        return { message: "user_already_registered" };
+    } else {
+        return { message: "Check email to continue sign in process" };
+    }
 }

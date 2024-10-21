@@ -44,11 +44,23 @@ export default function JoinForm() {
         title: "회원가입 성공",
         description: "이메일을 확인하여 계속 진행하세요.",
       });
+    } else if (result.message === "user_already_registered") {
+      console.log(result.message);
+      toast({
+        title: "회원가입에 실패하였습니다.",
+        description: "이미 가입된 이메일입니다.",
+      });
     } else if (result.message === "weak_password") {
       console.log(result.message);
       toast({
         title: "회원가입에 실패하였습니다.",
         description: "6자 이상의 비밀번호를 입력해주세요.",
+      });
+    } else if (result.message === "over_email_send_rate_limit") {
+      console.log(result.message);
+      toast({
+        title: "회원가입에 실패하였습니다.",
+        description: "이메일 전송 제한에 걸렸습니다. 잠시 후 다시 시도해주세요.",
       });
     } else {
       console.log(result.message);
@@ -71,23 +83,23 @@ export default function JoinForm() {
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="last-name">성</Label>
-                <Input id="last-name" {...register("lastName", { required: true })} placeholder="홍" />
+                <Input id="last-name" {...register("lastName", { required: true })} name="last-name" required placeholder="홍" />
                 {/* {errors.lastName && <span>{errors.lastName.message}</span>} */}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="first-name">이름</Label>
-                <Input id="first-name" {...register("firstName", { required: true })} placeholder="길동" />
+                <Input id="first-name" {...register("firstName", { required: true })} name="first-name" required placeholder="길동" />
                 {/* {errors.firstName && <span>{errors.firstName.message}</span>} */}
               </div>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="email">이메일</Label>
-              <Input id="email" type="email" {...register("email", { required: true })} placeholder="user@example.com" />
+              <Input id="email" type="email" {...register("email", { required: true })} name="email" required placeholder="user@example.com" />
               {/* {errors.email && <span>{errors.email.message}</span>} */}
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">비밀번호</Label>
-              <Input id="password" type="password" {...register("password", { required: true })} />
+              <Input id="password" type="password" {...register("password", { required: true })} name="passowrd" required />
               {/* {errors.password && <span>{errors.password.message}</span>} */}
             </div>
             <SubmitButton type="submit" className="w-full outline" pendingText="Signing Up..." disabled={isSubmitting}>
