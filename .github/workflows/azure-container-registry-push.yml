@@ -50,6 +50,7 @@ jobs:
           echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" >> .env.local
           echo "AZURE_STORAGE_CONNECTION_STRING=${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" >> .env.local
           echo "DEFAULT_AZURE_CONTAINER_NAME=${{ secrets.DEFAULT_AZURE_CONTAINER_NAME }}" >> .env.local
+          ls -a
 
       - name: Build and push
         id: docker_build
