@@ -6,6 +6,7 @@ on:
 
 jobs:
   build-and-push-image:
+    environment: rndsillog-front
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
