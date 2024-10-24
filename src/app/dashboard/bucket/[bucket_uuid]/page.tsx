@@ -23,6 +23,7 @@ import { NoNote } from "@/components/global/NoContent";
 import { handleNoteRemove } from "../../note/[note_uuid]/handleNoteRemove";
 import convertKST from "@/utils/time/convertKST";
 import NoteType from "@/types/NoteType";
+import { maskUUID } from "@/lib/utils";
 
 // API fetcher 함수
 const fetcher = async (url: string) => {
@@ -78,7 +79,7 @@ export default function Note() {
 								<Card key={note.id}>
 									<CardHeader>
 										<CardTitle>{note.title}</CardTitle>
-										<CardDescription>노트 ID: {note.id}</CardDescription>
+										<CardDescription>노트 ID: {maskUUID(note.id)}</CardDescription>
 									</CardHeader>
 									<CardContent>
 										<div className="grid w-full items-center gap-4">

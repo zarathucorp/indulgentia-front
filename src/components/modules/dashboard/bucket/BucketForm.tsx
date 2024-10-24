@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
 import { useTeamMemberList } from "@/hooks/fetch/useTeam";
+import { maskUUID } from "@/lib/utils";
 const BucketSchema = z.object({
 	title: z
 		.string()
@@ -39,7 +40,7 @@ export default function NewBucketForm() {
 	const router = useRouter();
 	const { toast } = useToast();
 	const searchParams = useSearchParams();
-	const projectUUID: string = searchParams.get("project") as string;
+	const projectUUID: string = maskUUID(searchParams.get("project") as string);
 	const [isCreating, setIsCreating] = useState<boolean>(false);
 
 	if (projectUUID === "" || projectUUID === null) redirect("/dashboard");
@@ -227,7 +228,8 @@ function ProjectUUIDField({ form }: { form: any }) {
 				<FormItem>
 					<FormLabel>프로젝트 UUID</FormLabel>
 					<FormControl>
-						<Input disabled {...field} />
+						{/* <Input disabled {...field} /> */}
+						<Input disabled {...field} value={maskUUID(field.value)} />
 					</FormControl>
 					<FormDescription>프로젝트 UUID입니다.</FormDescription>
 					<FormMessage />
