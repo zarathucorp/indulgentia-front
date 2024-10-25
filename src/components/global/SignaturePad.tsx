@@ -15,12 +15,26 @@ import { useForm } from "react-hook-form";
 import { getErrorMessageToast } from "@/hooks/error.tsx";
 import { useRouter } from "next/navigation";
 
+const MAX_FILE_SIZE = 1024 * 1024; // 1MB
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/gif"];
 
 const SignatureSchema = z.object({
-	file: z.custom((file) => file instanceof File, {
-	  message: "유효한 파일이 업로드 되지 않았습니다"
+	// file: z
+	// 	.custom((file) => file instanceof File, {
+	// 		message: "유효한 파일이 업로드 되지 않았습니다."
+	// 	})
+  file: z
+	.any()
+	.optional()
+	.refine(
+		(file) => !file || ACCEPTED_IMAGE_TYPES.includes(file?.type), {
+			message: "유효한 파일이 업로드 되지 않았습니다."
+		}
+	)
+	.refine((file) => !file || file?.size <= MAX_FILE_SIZE, {
+		message: "파일 크기는 1MB 이하여야 합니다."
 	})
-  });
+});
 
 export type CreateSignatureFormValues = z.infer<typeof SignatureSchema>;
 
@@ -137,7 +151,7 @@ const SignaturePad = () => {
 			window.removeEventListener("resize", scaleCanvas);
 		};
 	}, []);
-	
+
 	useEffect(() => {
 		if (isFileSelected) {
 			const loadUploadedSignature = () => {
@@ -178,10 +192,15 @@ const SignaturePad = () => {
 					context.clearRect(0, 0, canvasWidth, canvasHeight); // 이전 내용 지우기
 					context.drawImage(img, offsetX, offsetY, renderWidth, renderHeight);
 					setIsSigned(true);
+					canvasRef.current.off();
 				};
 			};
 	
 			loadUploadedSignature();
+		} else {
+			canvasRef.current.clear(); // 리셋
+			setIsSigned(false);
+			canvasRef.current.on();
 		}
 	}, [isFileSelected]);
 	
@@ -246,7 +265,7 @@ const SignaturePad = () => {
 				</Button>
 				<Button
 					className="px-4 py-2 w-full"
-					disabled={!isSigned} // 버튼 disabled
+					disabled={!isSigned || isFileSelected} // 버튼 disabled
 					onClick={(e) => {
 						e.preventDefault();
 						handleSave();
@@ -283,6 +302,7 @@ function SignatureFileField({ form, isFileSelected, setIsFileSelected }: { form:
 	const handleFileUnselect = () => {
 		form.setValue("file", null);
 		setIsFileSelected(false);
+		form.trigger("file");
 	};
 
 	return (
