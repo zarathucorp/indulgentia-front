@@ -28,6 +28,7 @@ const SignaturePad = () => {
 	const canvasRef = useRef<any>(null);
 	const [isSigned, setIsSigned] = useState<boolean>(false);
 	const [initialSignatureUrl, setInitialSignatureUrl] = useState<string | null>(null);
+	const [isFileSelected, setIsFileSelected] = useState<boolean>(false);
 	const { toast } = useToast();
 	const { data: signatureData } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature", async (url: string) => {
 		const { data } = await axios.get(url, { withCredentials: true });
@@ -136,6 +137,54 @@ const SignaturePad = () => {
 			window.removeEventListener("resize", scaleCanvas);
 		};
 	}, []);
+	
+	useEffect(() => {
+		if (isFileSelected) {
+			const loadUploadedSignature = () => {
+				const canvas = canvasRef.current.getCanvas();
+				const context = canvas.getContext("2d");
+				const img = new Image();
+				img.src = URL.createObjectURL(form.getValues("file"));
+				img.crossOrigin = "Anonymous";
+				img.onload = () => {
+					const canvasWidth = canvas.parentElement.offsetWidth;
+					const canvasHeight = canvas.parentElement.offsetHeight;
+	
+					// 이미지 비율 계산
+					const imgAspectRatio = img.width / img.height;
+					const canvasAspectRatio = canvasWidth / canvasHeight;
+	
+					let renderWidth, renderHeight, offsetX, offsetY;
+	
+					if (imgAspectRatio > canvasAspectRatio) {
+						// 이미지가 더 넓을 때
+						renderWidth = canvasWidth;
+						renderHeight = canvasWidth / imgAspectRatio;
+						offsetX = 0;
+						offsetY = (canvasHeight - renderHeight) / 2;
+					} else {
+						// 이미지가 더 좁을 때
+						renderWidth = canvasHeight * imgAspectRatio;
+						renderHeight = canvasHeight;
+						offsetX = (canvasWidth - renderWidth) / 2;
+						offsetY = 0;
+					}
+	
+					// 캔버스 크기 설정
+					canvas.width = canvasWidth;
+					canvas.height = canvasHeight;
+	
+					// 이미지 그리기
+					context.clearRect(0, 0, canvasWidth, canvasHeight); // 이전 내용 지우기
+					context.drawImage(img, offsetX, offsetY, renderWidth, renderHeight);
+					setIsSigned(true);
+				};
+			};
+	
+			loadUploadedSignature();
+		}
+	}, [isFileSelected]);
+	
 
 	const handleSave = async () => {
 		const canvas = canvasRef.current.getCanvas();
@@ -210,8 +259,8 @@ const SignaturePad = () => {
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 						<div className="flex justify-center">
-							<SignatureFileField form={form} />
-							<ActionButton type="submit" className="my-1.5">{isSubmitting && <Spinner />}&nbsp;서명 파일 업로드</ActionButton>
+							<SignatureFileField form={form} isFileSelected={isFileSelected} setIsFileSelected={setIsFileSelected} />
+							{ isFileSelected ? (<ActionButton type="submit" className="my-1.5">{isSubmitting && <Spinner />}&nbsp;서명 파일 업로드</ActionButton>) : <></>}
 						</div>	
 					</form>
 				</Form>
@@ -220,8 +269,7 @@ const SignaturePad = () => {
 	);
 };
 
-function SignatureFileField({ form }: { form: any }) {
-	const [isFileSelected, setIsFileSelected] = useState<boolean>(false);
+function SignatureFileField({ form, isFileSelected, setIsFileSelected }: { form: any; isFileSelected: boolean; setIsFileSelected: any; }) {
 
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const files = event.target.files;
