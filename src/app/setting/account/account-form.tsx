@@ -176,7 +176,7 @@ export function AccountForm() {
 						<TooltipProvider>
 							<FormLabel className="flex">
 								GitHub 계정 연결&nbsp;{" "}
-								<Tooltip>
+								<Tooltip delayDuration={100}>
 									<TooltipTrigger>
 										<FaRegCircleQuestion />
 									</TooltipTrigger>
@@ -221,7 +221,7 @@ export function AccountForm() {
 									await mutateGithub();
 								}
 							}}
-							className="bg-red-500 hover:bg-red-700"
+							className={`bg-red-500 hover:bg-red-700 ${githubError ? "hidden" : ""}`}
 						>
 							연동 해제
 						</Button>

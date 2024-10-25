@@ -34,14 +34,20 @@ export function SpecialForm() {
 			<TooltipProvider>
 				<Label className="flex">
 					GitHub 토큰 다시 받아오기&nbsp;{" "}
-					<Tooltip>
+					<Tooltip delayDuration={100}>
 						<TooltipTrigger>
 							<FaRegCircleQuestion />
 						</TooltipTrigger>
 						<TooltipContent>
 							<p>&apos;GitHub 계정 연동&apos; 버튼이 반응하지 않는 경우 &apos;토큰 다시 받아오기&apos;를 사용하시기 바랍니다.</p>
+							<p>								
+								다음과 같은 상황에서 일어날 수 있습니다.
+							</p>
 							<p>
-								GitHub 계정 연동을 해제하고 GitHub 상에서는 연구실록을 삭제하지 않은 경우, 여러 개의 연구실록 계정에서 동일한 GitHub 계정으로 로그인 한 경우 등의 상황에서 발생할 수 있는 상황입니다.
+								- GitHub 계정 연동을 해제하고 GitHub 상에서는 연구실록을 삭제하지 않은 경우
+							</p>
+							<p>
+								- 여러 개의 연구실록 계정에서 동일한 GitHub 계정으로 로그인 한 경우
 							</p>
 						</TooltipContent>
 					</Tooltip>
