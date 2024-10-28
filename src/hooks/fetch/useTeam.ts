@@ -34,9 +34,15 @@ type TeamInfoType = {
 	created_at: DateTimeString;
 	updated_at: DateTimeString;
 	name: string;
-	is_premium: boolean;
+	// is_premium: boolean;
 	team_leader_id: UUID;
 	is_deleted: boolean;
+	team_leader_first_name: string | null;
+	team_leader_last_name: string | null;
+	project_num: number;
+	bucket_num: number;
+	note_num: number;
+	linked_repo_num: number;
 };
 
 const useTeamInfo = () => {
