@@ -233,7 +233,7 @@ export function AccountRemoveModal({ isOpen, setIsOpen, userInfo, userMutate }: 
 						onClick={async () => {
 							try {
 								const supabase = createClient();
-								const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/auth/remove`, { withCredentials: true });							
+								const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/auth/remove`);							
 
 								const { error: signoutError } = await supabase.auth.signOut();
 								// 로그아웃 후 계정 삭제; 필요 없을 수 있음

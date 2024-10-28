@@ -76,7 +76,6 @@ export default function NewNoteForm() {
 		try {
 			const result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/dashboard/note/", sendData, {
 				timeout: 120000,
-				withCredentials: true,
 				headers: {
 					"Content-Type": "multipart/form-data",
 				},

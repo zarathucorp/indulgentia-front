@@ -139,9 +139,6 @@ export function TeamForm() {
 				{
 					invite_id: invitationId,
 				},
-				{
-					withCredentials: true,
-				}
 			);
 			if (data.status !== "succeed") throw new Error("Failed to accept invitation");
 			toast({
@@ -165,9 +162,6 @@ export function TeamForm() {
 				{
 					invite_id: invitationId,
 				},
-				{
-					withCredentials: true,
-				}
 			);
 			if (data.status !== "succeed") throw new Error("Failed to accept invitation");
 			toast({
@@ -189,7 +183,6 @@ export function TeamForm() {
 				data: {
 					invite_id: invitationId,
 				},
-				withCredentials: true,
 			});
 			if (data.status !== "succeed") throw new Error("Failed to accept invitation");
 			toast({
@@ -240,7 +233,7 @@ export function TeamForm() {
 								value={teamLoading ? "정보를 불러오는 중입니다." : isLeader ? inviteUserEmail : "팀 리더만 새로운 유저를 초대할 수 있습니다."}
 								onChange={handleInviteUserEmail}
 							/>
-							<Button onClick={() => {}}>초대하기</Button>
+							<Button onClick={() => {}} disabled={!isLeader}>초대하기</Button>
 						</div>
 					</form>
 				</div>

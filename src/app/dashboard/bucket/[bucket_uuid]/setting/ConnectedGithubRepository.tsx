@@ -34,7 +34,7 @@ export const RemoveRepositoryModal: React.FC<RemoveRepositoryModalProps> = ({ re
 	// 저장소 연결 해제 함수
 	const disconnectRepository = async () => {
 		try {
-			await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/bucket/${repo.bucket_id}/github_repo/${repo.id}`, { withCredentials: true });
+			await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/bucket/${repo.bucket_id}/github_repo/${repo.id}`);
 			toast({
 				title: "Repository 연결 해제",
 				description: "Repository의 연결이 해제되었습니다.",

@@ -45,7 +45,7 @@ const SignaturePad = () => {
 	const [isFileSelected, setIsFileSelected] = useState<boolean>(false);
 	const { toast } = useToast();
 	const { data: signatureData } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature", async (url: string) => {
-		const { data } = await axios.get(url, { withCredentials: true });
+		const { data } = await axios.get(url);
 		setInitialSignatureUrl(data.url);
 	});
 
@@ -73,7 +73,6 @@ const SignaturePad = () => {
 		try {
 			const result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature/file", sendData, {
 				timeout: 120000,
-				withCredentials: true,
 				headers: {
 					"Content-Type": "multipart/form-data",
 				},
@@ -210,7 +209,7 @@ const SignaturePad = () => {
 		const dataUrl = canvas.toDataURL("image/png", 1.0) as string;
 
 		try {
-			const { data } = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature", { file: dataUrl as string }, { withCredentials: true });
+			const { data } = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature", { file: dataUrl as string });
 			console.log(data);
 
 			toast({

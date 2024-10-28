@@ -36,7 +36,7 @@ const preprocessValues = (values: CreateProjectFormValues & { id: string }) => (
 
 const useTeamId = () => {
 	const { data: teamInfo } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/team/", async (url: string) => {
-		const { data } = await axios.get(url, { withCredentials: true });
+		const { data } = await axios.get(url);
 		return data.data;
 	});
 	return teamInfo?.id;
@@ -126,7 +126,7 @@ const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValu
 const handleRemove = async (values: (CreateProjectFormValues & { id: string }) | undefined) => {
 	if (values) {
 		try {
-			await axios.delete(process.env.NEXT_PUBLIC_API_URL + `/dashboard/project/${values.id}`, { withCredentials: true });
+			await axios.delete(process.env.NEXT_PUBLIC_API_URL + `/dashboard/project/${values.id}`);
 			console.log("Project removed successfully");
 			return;
 		} catch (error) {
@@ -147,7 +147,7 @@ const NewProjectForm = () => {
 	const onSubmit = async (data: CreateProjectFormValues) => {
 		const apiUrl = process.env.NEXT_PUBLIC_API_URL + "/dashboard/project/";
 		const payload = { team_id: teamId, ...data };
-		const options = { withCredentials: true };
+		const options = {};
 		console.log(payload);
 		try {
 			await axios.post(apiUrl, payload, options);
@@ -194,7 +194,7 @@ const EditProjectForm = ({ projectInfo, mutate }: { projectInfo: CreateProjectFo
 	const onSubmit = async (data: CreateProjectFormValues) => {
 		const apiUrl = process.env.NEXT_PUBLIC_API_URL + `/dashboard/project/${projectInfo.id}`;
 		const payload = { id: projectInfo.id, team_id: teamId, ...data };
-		const options = { withCredentials: true };
+		const options = {};
 
 		try {
 			await axios.put(apiUrl, payload, options);

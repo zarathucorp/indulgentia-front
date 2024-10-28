@@ -2,9 +2,15 @@ import axios from "axios";
 import { UUID } from "crypto";
 import useSWRImmutable from "swr/immutable";
 import useSWR from "swr";
+
+if (process.env.NODE_ENV === 'development') {
+	console.log('development');
+	axios.defaults.withCredentials = true;
+}
+
 const fetcher = (url: string) =>
 	axios
-		.get(url, { withCredentials: true })
+		.get(url)
 		.then((res) => res.data)
 		.catch(function (error) {
 			if (error.response) {
@@ -161,16 +167,13 @@ const createTeam = async (team_name: string) => {
 		{
 			name: team_name,
 		},
-		{
-			withCredentials: true,
-		}
 	);
 };
 
 const inviteUser = async (invitee_email: string): Promise<void> => {
 	const { data } = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/user/team/invite", {
 		user_email: invitee_email,
-	});
+	},);
 
 	if (data.status !== "succeed") {
 		throw new Error("유저 초대 실패");
@@ -203,7 +206,7 @@ const useInvitationSendList = () => {
 		},
 	});
 
-	console.log(data?.data);
+	// console.log(data?.data);
 
 	return {
 		invitationSendList: data?.data,

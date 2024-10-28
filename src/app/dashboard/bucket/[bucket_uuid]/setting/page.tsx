@@ -26,7 +26,7 @@ interface Repo {
 }
 
 // API 요청을 위한 fetcher 함수
-const fetcher = (url: string) => axios.get(url, { withCredentials: true }).then((res) => res.data.data.github_token);
+const fetcher = (url: string) => axios.get(url).then((res) => res.data.data.github_token);
 
 // GitHub 설치 및 Repository 선택 컴포넌트
 const InstallationRepoSelector: React.FC<{
@@ -118,7 +118,7 @@ const BucketSetting: React.FC = () => {
 		isLoading: isLoadingBucketInfo,
 		mutate: mutateBucketInfo,
 	} = useSWRImmutable<CreateBucketFormValues & { id: UUID }>(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/bucket/${params.bucket_uuid}`, async (url: string) => {
-		const { data } = await axios.get(url, { withCredentials: true });
+		const { data } = await axios.get(url);
 		return data.data;
 	});
 
@@ -128,7 +128,7 @@ const BucketSetting: React.FC = () => {
 		isLoading: isLoadingConnectedGithubRepos,
 		mutate: mutateConnectedGithubRepos,
 	} = useSWRImmutable(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/bucket/${params.bucket_uuid}/github_repo`, async (url: string) => {
-		const { data } = await axios.get(url, { withCredentials: true });
+		const { data } = await axios.get(url);
 		return data.data;
 	});
 
@@ -158,7 +158,7 @@ const BucketSetting: React.FC = () => {
 				throw new Error("이미 해당 GitHub Repository가 연결되어 있습니다.");
 			}
 
-			await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/bucket/${params.bucket_uuid}/github_repo`, createNewRepo, { withCredentials: true });
+			await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/bucket/${params.bucket_uuid}/github_repo`, createNewRepo);
 			toast({
 				title: "GitHub Repository 연결 성공",
 				description: "GitHub Repository 연결에 성공하였습니다.",

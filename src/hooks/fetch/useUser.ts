@@ -2,6 +2,11 @@ import axios from "axios";
 import { UUID } from "crypto";
 import useSWRImmutable from "swr/immutable";
 
+if (process.env.NODE_ENV === 'development') {
+	console.log('development');
+	axios.defaults.withCredentials = true;
+}
+
 type UserInfoType = {
 	id: UUID;
 	team_id: UUID;
@@ -13,7 +18,7 @@ type UserInfoType = {
 	github_token: boolean;
 };
 
-const fetcher = async (url: string) => await axios.get(url, { withCredentials: true }).then((res) => res.data.data as UserInfoType);
+const fetcher = async (url: string) => await axios.get(url).then((res) => res.data.data as UserInfoType);
 
 const useUser = () => {
 	const { data: userInfo, error, mutate, isLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/settings/info", fetcher);

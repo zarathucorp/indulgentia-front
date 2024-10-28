@@ -27,7 +27,7 @@ import { maskUUID } from "@/lib/utils";
 
 // API fetcher 함수
 const fetcher = async (url: string) => {
-	const result = await axios.get(url, { withCredentials: true });
+	const result = await axios.get(url);
 	if (result.status !== 200) {
 		throw new Error("An error occurred while fetching the data.");
 	}

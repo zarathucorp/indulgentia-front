@@ -55,7 +55,7 @@ export default function NewBucketForm() {
 	});
 
 	const { data: teamUserList, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + "/user/team/list", async (url) => {
-		const result = await axios.get(url, { withCredentials: true });
+		const result = await axios.get(url);
 		console.log(result.data.data);
 		return result.data.data as TeamUserType[];
 	});
@@ -63,7 +63,7 @@ export default function NewBucketForm() {
 	async function onSubmit(data: CreateBucketFormValues) {
 		setIsCreating(true);
 		try {
-			await axios.post(process.env.NEXT_PUBLIC_API_URL + "/dashboard/bucket/", { ...data }, { withCredentials: true });
+			await axios.post(process.env.NEXT_PUBLIC_API_URL + "/dashboard/bucket/", { ...data });
 		} catch (error) {
 			console.error(error);
 		}
@@ -101,7 +101,7 @@ export default function NewBucketForm() {
 const handleRemove = async (values: (CreateBucketFormValues & { id: string }) | undefined) => {
 	if (values) {
 		try {
-			await axios.delete(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/${values.id}`, { withCredentials: true });
+			await axios.delete(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/${values.id}`);
 			return;
 		} catch (error) {
 			console.error(error);
@@ -122,14 +122,14 @@ export function EditBucketForm({ bucketInfo, mutate }: { bucketInfo: CreateBucke
 
 	const { memberList: teamUserList, isLoading } = useTeamMemberList();
 	// const { data: teamUserList, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + "/user/team/list", async (url) => {
-	// 	const result = await axios.get(url, { withCredentials: true });
+	// 	const result = await axios.get(url);
 	// 	console.log(result.data.data);
 	// 	return result.data.data as TeamUserType[];
 	// });
 
 	async function onSubmit(data: CreateBucketFormValues) {
 		try {
-			await axios.put(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/${bucketInfo.id}`, { id: bucketInfo.id, ...data }, { withCredentials: true });
+			await axios.put(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/${bucketInfo.id}`, { id: bucketInfo.id, ...data });
 			toast({
 				title: "버킷 수정 완료",
 				description: `버킷 ${data.title}이 성공적으로 수정되었습니다.`,

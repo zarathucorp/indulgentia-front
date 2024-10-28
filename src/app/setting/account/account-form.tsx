@@ -108,7 +108,6 @@ export function AccountForm() {
 					first_name: processedData.firstName,
 					last_name: processedData.lastName,
 				},
-				{ withCredentials: true }
 			);
 
 			toast({
