@@ -83,23 +83,23 @@ export default function JoinForm() {
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="last-name">성</Label>
-                <Input id="last-name" {...register("lastName", { required: true })} name="last-name" required placeholder="홍" />
+                <Input id="last-name" {...register("lastName", { required: true })} required placeholder="홍" />
                 {/* {errors.lastName && <span>{errors.lastName.message}</span>} */}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="first-name">이름</Label>
-                <Input id="first-name" {...register("firstName", { required: true })} name="first-name" required placeholder="길동" />
+                <Input id="first-name" {...register("firstName", { required: true })} required placeholder="길동" />
                 {/* {errors.firstName && <span>{errors.firstName.message}</span>} */}
               </div>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="email">이메일</Label>
-              <Input id="email" type="email" {...register("email", { required: true })} name="email" required placeholder="user@example.com" />
+              <Input id="email" type="email" {...register("email", { required: true })} required placeholder="user@example.com" />
               {/* {errors.email && <span>{errors.email.message}</span>} */}
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">비밀번호</Label>
-              <Input id="password" type="password" {...register("password", { required: true })} name="passowrd" required />
+              <Input id="password" type="password" {...register("password", { required: true })} required />
               {/* {errors.password && <span>{errors.password.message}</span>} */}
             </div>
             <SubmitButton type="submit" className="w-full outline" pendingText="Signing Up..." disabled={isSubmitting}>
