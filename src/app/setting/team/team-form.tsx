@@ -18,6 +18,7 @@ import { UUID } from "crypto";
 import { LeaderTeamExitModal } from "@/components/global/RemoveModal";
 import { useState } from "react";
 import { useCurrentPlan, getCurrentPlanAxios } from "@/hooks/fetch/usePayment";
+import { maskUUID } from "@/lib/utils";
 export function TeamForm() {
 	const { toast } = useToast();
 	const { teamInfo, hasTeam, isLoading: teamLoading, mutate: teamMutate, isLeader } = useTeamInfo();
@@ -217,7 +218,7 @@ export function TeamForm() {
 				<div className="grid items-center gap-4">
 					<Label htmlFor="team-uuid">팀 ID</Label>
 					<div className="flex items-center gap-2">
-						<Input type="text" disabled className="rounded-md  px-2 py-1 font-mono text-sm" value={teamLoading ? "정보를 불러오는 중입니다." : teamInfo?.id || "소속된 팀이 없습니다."} />
+						<Input type="text" disabled className="rounded-md  px-2 py-1 font-mono text-sm" value={teamLoading ? "정보를 불러오는 중입니다." : maskUUID(teamInfo?.id) || "소속된 팀이 없습니다."} />
 					</div>
 				</div>
 				<div className="grid items-center gap-4">
@@ -291,7 +292,7 @@ export function TeamForm() {
 											</Avatar>
 											<div>
 												<p className="text-sm font-medium">
-													{member.last_name + member.first_name} {member.id === teamInfo?.team_leader_id && "(팀 리더)"}
+													{member.last_name + " " + member.first_name} {member.id === teamInfo?.team_leader_id && "(팀 리더)"}
 												</p>
 												<p className="text-sm text-gray-500 dark:text-gray-400">{member.email}</p>
 											</div>

@@ -7,6 +7,7 @@ import axios from "axios";
 import { UUID } from "crypto";
 import { NoteTypeDetail } from "@/types/NoteType";
 import { Label } from "@/components/ui/label";
+import { maskUUID } from "@/lib/utils";
 
 export default function NoteInfo() {
 	const params = useParams<{ note_uuid: string }>();
@@ -62,7 +63,7 @@ export default function NoteInfo() {
 								<div className="flex items-center space-x-2">
 									<div>
 										<p className="text-sm text-gray-500 dark:text-gray-400">노트 고유 ID</p>
-										<p className="font-medium">{data.note_id}</p>
+										<p className="font-medium">{maskUUID(data.note_id)}</p>
 									</div>
 								</div>
 							</div>
