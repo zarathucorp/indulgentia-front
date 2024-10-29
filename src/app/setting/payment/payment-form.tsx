@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { StartTeamPlanButton, AddUserButton } from "./payment-button";
 import UserAddModal from "./UserAddModal";
-import { useCurrentUserWithPending } from "@/hooks/fetch/useTeam";
+import { useCurrentUserWithPending, useTeamInfo } from "@/hooks/fetch/useTeam";
 import { useCurrentPlan, usePaymentHistory } from "@/hooks/fetch/usePayment";
 import { PaymentHistoryType } from "@/hooks/fetch/usePayment";
 const leftDays = (expireAt: string) => {
@@ -47,6 +47,7 @@ function PaymentForm() {
 function CurrentPlan() {
 	const { currentPlan, isLoading, error } = useCurrentPlan();
 	const { numberCurrentUserWithPending, isLoading: numberCurrentUserWithPendingLoading, isError: numberCurrentUserWithPendingError } = useCurrentUserWithPending();
+	const { teamInfo, isLoading: teamInfoLoading, error: teamInfoError, mutate: teamInfoMutate } = useTeamInfo();
 	return (
 		<div className="bg-card rounded-lg shadow-md p-6">
 			<div className="flex items-center justify-between">
@@ -56,7 +57,7 @@ function CurrentPlan() {
 			</div>
 			<div className="mt-6">
 				<div className="flex items-center justify-between">
-					{isLoading && (
+					{isLoading || teamInfoLoading && (
 						<div>
 							<h3 className="text-lg font-medium">정보를 불러오는 중입니다.</h3>
 						</div>
@@ -78,12 +79,14 @@ function CurrentPlan() {
 							</div>
 						))}
 				</div>
-				{!isLoading && currentPlan && (
+				{!teamInfoLoading && teamInfo && (
 					<div className="mt-4 text-sm text-muted-foreground">
 						<ul className="list-disc pl-4 space-y-1">
-							<li>무제한 GitHub Repository 연동</li>
-							<li>무제한 프로젝트/버킷/노트 생성</li>
 							<li>블록체인을 이용한 전자서명</li>
+							<li>연동 GitHub Repository 수: {teamInfo.linked_repo_num}/&infin;</li>
+							<li>프로젝트 수: {teamInfo.project_num}/&infin;</li>
+							<li>버킷 수: {teamInfo.bucket_num}/&infin;</li>
+							<li>노트 수: {teamInfo.note_num}/&infin;</li>
 						</ul>
 					</div>
 				)}
