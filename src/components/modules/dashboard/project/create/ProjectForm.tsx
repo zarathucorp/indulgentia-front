@@ -67,18 +67,6 @@ const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValu
 		console.log("initialProjectLeader", initialProjectLeader);
   }, [form]);
 
-  const handleSelectChange = (value: string) => {
-    setSelectedValue(value);
-    setCustomValue(""); // Select로 변경할 때 Input 값 초기화
-    form.setValue("project_leader", value); // Form 값 업데이트
-  };
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomValue(event.target.value);
-    setSelectedValue(""); // Input을 사용하면 Select 값 초기화
-    form.setValue("project_leader", event.target.value); // Form 값 업데이트
-  };
-
 	return (
 	<>
 		<FormField

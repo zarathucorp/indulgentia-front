@@ -39,7 +39,7 @@ export default function NoteInfo() {
 								<div className="flex items-center space-x-2">
 									<div>
 										<p className="text-sm text-gray-500 dark:text-gray-400">작성자</p>
-										<p className="font-medium">{data.last_name === null && data.first_name === null ? "설정된 이름이 없습니다" : (data.last_name ?? "") + (data.first_name ?? "")}</p>
+										<p className="font-medium">{data.last_name === null && data.first_name === null ? "설정된 이름이 없습니다" : (data.last_name ?? "") + " " + (data.first_name ?? "")}</p>
 									</div>
 								</div>
 							</div>
