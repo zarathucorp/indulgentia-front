@@ -202,7 +202,7 @@ export function AccountForm() {
 							<Button type="button">토큰 다시 받아오기</Button>
 						</Link> */}
 
-						<Button
+						{githubError ? (<Button
 							type="button"
 							onClick={async () => {
 								try {
@@ -223,7 +223,7 @@ export function AccountForm() {
 							className={`bg-red-500 hover:bg-red-700 ${githubError ? "hidden" : ""}`}
 						>
 							연동 해제
-						</Button>
+						</Button>) : null}
 					</div>
 				</div>
 				<Button type="submit">설정 업데이트</Button>

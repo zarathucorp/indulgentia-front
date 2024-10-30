@@ -10,31 +10,51 @@ import { useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useTeamInfo } from "@/hooks/fetch/useTeam";
+import { useToast } from "@/components/ui/use-toast";
 export default function PricingPage() {
 	const numbers = Array.from({ length: 41 }, (_, i) => i + 10);
 	const [numUser, setNumUser] = useState<string>("10");
 	const totalPrice = parseInt(numUser) * 100_000;
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const { hasTeam, isLoading, error, mutate } = useTeamInfo();
 	const router = useRouter();
 
-	useEffect(() => {
-		const getUser = async () => {
-			const supabase = createClient();
-			const { data: user } = await supabase.auth.getUser();
-			if (user) setIsLoggedIn(true);
-		};
+	const { toast } = useToast();
 
-		getUser();
-	}, []);
+	const getUser = async () => {
+		const supabase = createClient();
+		const { data: { user } } = await supabase.auth.getUser();
+		if (user) {
+			setIsLoggedIn(true)
+		} else {
+			setIsLoggedIn(false)
+		};
+	};
 
 	const handleSubmit = (e: any) => {
 		e.preventDefault();
-    if (isLoggedIn) {
-      router.push(`/payment?type=New&user=${numUser}`);
-    } else {
-      router.push("/auth/login");
-    }
-	}
+		if (isLoggedIn && hasTeam) {
+				router.push(`/payment?type=New&user=${numUser}`);
+		} else if (isLoggedIn && !hasTeam) {
+			toast({
+				title: "팀이 필요합니다.",
+				description: "팀을 생성하거나 초대를 받아야합니다.",
+			})
+			router.push("/setting/team");
+		} else {
+			toast({
+				title: "로그인이 필요합니다.",
+				description: "결제는 로그인 후 가능합니다.",
+			});
+			router.push("/auth/login");
+		}
+	};
+
+	useEffect(() => {
+		getUser();
+		console.log(hasTeam);
+	}, []);
 
 	return (
 		<>

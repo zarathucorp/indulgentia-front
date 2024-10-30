@@ -4,7 +4,6 @@ import useSWRImmutable from "swr/immutable";
 import useSWR from "swr";
 
 if (process.env.NODE_ENV === 'development') {
-	console.log('development');
 	axios.defaults.withCredentials = true;
 }
 
@@ -33,7 +32,7 @@ type TeamInfoType = {
 	id: UUID;
 	created_at: DateTimeString;
 	updated_at: DateTimeString;
-	name: string;
+	team_name: string;
 	// is_premium: boolean;
 	team_leader_id: UUID;
 	is_deleted: boolean;

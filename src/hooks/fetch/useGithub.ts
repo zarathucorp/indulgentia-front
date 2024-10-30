@@ -2,7 +2,6 @@ import axios from "axios";
 import useSWRImmutable from "swr/immutable";
 
 if (process.env.NODE_ENV === 'development') {
-	console.log('development');
 	axios.defaults.withCredentials = true;
 }
 

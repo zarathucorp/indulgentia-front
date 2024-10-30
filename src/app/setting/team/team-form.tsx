@@ -206,7 +206,7 @@ export function TeamForm() {
 				<CreateTeamModal />
 				<div className="grid items-center gap-4">
 					<Label htmlFor="team-name">팀 이름</Label>
-					<Input type="text" disabled defaultValue={"팀 이름"} id="team-name" value={teamLoading ? "정보를 불러오는 중입니다." : teamInfo?.name || "소속된 팀이 없습니다."} />
+					<Input type="text" disabled defaultValue={"팀 이름"} id="team-name" value={teamLoading ? "정보를 불러오는 중입니다." : teamInfo?.team_name || "소속된 팀이 없습니다."} />
 				</div>
 				<div className="grid items-center gap-4">
 					<Label htmlFor="team-uuid">팀 ID</Label>
