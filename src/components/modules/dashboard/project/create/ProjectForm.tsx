@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { useTeamMemberList } from "@/hooks/fetch/useTeam";
+import { TeamUserType } from "@/types/TeamUserType";
 import { z } from "zod";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
@@ -159,8 +160,8 @@ const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValu
 								</SelectTrigger>
 								<SelectContent>
 									<SelectGroup>
-										{memberList.map((member) => (
-											<SelectItem value={`${member.last_name} ${member.first_name}`} key={member.email}>
+										{memberList.map((member: TeamUserType, index: number) => (
+											<SelectItem value={`${member.last_name} ${member.first_name}`} key={index}>
 												{member.last_name} {member.first_name} {`<${member.email}>`}
 											</SelectItem>
 										))}
