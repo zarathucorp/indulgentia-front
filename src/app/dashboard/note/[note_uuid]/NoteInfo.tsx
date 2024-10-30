@@ -12,7 +12,7 @@ import { maskUUID } from "@/lib/utils";
 export default function NoteInfo() {
 	const params = useParams<{ note_uuid: string }>();
 	const { data, isLoading, error } = useSWRImmutable<NoteTypeDetail>(process.env.NEXT_PUBLIC_API_URL + `/dashboard/note/${params.note_uuid}`, async (url: string) => {
-		const { data } = await axios.get(url, { withCredentials: true });
+		const { data } = await axios.get(url);
 		if (data.status !== "succeed") {
 			const error = new Error("An error occurred while fetching the data.");
 			throw error;
@@ -39,7 +39,7 @@ export default function NoteInfo() {
 								<div className="flex items-center space-x-2">
 									<div>
 										<p className="text-sm text-gray-500 dark:text-gray-400">작성자</p>
-										<p className="font-medium">{data.last_name === null && data.first_name === null ? "설정된 이름이 없습니다" : (data.last_name ?? "") + (data.first_name ?? "")}</p>
+										<p className="font-medium">{data.last_name === null && data.first_name === null ? "설정된 이름이 없습니다" : (data.last_name ?? "") + " " + (data.first_name ?? "")}</p>
 									</div>
 								</div>
 							</div>

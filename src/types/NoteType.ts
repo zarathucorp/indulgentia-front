@@ -10,7 +10,27 @@ export interface BaseNoteType {
 	is_github: boolean;
 }
 
+interface BaseNoteTypWithUserSetting extends BaseNoteType {
+	user_setting: {
+		email: string,
+		team_id: UUID,
+		is_admin: boolean,
+		last_name: string,
+		first_name: string,
+		is_deleted: boolean,
+		github_token: string,
+		has_signature: boolean,
+	}
+}
+
 interface NoteWithGitHub extends BaseNoteType {
+	is_github: true; // Make github_link mandatory
+	github_type: "Commit" | "PR" | "Issue";
+	github_hash: string;
+	github_link: string;
+}
+
+interface NoteWithGithubAndUserSetting extends BaseNoteTypWithUserSetting {
 	is_github: true; // Make github_link mandatory
 	github_type: "Commit" | "PR" | "Issue";
 	github_hash: string;
@@ -24,7 +44,15 @@ interface NoteWithoutGitHub extends BaseNoteType {
 	github_link: never; // Ensure that github_link cannot be provided
 }
 
+interface NoteWithoutGithubAndUserSetting extends BaseNoteTypWithUserSetting {
+	is_github: false;
+	github_type: never;
+	github_link: never; // Ensure that github_link cannot be provided
+}
+
 type NoteType = NoteWithGitHub | NoteWithoutGitHub;
+
+type NoteTypeWithUserSetting = NoteWithGithubAndUserSetting | NoteWithoutGithubAndUserSetting;
 
 type NoteTypeDetail = NoteType & {
 	first_name?: string;
@@ -37,4 +65,4 @@ type NoteTypeDetail = NoteType & {
 };
 
 export default NoteType;
-export type { NoteTypeDetail };
+export type { NoteTypeDetail, NoteTypeWithUserSetting };

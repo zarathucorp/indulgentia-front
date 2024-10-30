@@ -8,7 +8,7 @@ import { ErrorPage } from "@/components/global/Error/Error";
 import { DashboardBreadCrumb } from "@/components/modules/dashboard/DashboardBreadCrumb";
 import { DashboardLoading } from "@/components/global/Loading/Dashboard";
 const projectListFetcher = async (url: string) => {
-	const result = await axios.get(url, { withCredentials: true });
+	const result = await axios.get(url);
 	console.log(result.data.data);
 	if (result.status !== 200) {
 		const error = new Error("An error occurred while fetching the data.");

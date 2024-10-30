@@ -17,7 +17,7 @@ export default function ProjectSetting() {
 		isLoading,
 		mutate,
 	} = useSWRImmutable<CreateProjectFormValues>(process.env.NEXT_PUBLIC_API_URL + `/dashboard/project/${params.project_uuid}`, async (url: string) => {
-		const { data } = await axios.get(url, { withCredentials: true });
+		const { data } = await axios.get(url);
 		console.log(data.data);
 		console.log(params.project_uuid);
 		return data.data;

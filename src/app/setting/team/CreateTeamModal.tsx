@@ -12,8 +12,10 @@ import { Spinner } from "@/components/global/Spinner";
 import { createTeam, useTeamInfo } from "@/hooks/fetch/useTeam";
 import { ActionButton } from "@/components/ui/actionbutton";
 import useSWRImmutable from "swr/immutable";
+import { useRouter } from "next/navigation";
 export function CreateTeamModal() {
 	const { toast } = useToast();
+	const router = useRouter();
 	const [openModal, setOpenModal] = useState<boolean>(false);
 	const [teamName, setTeamName, handleTeamName] = useVariable<string>("");
 	const [orgName, setOrgName, handleOrgName] = useVariable<string>("");
@@ -60,6 +62,7 @@ export function CreateTeamModal() {
 
 									mutate();
 									setOpenModal(false);
+									router.push("/pricing");
 								} catch (e: any) {
 									toast({
 										title: "팀 생성 실패",
