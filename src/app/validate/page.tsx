@@ -8,6 +8,8 @@ import React, { useState, useCallback } from "react";
 import { Spinner } from "@/components/global/Spinner";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { FileUploaderDrag } from "@/components/global/FileUploader";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { FaRegCircleQuestion } from "react-icons/fa6";
 export default function ValidatePDF() {
 	// 상태 관리
 	const [file, setFile] = useState<File | null>(null);
@@ -118,8 +120,26 @@ export default function ValidatePDF() {
 		<div className="flex items-center justify-center h-screen-minus-navbar">
 			<Card className="w-full max-w-md p-6 mx-auto bg-white rounded-lg shadow-md">
 				<CardHeader>
-					<CardTitle>연구노트 검증</CardTitle>
-					<CardDescription>검증할 연구노트 파일을 업로드하세요.</CardDescription>
+					{/* <CardTitle>연구노트 검증</CardTitle> */}
+					{/* <CardDescription>검증할 연구노트 파일을 업로드하세요.</CardDescription> */}
+					<TooltipProvider>
+						<CardTitle>
+							연구노트 검증&nbsp;{" "}
+							<Tooltip delayDuration={100}>
+								<TooltipTrigger>
+									<FaRegCircleQuestion size={16} />
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>
+										검증할 연구노트 파일을 업로드하세요.
+									</p>
+									<p>
+										연구실록에서 만든 연구 노트만 검증할 수 있습니다. 파일 형식은 PDF 만 지원합니다.
+									</p>
+								</TooltipContent>
+							</Tooltip>
+						</CardTitle>
+					</TooltipProvider>
 				</CardHeader>
 				<CardContent>
 					<form onSubmit={handleSubmit} className="mt-4">
