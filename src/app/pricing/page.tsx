@@ -73,7 +73,7 @@ export default function PricingPage() {
 								<form onSubmit={handleSubmit}>
 								<div className="mb-4">
 									<Label htmlFor="num_user" className="block text-sm font-medium text-gray-700 mb-2">
-										유저 수를 선택해주세요. 5명씩 추가할 수 있습니다.
+										유저 수를 선택해주세요. 10명부터 5명씩 추가할 수 있습니다.
 									</Label>
 									<Input type="number" value={numUser} step="5" min="10" onChange={(e) => setNumUser(e.target.value)} />
 								</div>

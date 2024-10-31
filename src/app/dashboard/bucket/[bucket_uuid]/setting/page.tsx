@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { UUID } from "crypto";
 import { useParams } from "next/navigation";
+import useSWR from "swr";
 import useSWRImmutable from "swr/immutable";
 import { useToast } from "@/components/ui/use-toast";
 import { EditBucketForm, CreateBucketFormValues } from "@/components/modules/dashboard/bucket/BucketForm";
@@ -11,6 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RemoveRepositoryModal, GithubRepoType } from "./ConnectedGithubRepository";
+import { DashboardBreadCrumb } from "@/components/modules/dashboard/DashboardBreadCrumb";
+import { DashboardBreadCrumbLoading } from "@/components/global/Loading/BreadCrumb";
 
 // 타입 정의
 interface Installation {
@@ -122,6 +125,9 @@ const BucketSetting: React.FC = () => {
 		return data.data;
 	});
 
+	// breadcrumb 정보 fetch
+	const { data: breadcrumbData, isLoading: isBreadcrumbLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/bucket/${params.bucket_uuid}/breadcrumb`, async (url: string) => axios.get(url).then((res) => res.data.data));
+
 	// 연결된 GitHub 저장소 fetch
 	const {
 		data: connectedGithubRepos,
@@ -175,6 +181,9 @@ const BucketSetting: React.FC = () => {
 
 	return (
 		<div>
+			<div className="py-3 pl-4">
+				{isBreadcrumbLoading ? <DashboardBreadCrumbLoading type="Bucket" /> : <DashboardBreadCrumb breadcrumbData={{ level: "Bucket", bucket_id: params.bucket_uuid, ...breadcrumbData }} />}
+			</div>
 			{isLoadingBucketInfo ? <p>Loading...</p> : bucketInfo && <EditBucketForm bucketInfo={bucketInfo} mutate={mutateBucketInfo} />}
 			<div className="max-w-6xl w-full mx-auto grid gap-2">
 				<h1 className="font-semibold text-3xl">GitHub Repository 연결</h1>

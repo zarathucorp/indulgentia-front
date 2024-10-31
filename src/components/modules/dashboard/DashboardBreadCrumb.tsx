@@ -56,7 +56,11 @@ export function DashboardBreadCrumb({ breadcrumbData }: { breadcrumbData: Dashbo
 					<>
 						<BreadcrumbSeparator />
 						{breadcrumbData.level === "Project" ? (
-							<BreadcrumbItem>{breadcrumbData.title}</BreadcrumbItem>
+							breadcrumbData.project_id ? (
+							<BreadcrumbLink href={`/dashboard/project/${breadcrumbData.project_id}`}>{breadcrumbData.title}</BreadcrumbLink>
+							) : (
+								<BreadcrumbItem>{breadcrumbData.title}</BreadcrumbItem>
+							)
 						) : (
 							<BreadcrumbLink href={`/dashboard/project/${breadcrumbData.project_id}`}>{breadcrumbData.project_title}</BreadcrumbLink>
 						)}
@@ -67,7 +71,11 @@ export function DashboardBreadCrumb({ breadcrumbData }: { breadcrumbData: Dashbo
 					<>
 						<BreadcrumbSeparator />
 						{breadcrumbData.level === "Bucket" ? (
+							breadcrumbData.bucket_id ? (
+								<BreadcrumbLink href={`/dashboard/bucket/${breadcrumbData.bucket_id}`}>{breadcrumbData.bucket_title}</BreadcrumbLink>
+							) : (
 							<BreadcrumbItem>{breadcrumbData.bucket_title}</BreadcrumbItem>
+						)
 						) : (
 							<BreadcrumbLink href={`/dashboard/bucket/${breadcrumbData.bucket_id}`}>{breadcrumbData.bucket_title}</BreadcrumbLink>
 						)}

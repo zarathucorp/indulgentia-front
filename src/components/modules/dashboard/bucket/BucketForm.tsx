@@ -42,7 +42,7 @@ export default function NewBucketForm() {
 	const router = useRouter();
 	const { toast } = useToast();
 	const searchParams = useSearchParams();
-	const projectUUID: string = maskUUID(searchParams.get("project") as string);
+	const projectUUID: string = searchParams.get("project") as string;
 	const [isCreating, setIsCreating] = useState<boolean>(false);
 
 	if (projectUUID === "" || projectUUID === null) redirect("/dashboard");
@@ -269,7 +269,7 @@ function ProjectUUIDField({ form }: { form: any }) {
 					</TooltipProvider>
 					<FormControl>
 						{/* <Input disabled {...field} /> */}
-						<Input disabled {...field} value={maskUUID(field.value)} />
+						<Input disabled {...field} value={maskUUID(field.value)}/>
 					</FormControl>
 					{/* <FormDescription>프로젝트 UUID입니다.</FormDescription> */}
 					<FormMessage />

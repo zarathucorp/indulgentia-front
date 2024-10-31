@@ -174,8 +174,8 @@ function NoteDescriptionField({ form }: { form: any }) {
 									<p>
 										마크 다운 형식으로 작성할 수 있습니다.
 									</p>
-									<p>
-										* 마크 다운 에디터 구현 예정
+									<p className="text-gray-500">
+										<i>* 마크 다운 에디터 구현 예정</i>
 									</p>
 								</TooltipContent>
 							</Tooltip>
@@ -211,8 +211,8 @@ function NoteTagField({ form }: { form: any }) {
 									<p>
 										&quot;,&quot;로 구분된 태그를 입력합니다.
 									</p>
-									<p>
-										* 구현 예정
+									<p className="text-gray-500">
+										<i>* 구현 예정</i>
 									</p>
 								</TooltipContent>
 							</Tooltip>
@@ -221,7 +221,7 @@ function NoteTagField({ form }: { form: any }) {
 					<FormControl>
 						<Input placeholder="노트 태그" {...field} />
 					</FormControl>
-					<FormDescription>&quot;,&quot;로 구분된 태그를 입력합니다.</FormDescription>
+					{/* <FormDescription>&quot;,&quot;로 구분된 태그를 입력합니다.</FormDescription> */}
 					<FormMessage />
 				</FormItem>
 			)}
