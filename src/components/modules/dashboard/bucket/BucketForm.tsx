@@ -20,7 +20,6 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect, useState } from "react";
 import { useTeamMemberList } from "@/hooks/fetch/useTeam";
-import { maskUUID } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { FaRegCircleQuestion } from "react-icons/fa6";
 const BucketSchema = z.object({
@@ -253,7 +252,7 @@ function ProjectUUIDField({ form }: { form: any }) {
 				<FormItem>
 					{/* <FormLabel>프로젝트 UUID</FormLabel> */}
 					<TooltipProvider>
-						<FormLabel>
+						<FormLabel hidden >
 							프로젝트 UUID&nbsp;{" "}
 							<Tooltip delayDuration={100}>
 								<TooltipTrigger>
@@ -269,7 +268,7 @@ function ProjectUUIDField({ form }: { form: any }) {
 					</TooltipProvider>
 					<FormControl>
 						{/* <Input disabled {...field} /> */}
-						<Input disabled {...field} value={maskUUID(field.value)}/>
+						<Input type="hidden" disabled {...field} />
 					</FormControl>
 					{/* <FormDescription>프로젝트 UUID입니다.</FormDescription> */}
 					<FormMessage />

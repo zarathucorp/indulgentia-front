@@ -18,7 +18,6 @@ import { UUID } from "crypto";
 import { LeaderTeamExitModal } from "@/components/global/RemoveModal";
 import { useState } from "react";
 import { useCurrentPlan, getCurrentPlanAxios } from "@/hooks/fetch/usePayment";
-import { maskUUID } from "@/lib/utils";
 export function TeamForm() {
 	const { toast } = useToast();
 	const { teamInfo, hasTeam, isLoading: teamLoading, mutate: teamMutate, isLeader } = useTeamInfo();
@@ -208,12 +207,12 @@ export function TeamForm() {
 					<Label htmlFor="team-name">팀 이름</Label>
 					<Input type="text" disabled defaultValue={"팀 이름"} id="team-name" value={teamLoading ? "정보를 불러오는 중입니다." : teamInfo?.team_name || "소속된 팀이 없습니다."} />
 				</div>
-				<div className="grid items-center gap-4">
+				{/* <div className="grid items-center gap-4">
 					<Label htmlFor="team-uuid">팀 ID</Label>
 					<div className="flex items-center gap-2">
-						<Input type="text" disabled className="rounded-md  px-2 py-1 font-mono text-sm" value={teamLoading ? "정보를 불러오는 중입니다." : maskUUID(teamInfo?.id) || "소속된 팀이 없습니다."} />
+						<Input type="text" disabled className="rounded-md  px-2 py-1 font-mono text-sm" value={teamLoading ? "정보를 불러오는 중입니다." : teamInfo?.id || "소속된 팀이 없습니다."} />
 					</div>
-				</div>
+				</div> */}
 				<div className="grid items-center gap-4">
 					<Label htmlFor="team-uuid">내 권한</Label>
 					<div className="flex items-center gap-2">

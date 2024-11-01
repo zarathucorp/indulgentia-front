@@ -17,7 +17,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { ActionButton } from "@/components/ui/actionbutton";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/global/Spinner";
-import { maskUUID } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { FaRegCircleQuestion } from "react-icons/fa6";
 const NoteSchema = z.object({
@@ -294,7 +293,7 @@ function BucketUUIDField({ form }: { form: any }) {
 				<FormItem>
 					{/* <FormLabel>버킷 UUID</FormLabel> */}
 					<TooltipProvider>
-						<FormLabel>
+						<FormLabel hidden >
 							버킷 UUID&nbsp;{" "}
 							<Tooltip delayDuration={100}>
 								<TooltipTrigger>
@@ -309,7 +308,7 @@ function BucketUUIDField({ form }: { form: any }) {
 						</FormLabel>
 					</TooltipProvider>
 					<FormControl>
-						<Input disabled {...field} value={maskUUID(field.value)} />
+						<Input type="hidden" disabled {...field} />
 					</FormControl>
 					{/* <FormDescription>버킷 UUID입니다.</FormDescription> */}
 					<FormMessage />
