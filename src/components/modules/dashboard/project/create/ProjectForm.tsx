@@ -22,7 +22,7 @@ import { useState, useEffect } from "react";
 const ProjectSchema = z
 	.object({
 		title: z.string().min(1, "프로젝트 이름은 1자보다 길어야 합니다.").max(1000, "프로젝트 이름은 1,000자보다 짧아야 합니다."),
-		project_leader: z.string().max(1000, "연구책임자 이름은 1,000자보다 짧아야 합니다."),
+		project_leader: z.string().max(1000, "연구책임자 이름은 1,000자보다 짧아야 합니다.").nullable(),
     grant_number: z
       .string()
       .regex(/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/, "과제 번호는 영문, 숫자, 특수문자만 포함할 수 있습니다.")
