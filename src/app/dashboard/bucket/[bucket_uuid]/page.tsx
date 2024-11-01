@@ -80,7 +80,7 @@ export default function Note() {
 								<Card key={note.id}>
 									<CardHeader>
 										<CardTitle>{note.title}</CardTitle>
-										<CardDescription>노트 ID: {maskUUID(note.id)}</CardDescription>
+										{/* <CardDescription>노트 ID: {maskUUID(note.id)}</CardDescription> */}
 									</CardHeader>
 									<CardContent>
 										<div className="grid w-full items-center gap-4">
