@@ -25,15 +25,65 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { FaRegCircleQuestion } from "react-icons/fa6";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useState } from "react";
+import { FcGoogle } from "react-icons/fc";
+import { MdEmail } from "react-icons/md";
+import { FaGithub } from "react-icons/fa";
 
-export function SpecialForm() {
+export function AccountLinkForm() {
 	const { username: githubUsername, error: githubError, isLoading: isLoadingGithub, mutate: mutateGithub } = useGithub();
+	const [userProvider, setUserProvider] = useState<string | null>(null);
+	
+	const getUserIdentities = async () => {
+		const supabase = createClient();
+		const { data, error } = await supabase.auth.getUserIdentities();
+		if (error) {
+			throw error;
+		}
+		console.log(data);
+		const emailIdentities = data?.identities.filter((identity) => identity.provider === "email");
+		const nonEmailIdentities = data?.identities.filter((identity) => identity.provider !== "email");
+
+		if (emailIdentities && emailIdentities.length > 0 && nonEmailIdentities.length < 1) {
+			setUserProvider("email");
+		} else if (nonEmailIdentities && nonEmailIdentities.length > 0) {
+			setUserProvider(nonEmailIdentities[0].provider);
+		}
+	}
+	
+	
+	useEffect(() => {
+		getUserIdentities();
+		console.log(userProvider);
+	}, [userProvider]);
 
 	return (
 		<div className="">
+		<TooltipProvider>
+			<Label className="flex">
+				연결한 계정&nbsp;{" "}
+				<Tooltip delayDuration={100}>
+					<TooltipTrigger>
+						<FaRegCircleQuestion />
+					</TooltipTrigger>
+					<TooltipContent>
+						<p>계정이 연동된 곳을 확인합니다.</p>
+						<p>								
+							서비스 제공자: 이메일, 구글, 네이버, 카카오
+						</p>
+						<p>
+							<i>* 네이버, 카카오 연동은 준비중입니다.</i>
+						</p>
+					</TooltipContent>
+				</Tooltip>
+			</Label>
+		</TooltipProvider>
+		<div className="mt-2 mb-4 flex items-center gap-2">
+			{userProvider === "google" ? <><FcGoogle /><p>Google</p></> : userProvider === "email" ? <><MdEmail /><p>Email</p></> : "연동된 계정이 없습니다."}
+		</div>
 			<TooltipProvider>
 				<Label className="flex">
-					GitHub 토큰 다시 받아오기&nbsp;{" "}
+					<FaGithub/>&nbsp;GitHub 연결&nbsp;{" "}
 					<Tooltip delayDuration={100}>
 						<TooltipTrigger>
 							<FaRegCircleQuestion />
@@ -61,7 +111,28 @@ export function SpecialForm() {
 				<a href={"https://github.com/login/oauth/authorize?client_id=Iv23li79mqTdxRfQ2tpK&redirect_uri=https://rndsillog.com/next-api/github/callback" || "#"}>
 					<Button type="button">토큰 다시 받아오기</Button>
 				</a>
-
+				{githubError ? (<Button
+					type="button"
+					onClick={async () => {
+						try {
+							await disconnectGitHub();
+							toast({
+								title: "연동 해제에 성공하였습니다.",
+								description: `연동 해제에 성공하였습니다.`,
+							});
+						} catch (e: any) {
+							toast({
+								title: "연동 해제에 실패하였습니다.",
+								description: `연동 해제에 실패하였습니다: ${e.message}`,
+							});
+						} finally {
+							await mutateGithub();
+						}
+					}}
+					className={`bg-red-500 hover:bg-red-700 ${githubError ? "hidden" : ""}`}
+				>
+					연동 해제
+				</Button>) : null}
 				{/* <Button
 					type="button"
 					onClick={async () => {
