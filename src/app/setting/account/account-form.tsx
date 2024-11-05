@@ -170,7 +170,7 @@ export function AccountForm() {
 						</FormItem>
 					)}
 				/>
-				<div className="">
+				<div className="hidden">
 					<div>
 						<TooltipProvider>
 							<FormLabel className="flex">
@@ -182,8 +182,8 @@ export function AccountForm() {
 									<TooltipContent>
 										<p>
 											&apos;GitHub 계정 연동&apos; 버튼을 눌러도 계정을 연결할 수 없는 경우{" "}
-											<Link href="/setting/special">
-												<u>&apos;특수 설정&apos;</u>
+											<Link href="/setting/link">
+												<u>&apos;계정 연동&apos;</u>
 											</Link>{" "}
 											탭으로 가시기 바랍니다.
 										</p>
