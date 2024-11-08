@@ -134,7 +134,7 @@ function NoteTitleField({ form }: { form: any }) {
 								</TooltipTrigger>
 								<TooltipContent>
 									<p>
-										노트 이름을 입력합니다.
+										노트 이름을 텍스트로 입력합니다.
 									</p>
 								</TooltipContent>
 							</Tooltip>
@@ -168,7 +168,7 @@ function NoteDescriptionField({ form }: { form: any }) {
 								</TooltipTrigger>
 								<TooltipContent>
 									<p>
-										노트 내용을 입력합니다.
+										노트 내용을 텍스트로 입력합니다.
 									</p>
 									<p>
 										마크 다운 형식으로 작성할 수 있습니다.
@@ -261,6 +261,15 @@ function NoteFileField({ form }: { form: any }) {
 								<TooltipContent>
 									<p>
 										노트 파일을 업로드합니다.
+									</p>
+									<p>
+										* 권장사항
+									</p>
+									<p>
+										- 파일 형식: PPT, PPTX, DOC, DOCX, XLS, XLSX, HWP, HWPX, JPG, PNG, PDF, MD(준비중)
+									</p>
+									<p>
+										- 파일 갯수: 20개 이하
 									</p>
 								</TooltipContent>
 							</Tooltip>

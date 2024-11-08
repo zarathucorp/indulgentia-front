@@ -133,7 +133,25 @@ export function AccountForm() {
 						name="lastName"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>성</FormLabel>
+								{/* <FormLabel>성</FormLabel> */}
+								<TooltipProvider>
+									<FormLabel>
+										성&nbsp;{" "}
+										<Tooltip delayDuration={100}>
+											<TooltipTrigger>
+												<FaRegCircleQuestion />
+											</TooltipTrigger>
+											<TooltipContent>
+												<p>
+													사용자의 성(Last name)입니다.
+												</p>
+												<p>
+												이 성은 연구노트 작성자로 활용됩니다. 성을 변경하더라도 이미 생성된 연구노트 PDF에는 영향을 끼치지 않습니다.
+												</p>
+											</TooltipContent>
+										</Tooltip>
+									</FormLabel>
+								</TooltipProvider>
 								<FormControl>
 									<Input placeholder="성을 입력하세요" {...field} disabled={isLoadingUserInfo} value={isLoadingUserInfo ? "값을 불러오는 중입니다." : field.value ?? ""} />
 								</FormControl>
@@ -146,7 +164,25 @@ export function AccountForm() {
 						name="firstName"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>이름</FormLabel>
+								{/* <FormLabel>이름</FormLabel> */}
+								<TooltipProvider>
+									<FormLabel>
+										이름&nbsp;{" "}
+										<Tooltip delayDuration={100}>
+											<TooltipTrigger>
+												<FaRegCircleQuestion />
+											</TooltipTrigger>
+											<TooltipContent>
+												<p>
+													사용자의 이름(First name)입니다.
+												</p>
+												<p>
+												이 이름은 연구노트 작성자로 활용됩니다. 이름을 변경하더라도 이미 생성된 연구노트 PDF에는 영향을 끼치지 않습니다.
+												</p>
+											</TooltipContent>
+										</Tooltip>
+									</FormLabel>
+								</TooltipProvider>
 								<FormControl>
 									<Input placeholder="이름을 입력하세요" {...field} disabled={isLoadingUserInfo} value={isLoadingUserInfo ? "값을 불러오는 중입니다." : field.value ?? ""} />
 								</FormControl>
@@ -155,16 +191,34 @@ export function AccountForm() {
 						)}
 					/>
 				</div>
-				<FormDescription>이 이름은 연구노트 작성자로 활용됩니다. 이름을 변경하더라도 이미 생성된 연구노트 PDF에는 영향을 끼치지 않습니다.</FormDescription>
+				{/* <FormDescription>이 이름은 연구노트 작성자로 활용됩니다. 이름을 변경하더라도 이미 생성된 연구노트 PDF에는 영향을 끼치지 않습니다.</FormDescription> */}
 				<FormField
 					name="signature"
 					render={() => (
 						<FormItem>
-							<FormLabel>이메일</FormLabel>
+							{/* <FormLabel>이메일</FormLabel> */}
+							<TooltipProvider>
+								<FormLabel>
+									이메일&nbsp;{" "}
+									<Tooltip delayDuration={100}>
+										<TooltipTrigger>
+											<FaRegCircleQuestion />
+										</TooltipTrigger>
+										<TooltipContent>
+											<p>
+												사용자의 이메일입니다.
+											</p>
+											<p>
+												이메일은 변경할 수 없습니다.
+											</p>
+										</TooltipContent>
+									</Tooltip>
+								</FormLabel>
+							</TooltipProvider>
 							<FormControl>
 								<Input disabled type="email" value={userEmail} />
 							</FormControl>
-							<FormDescription>이메일은 변경할 수 없습니다.</FormDescription>
+							{/* <FormDescription>이메일은 변경할 수 없습니다.</FormDescription> */}
 							<FormMessage />
 							<SendPasswordResetMailModal/>
 						</FormItem>

@@ -28,8 +28,8 @@ export default function MyProjectList({ projectList }: { projectList: ProjectTyp
 							<TableHead>프로젝트 이름</TableHead>
 							<TableHead className="hidden md:table-cell">연구책임자</TableHead>
 							<TableHead className="hidden md:table-cell">과제번호</TableHead>
-							<TableHead className="hidden xl:table-cell">수행 시작일</TableHead>
-							<TableHead className="hidden xl:table-cell">수행 종료일</TableHead>
+							<TableHead className="hidden xl:table-cell">연구 시작일</TableHead>
+							<TableHead className="hidden xl:table-cell">연구 종료일</TableHead>
 							<TableHead>
 								<span className="sr-only">관리 버튼</span>
 							</TableHead>
