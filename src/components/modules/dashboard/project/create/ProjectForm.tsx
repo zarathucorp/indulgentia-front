@@ -84,7 +84,7 @@ const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValu
 								</TooltipTrigger>
 								<TooltipContent>
 									<p>
-										프로젝트 이름을 입력합니다.
+										프로젝트 이름을 텍스트로 입력합니다.
 									</p>
 								</TooltipContent>
 							</Tooltip>
@@ -113,7 +113,10 @@ const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValu
 								</TooltipTrigger>
 								<TooltipContent>
 									<p>
-										연구책임자의 이름을 입력합니다.
+										연구책임자의 이름을 텍스트로 입력합니다.
+									</p>
+									<p>
+										팀 목록에서 선택하기와 직접 입력하기 중 선택할 수 있습니다.
 									</p>
 								</TooltipContent>
 							</Tooltip>
@@ -178,7 +181,7 @@ const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValu
 								</TooltipTrigger>
 								<TooltipContent>
 									<p>
-										과제 번호를 입력합니다.
+										과제 번호를 텍스트로 입력합니다.
 									</p>
 									<p>
 										* 영문, 숫자, 특수문자 사용 가능

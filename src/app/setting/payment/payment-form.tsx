@@ -79,7 +79,7 @@ function CurrentPlan() {
 							</div>
 						))}
 				</div>
-				{!teamInfoLoading && teamInfo && (
+				{!teamInfoLoading && teamInfo && currentPlan && (
 					<div className="mt-4 text-sm text-muted-foreground">
 						<ul className="list-disc pl-4 space-y-1">
 							<li>블록체인을 이용한 전자서명</li>

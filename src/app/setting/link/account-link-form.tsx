@@ -67,12 +67,12 @@ export function AccountLinkForm() {
 						<FaRegCircleQuestion />
 					</TooltipTrigger>
 					<TooltipContent>
-						<p>계정이 연동된 곳을 확인합니다.</p>
+						<p>계정이 연결된 곳을 확인합니다.</p>
 						<p>								
 							서비스 제공자: 이메일, 구글, 네이버, 카카오
 						</p>
 						<p>
-							<i>* 네이버, 카카오 연동은 준비중입니다.</i>
+							<i>* 네이버, 카카오 연결은 준비중입니다.</i>
 						</p>
 					</TooltipContent>
 				</Tooltip>
@@ -89,7 +89,7 @@ export function AccountLinkForm() {
 							<FaRegCircleQuestion />
 						</TooltipTrigger>
 						<TooltipContent>
-							<p>&apos;GitHub 계정 연동&apos; 버튼이 반응하지 않는 경우 &apos;토큰 다시 받아오기&apos;를 사용하시기 바랍니다.</p>
+							<p>&apos;GitHub 계정 연결&apos; 버튼이 반응하지 않는 경우 &apos;토큰 다시 받아오기&apos;를 사용하시기 바랍니다.</p>
 							<p>								
 								다음과 같은 상황에서 일어날 수 있습니다.
 							</p>
@@ -106,7 +106,7 @@ export function AccountLinkForm() {
 			<div className="mt-2 flex items-center gap-2">
 				<Input type="email" disabled value={isLoadingGithub ? "정보를 불러오는 중입니다." : githubError || githubUsername} />
 				<a target="_blank" href={process.env.NEXT_PUBLIC_GITHUB_APP_INSTALL_URL || "#"}>
-					<Button type="button">GitHub 계정 연동</Button>
+					<Button type="button">GitHub 계정 연결</Button>
 				</a>
 				<a href={"https://github.com/login/oauth/authorize?client_id=Iv23li79mqTdxRfQ2tpK&redirect_uri=https://rndsillog.com/next-api/github/callback" || "#"}>
 					<Button type="button">토큰 다시 받아오기</Button>
@@ -117,13 +117,13 @@ export function AccountLinkForm() {
 						try {
 							await disconnectGitHub();
 							toast({
-								title: "연동 해제에 성공하였습니다.",
-								description: `연동 해제에 성공하였습니다.`,
+								title: "연결 해제에 성공하였습니다.",
+								description: `연결 해제에 성공하였습니다.`,
 							});
 						} catch (e: any) {
 							toast({
-								title: "연동 해제에 실패하였습니다.",
-								description: `연동 해제에 실패하였습니다: ${e.message}`,
+								title: "연결 해제에 실패하였습니다.",
+								description: `연결 해제에 실패하였습니다: ${e.message}`,
 							});
 						} finally {
 							await mutateGithub();
@@ -131,7 +131,7 @@ export function AccountLinkForm() {
 					}}
 					className={`bg-red-500 hover:bg-red-700 ${githubError ? "hidden" : ""}`}
 				>
-					연동 해제
+					연결 해제
 				</Button>) : null}
 				{/* <Button
 					type="button"
@@ -139,13 +139,13 @@ export function AccountLinkForm() {
 						try {
 							await disconnectGitHub();
 							toast({
-								title: "연동 해제에 성공하였습니다.",
-								description: `연동 해제에 성공하였습니다.`,
+								title: "연결 해제에 성공하였습니다.",
+								description: `연결 해제에 성공하였습니다.`,
 							});
 						} catch (e: any) {
 							toast({
-								title: "연동 해제에 실패하였습니다.",
-								description: `연동 해제에 실패하였습니다: ${e.message}`,
+								title: "연결 해제에 실패하였습니다.",
+								description: `연결 해제에 실패하였습니다: ${e.message}`,
 							});
 						} finally {
 							await mutateGithub();
@@ -153,7 +153,7 @@ export function AccountLinkForm() {
 					}}
 					className="bg-red-500 hover:bg-red-700"
 				>
-					연동 해제
+					연결 해제
 				</Button> */}
 			</div>
 		</div>

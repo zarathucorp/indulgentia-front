@@ -36,16 +36,16 @@ export const RemoveRepositoryModal: React.FC<RemoveRepositoryModalProps> = ({ re
 		try {
 			await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/bucket/${repo.bucket_id}/github_repo/${repo.id}`);
 			toast({
-				title: "Repository 연결 해제",
-				description: "Repository의 연결이 해제되었습니다.",
+				title: "Repository 연동 해제",
+				description: "Repository의 연동이 해제되었습니다.",
 			});
 			mutateConnectedGithubRepos();
 			setIsOpen(false);
 		} catch (e: any) {
 			console.error(e);
 			toast({
-				title: "Repository 연결 해제 실패",
-				description: `Repository의 연결 해제에 실패하였습니다. ${e.response?.data?.detail ?? e.message}`,
+				title: "Repository 연동 해제 실패",
+				description: `Repository의 연동 해제에 실패하였습니다. ${e.response?.data?.detail ?? e.message}`,
 			});
 		}
 	};
@@ -59,8 +59,8 @@ export const RemoveRepositoryModal: React.FC<RemoveRepositoryModalProps> = ({ re
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
 				<DialogHeader>
-					<DialogTitle>Repository 연결 해제</DialogTitle>
-					<DialogDescription>Repository의 연결을 해제합니다. 이미 생성된 노트는 삭제되지 않습니다. 언제든지 이 페이지에서 다시 연결할 수 있습니다.</DialogDescription>
+					<DialogTitle>Repository 연동 해제</DialogTitle>
+					<DialogDescription>Repository의 연동을 해제합니다. 이미 생성된 노트는 삭제되지 않습니다. 언제든지 이 페이지에서 다시 연결할 수 있습니다.</DialogDescription>
 				</DialogHeader>
 				<div className="grid gap-4 py-4">
 					<div className="grid grid-cols-4 items-center gap-4">
@@ -88,7 +88,7 @@ const ConnectedGithubRepository: React.FC<ConnectedGithubRepositoryProps> = ({ c
 	return (
 		<>
 			<div className="max-w-6xl w-full mx-auto grid gap-2">
-				<h1 className="font-semibold text-3xl">연결된 GitHub Repository</h1>
+				<h1 className="font-semibold text-3xl">연동된 GitHub Repository</h1>
 			</div>
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mx-auto">
 				{connectedGithubRepos.map((repo: GithubRepoType) => (

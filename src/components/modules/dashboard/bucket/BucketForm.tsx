@@ -175,7 +175,7 @@ function BucketTitleField({ form }: { form: any }) {
 								</TooltipTrigger>
 								<TooltipContent>
 									<p>
-										버킷 이름을 입력합니다.
+										버킷 이름을 텍스트로 입력합니다.
 									</p>
 								</TooltipContent>
 							</Tooltip>
