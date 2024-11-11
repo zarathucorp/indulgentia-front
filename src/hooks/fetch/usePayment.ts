@@ -41,12 +41,13 @@ type currentPlanType = {
 };
 
 const useCurrentPlan = () => {
-	const { data, error, isLoading } = useSWRImmutable<currentPlanType>(process.env.NEXT_PUBLIC_API_URL + "/payment/order/subscription", fetcher);
+	const { data, error, isLoading, mutate } = useSWR<currentPlanType>(process.env.NEXT_PUBLIC_API_URL + "/payment/order/subscription", fetcher);
 
 	return {
 		currentPlan: data,
 		isLoading,
 		error,
+		mutate,
 	};
 };
 const getCurrentPlanAxios = async () => {
