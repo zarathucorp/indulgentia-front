@@ -229,6 +229,10 @@ const useCurrentUserWithPending = () => {
 		numberCurrentUserWithPending: !memberListLoading && !invitationSendListLoading && memberList && invitationSendList && memberList.length + invitationSendList.length,
 		isLoading: memberListLoading || invitationSendListLoading,
 		isError: memberListError || invitationSendListError,
+		mutate: () => {
+			memberListMutate();
+			invitationSendListMutate();
+		},
 	};
 };
 

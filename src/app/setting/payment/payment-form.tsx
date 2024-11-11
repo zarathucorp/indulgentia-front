@@ -7,6 +7,7 @@ import UserAddModal from "./UserAddModal";
 import { useCurrentUserWithPending, useTeamInfo } from "@/hooks/fetch/useTeam";
 import { useCurrentPlan, usePaymentHistory } from "@/hooks/fetch/usePayment";
 import { PaymentHistoryType } from "@/hooks/fetch/usePayment";
+import { useEffect } from "react";
 const leftDays = (expireAt: string) => {
 	const currentDate: Date = new Date();
 	const expireDate: Date = new Date(expireAt);
@@ -45,9 +46,16 @@ function PaymentForm() {
 }
 
 function CurrentPlan() {
-	const { currentPlan, isLoading, error } = useCurrentPlan();
-	const { numberCurrentUserWithPending, isLoading: numberCurrentUserWithPendingLoading, isError: numberCurrentUserWithPendingError } = useCurrentUserWithPending();
+	const { currentPlan, isLoading, error, mutate: currentPlanMutate } = useCurrentPlan();
+	const { numberCurrentUserWithPending, isLoading: numberCurrentUserWithPendingLoading, isError: numberCurrentUserWithPendingError, mutate: currentUserWithPendingMutate } = useCurrentUserWithPending();
 	const { teamInfo, isLoading: teamInfoLoading, error: teamInfoError, mutate: teamInfoMutate } = useTeamInfo();
+
+	useEffect(() => {
+		currentPlanMutate();
+		currentUserWithPendingMutate();
+		teamInfoMutate();
+	}, [currentPlanMutate, currentUserWithPendingMutate, teamInfoMutate]);
+
 	return (
 		<div className="bg-card rounded-lg shadow-md p-6">
 			<div className="flex items-center justify-between">
@@ -57,7 +65,7 @@ function CurrentPlan() {
 			</div>
 			<div className="mt-6">
 				<div className="flex items-center justify-between">
-					{isLoading || teamInfoLoading && (
+					{isLoading || teamInfoLoading || numberCurrentUserWithPendingLoading && (
 						<div>
 							<h3 className="text-lg font-medium">정보를 불러오는 중입니다.</h3>
 						</div>

@@ -95,25 +95,46 @@ const SignaturePad = () => {
 	}
 
 	useEffect(() => {
-		if (initialSignatureUrl) {
-			const loadInitialSignature = () => {
-				const canvas = canvasRef.current.getCanvas();
-				const context = canvas.getContext("2d");
-				const img = new Image();
-				img.src = initialSignatureUrl;
-				img.crossOrigin = "Anonymous";
-				img.onload = () => {
-					canvas.width = canvas.parentElement.offsetWidth;
-					canvas.height = canvas.parentElement.offsetHeight;
-					canvas.style.width = "100%";
-					canvas.style.height = "100%";
-					context.drawImage(img, 0, 0, canvas.width, canvas.height);
-					setIsSigned(true);
-				};
-			};
+    if (initialSignatureUrl) {
+        const loadInitialSignature = () => {
+            const canvas = canvasRef.current.getCanvas();
+            const context = canvas.getContext("2d");
+            const img = new Image();
+            img.src = initialSignatureUrl;
+            img.crossOrigin = "Anonymous";
+            img.onload = () => {
+                // 캔버스 크기를 부모 요소에 맞게 설정
+                canvas.width = canvas.parentElement.offsetWidth;
+                canvas.height = canvas.parentElement.offsetHeight;
+                canvas.style.width = "100%";
+                canvas.style.height = "100%";
 
-			loadInitialSignature();
-		}
+                // 이미지와 캔버스의 가로세로 비율 계산
+                const imgAspectRatio = img.width / img.height;
+                const canvasAspectRatio = canvas.width / canvas.height;
+
+                let drawWidth, drawHeight;
+                // 이미지 비율에 맞게 그릴 크기 계산
+                if (imgAspectRatio > canvasAspectRatio) {
+                    drawWidth = canvas.width;
+                    drawHeight = canvas.width / imgAspectRatio;
+                } else {
+                    drawHeight = canvas.height;
+                    drawWidth = canvas.height * imgAspectRatio;
+                }
+
+                // 이미지를 캔버스 중앙에 위치시키기 위한 좌표 계산
+                const drawX = (canvas.width - drawWidth) / 2;
+                const drawY = (canvas.height - drawHeight) / 2;
+
+                // 이미지 그리기
+                context.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+                setIsSigned(true);
+            };
+        };
+
+        loadInitialSignature();
+			}
 	}, [initialSignatureUrl]);
 
 	useEffect(() => {

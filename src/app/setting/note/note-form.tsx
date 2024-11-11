@@ -26,6 +26,9 @@ export function NoteForm() {
 						</TooltipTrigger>
 						<TooltipContent>
 							<p>
+								미리보기 상의 이미지는 실제 해상도, 파일 크기와 다를 수 있습니다.
+							</p>
+							<p>
 								* 권장사항
 							</p>
 							<p>
