@@ -27,8 +27,8 @@ const sidebarNavItems = [
 		href: "/setting/note",
 	},
 	{
-		title: "특수 설정",
-		href: "/setting/special",
+		title: "연결",
+		href: "/setting/link",
 	},
 	{
 		title: "결제",

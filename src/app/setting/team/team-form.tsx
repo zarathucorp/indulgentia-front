@@ -138,9 +138,6 @@ export function TeamForm() {
 				{
 					invite_id: invitationId,
 				},
-				{
-					withCredentials: true,
-				}
 			);
 			if (data.status !== "succeed") throw new Error("Failed to accept invitation");
 			toast({
@@ -164,9 +161,6 @@ export function TeamForm() {
 				{
 					invite_id: invitationId,
 				},
-				{
-					withCredentials: true,
-				}
 			);
 			if (data.status !== "succeed") throw new Error("Failed to accept invitation");
 			toast({
@@ -188,7 +182,6 @@ export function TeamForm() {
 				data: {
 					invite_id: invitationId,
 				},
-				withCredentials: true,
 			});
 			if (data.status !== "succeed") throw new Error("Failed to accept invitation");
 			toast({
@@ -212,14 +205,14 @@ export function TeamForm() {
 				<CreateTeamModal />
 				<div className="grid items-center gap-4">
 					<Label htmlFor="team-name">팀 이름</Label>
-					<Input type="text" disabled defaultValue={"팀 이름"} id="team-name" value={teamLoading ? "정보를 불러오는 중입니다." : teamInfo?.name || "소속된 팀이 없습니다."} />
+					<Input type="text" disabled defaultValue={"팀 이름"} id="team-name" value={teamLoading ? "정보를 불러오는 중입니다." : teamInfo?.team_name || "소속된 팀이 없습니다."} />
 				</div>
-				<div className="grid items-center gap-4">
+				{/* <div className="grid items-center gap-4">
 					<Label htmlFor="team-uuid">팀 ID</Label>
 					<div className="flex items-center gap-2">
 						<Input type="text" disabled className="rounded-md  px-2 py-1 font-mono text-sm" value={teamLoading ? "정보를 불러오는 중입니다." : teamInfo?.id || "소속된 팀이 없습니다."} />
 					</div>
-				</div>
+				</div> */}
 				<div className="grid items-center gap-4">
 					<Label htmlFor="team-uuid">내 권한</Label>
 					<div className="flex items-center gap-2">
@@ -239,7 +232,7 @@ export function TeamForm() {
 								value={teamLoading ? "정보를 불러오는 중입니다." : isLeader ? inviteUserEmail : "팀 리더만 새로운 유저를 초대할 수 있습니다."}
 								onChange={handleInviteUserEmail}
 							/>
-							<Button onClick={() => {}}>초대하기</Button>
+							<Button onClick={() => {}} disabled={!isLeader}>초대하기</Button>
 						</div>
 					</form>
 				</div>
@@ -291,7 +284,7 @@ export function TeamForm() {
 											</Avatar>
 											<div>
 												<p className="text-sm font-medium">
-													{member.last_name + member.first_name} {member.id === teamInfo?.team_leader_id && "(팀 리더)"}
+													{member.last_name + " " + member.first_name} {member.id === teamInfo?.team_leader_id && "(팀 리더)"}
 												</p>
 												<p className="text-sm text-gray-500 dark:text-gray-400">{member.email}</p>
 											</div>

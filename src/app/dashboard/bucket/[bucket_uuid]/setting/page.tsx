@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { UUID } from "crypto";
 import { useParams } from "next/navigation";
+import useSWR from "swr";
 import useSWRImmutable from "swr/immutable";
 import { useToast } from "@/components/ui/use-toast";
 import { EditBucketForm, CreateBucketFormValues } from "@/components/modules/dashboard/bucket/BucketForm";
@@ -11,6 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RemoveRepositoryModal, GithubRepoType } from "./ConnectedGithubRepository";
+import { DashboardBreadCrumb } from "@/components/modules/dashboard/DashboardBreadCrumb";
+import { DashboardBreadCrumbLoading } from "@/components/global/Loading/BreadCrumb";
 
 // 타입 정의
 interface Installation {
@@ -26,7 +29,7 @@ interface Repo {
 }
 
 // API 요청을 위한 fetcher 함수
-const fetcher = (url: string) => axios.get(url, { withCredentials: true }).then((res) => res.data.data.github_token);
+const fetcher = (url: string) => axios.get(url).then((res) => res.data.data.github_token);
 
 // GitHub 설치 및 Repository 선택 컴포넌트
 const InstallationRepoSelector: React.FC<{
@@ -118,9 +121,12 @@ const BucketSetting: React.FC = () => {
 		isLoading: isLoadingBucketInfo,
 		mutate: mutateBucketInfo,
 	} = useSWRImmutable<CreateBucketFormValues & { id: UUID }>(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/bucket/${params.bucket_uuid}`, async (url: string) => {
-		const { data } = await axios.get(url, { withCredentials: true });
+		const { data } = await axios.get(url);
 		return data.data;
 	});
+
+	// breadcrumb 정보 fetch
+	const { data: breadcrumbData, isLoading: isBreadcrumbLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/bucket/${params.bucket_uuid}/breadcrumb`, async (url: string) => axios.get(url).then((res) => res.data.data));
 
 	// 연결된 GitHub 저장소 fetch
 	const {
@@ -128,7 +134,7 @@ const BucketSetting: React.FC = () => {
 		isLoading: isLoadingConnectedGithubRepos,
 		mutate: mutateConnectedGithubRepos,
 	} = useSWRImmutable(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/bucket/${params.bucket_uuid}/github_repo`, async (url: string) => {
-		const { data } = await axios.get(url, { withCredentials: true });
+		const { data } = await axios.get(url);
 		return data.data;
 	});
 
@@ -136,7 +142,7 @@ const BucketSetting: React.FC = () => {
 	const handleConnectRepository = async () => {
 		if (!gitUsername || !gitRepository) {
 			toast({
-				title: "GitHub Repository 연결 실패",
+				title: "GitHub Repository 연동 실패",
 				description: "GitHub Repository를 선택해주세요.",
 			});
 			return;
@@ -155,38 +161,41 @@ const BucketSetting: React.FC = () => {
 
 		try {
 			if (connectedGithubRepos && hasMatchingRepo(connectedGithubRepos, gitUsername, gitRepository)) {
-				throw new Error("이미 해당 GitHub Repository가 연결되어 있습니다.");
+				throw new Error("이미 해당 GitHub Repository가 연동되어 있습니다.");
 			}
 
-			await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/bucket/${params.bucket_uuid}/github_repo`, createNewRepo, { withCredentials: true });
+			await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/bucket/${params.bucket_uuid}/github_repo`, createNewRepo);
 			toast({
-				title: "GitHub Repository 연결 성공",
-				description: "GitHub Repository 연결에 성공하였습니다.",
+				title: "GitHub Repository 연동 성공",
+				description: "GitHub Repository 연동에 성공하였습니다.",
 			});
 			mutateConnectedGithubRepos();
 		} catch (error: any) {
 			console.error(error);
 			toast({
-				title: "GitHub Repository 연결 실패",
-				description: `GitHub Repository 연결에 실패하였습니다. ${error?.response?.data?.detail ?? error.message}`,
+				title: "GitHub Repository 연동 실패",
+				description: `GitHub Repository 연동에 실패하였습니다. ${error?.response?.data?.detail ?? error.message}`,
 			});
 		}
 	};
 
 	return (
 		<div>
+			<div className="py-3 pl-4">
+				{isBreadcrumbLoading ? <DashboardBreadCrumbLoading type="Bucket" /> : <DashboardBreadCrumb breadcrumbData={{ level: "Bucket", bucket_id: params.bucket_uuid, ...breadcrumbData }} />}
+			</div>
 			{isLoadingBucketInfo ? <p>Loading...</p> : bucketInfo && <EditBucketForm bucketInfo={bucketInfo} mutate={mutateBucketInfo} />}
 			<div className="max-w-6xl w-full mx-auto grid gap-2">
-				<h1 className="font-semibold text-3xl">GitHub Repository 연결</h1>
+				<h1 className="font-semibold text-3xl">GitHub Repository 연동</h1>
 			</div>
 			<div className="grid gap-6 max-w-6xl w-full mx-auto">
 				<div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
 					<InstallationRepoSelector setGitUsername={setGitUsername} setGitRepository={setGitRepository} />
-					<Button onClick={handleConnectRepository}>Repository 연결</Button>
+					<Button onClick={handleConnectRepository}>Repository 연동</Button>
 				</div>
 			</div>
 			<div className="max-w-6xl w-full mx-auto grid gap-2">
-				<h1 className="font-semibold text-3xl">연결된 GitHub Repository</h1>
+				<h1 className="font-semibold text-3xl">연동된 GitHub Repository</h1>
 			</div>
 			{!isLoadingConnectedGithubRepos && connectedGithubRepos && (
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mx-auto max-w-6xl">

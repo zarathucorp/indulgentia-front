@@ -17,6 +17,8 @@ import { useToast } from "@/components/ui/use-toast";
 import { ActionButton } from "@/components/ui/actionbutton";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/global/Spinner";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { FaRegCircleQuestion } from "react-icons/fa6";
 const NoteSchema = z.object({
 	title: z
 		.string()
@@ -76,7 +78,6 @@ export default function NewNoteForm() {
 		try {
 			const result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/dashboard/note/", sendData, {
 				timeout: 120000,
-				withCredentials: true,
 				headers: {
 					"Content-Type": "multipart/form-data",
 				},
@@ -104,8 +105,8 @@ export default function NewNoteForm() {
 				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 					<NoteTitleField form={form} />
 					<NoteDescriptionField form={form} />
-					<NoteTagField form={form} />
 					<NoteFileField form={form} />
+					<NoteTagField form={form} />
 					<BucketUUIDField form={form} />
 					<div className="flex justify-center">
 						<ActionButton type="submit">{isSubmitting && <Spinner />}&nbsp;새 노트 생성</ActionButton>
@@ -123,11 +124,26 @@ function NoteTitleField({ form }: { form: any }) {
 			name="title"
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>노트 이름</FormLabel>
+					{/* <FormLabel>노트 이름</FormLabel> */}
+					<TooltipProvider>
+						<FormLabel>
+							노트 이름&nbsp;{" "}
+							<Tooltip delayDuration={100}>
+								<TooltipTrigger>
+									<FaRegCircleQuestion />
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>
+										노트 이름을 텍스트로 입력합니다.
+									</p>
+								</TooltipContent>
+							</Tooltip>
+						</FormLabel>
+					</TooltipProvider>
 					<FormControl>
 						<Input placeholder="노트 이름" {...field} />
 					</FormControl>
-					<FormDescription>노트 이름을 입력합니다.</FormDescription>
+					{/* <FormDescription>노트 이름을 입력합니다.</FormDescription> */}
 					<FormMessage />
 				</FormItem>
 			)}
@@ -142,11 +158,32 @@ function NoteDescriptionField({ form }: { form: any }) {
 			name="description"
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>노트 내용</FormLabel>
+					{/* <FormLabel>노트 내용</FormLabel> */}
+					<TooltipProvider>
+						<FormLabel>
+							노트 내용&nbsp;{" "}
+							<Tooltip delayDuration={100}>
+								<TooltipTrigger>
+									<FaRegCircleQuestion />
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>
+										노트 내용을 텍스트로 입력합니다.
+									</p>
+									<p>
+										마크 다운 형식으로 작성할 수 있습니다.
+									</p>
+									<p className="text-gray-500">
+										<i>* 마크 다운 에디터 구현 예정</i>
+									</p>
+								</TooltipContent>
+							</Tooltip>
+						</FormLabel>
+					</TooltipProvider>
 					<FormControl>
 						<Textarea placeholder="노트 내용을 입력하여 주십시오." {...field} />
 					</FormControl>
-					<FormDescription>노트 내용을 입력합니다.</FormDescription>
+					{/* <FormDescription>노트 내용을 입력합니다.</FormDescription> */}
 					<FormMessage />
 				</FormItem>
 			)}
@@ -161,11 +198,29 @@ function NoteTagField({ form }: { form: any }) {
 			name="tags"
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>노트 태그</FormLabel>
+					{/* <FormLabel>노트 태그</FormLabel> */}
+					<TooltipProvider>
+						<FormLabel>
+							노트 태그&nbsp;{" "}
+							<Tooltip delayDuration={100}>
+								<TooltipTrigger>
+									<FaRegCircleQuestion />
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>
+										&quot;,&quot;로 구분된 태그를 입력합니다.
+									</p>
+									<p className="text-gray-500">
+										<i>* 구현 예정</i>
+									</p>
+								</TooltipContent>
+							</Tooltip>
+						</FormLabel>
+					</TooltipProvider>
 					<FormControl>
 						<Input placeholder="노트 태그" {...field} />
 					</FormControl>
-					<FormDescription>&quot;,&quot;로 구분된 태그를 입력합니다.</FormDescription>
+					{/* <FormDescription>&quot;,&quot;로 구분된 태그를 입력합니다.</FormDescription> */}
 					<FormMessage />
 				</FormItem>
 			)}
@@ -195,7 +250,31 @@ function NoteFileField({ form }: { form: any }) {
 			name="files"
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>노트 파일</FormLabel>
+					{/* <FormLabel>노트 파일</FormLabel> */}
+					<TooltipProvider>
+						<FormLabel>
+							노트 파일&nbsp;{" "}
+							<Tooltip delayDuration={100}>
+								<TooltipTrigger>
+									<FaRegCircleQuestion />
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>
+										노트 파일을 업로드합니다.
+									</p>
+									<p>
+										* 권장사항
+									</p>
+									<p>
+										- 파일 형식: PPT, PPTX, DOC, DOCX, XLS, XLSX, HWP, HWPX, JPG, PNG, PDF, MD(준비중)
+									</p>
+									<p>
+										- 파일 갯수: 20개 이하
+									</p>
+								</TooltipContent>
+							</Tooltip>
+						</FormLabel>
+					</TooltipProvider>
 					<FormControl>
 						<FileUploader
 							typeString=""
@@ -206,7 +285,7 @@ function NoteFileField({ form }: { form: any }) {
 							accept="application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/x-hwp,application/x-hwpx,image/jpeg,image/png,application/pdf,.hwp,.hwpx"
 						/>
 					</FormControl>
-					<FormDescription>노트 파일을 업로드합니다.</FormDescription>
+					{/* <FormDescription>노트 파일을 업로드합니다.</FormDescription> */}
 					<FormMessage />
 				</FormItem>
 			)}
@@ -221,11 +300,26 @@ function BucketUUIDField({ form }: { form: any }) {
 			name="bucket_id"
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>버킷 UUID</FormLabel>
+					{/* <FormLabel>버킷 UUID</FormLabel> */}
+					<TooltipProvider>
+						<FormLabel hidden >
+							버킷 UUID&nbsp;{" "}
+							<Tooltip delayDuration={100}>
+								<TooltipTrigger>
+									<FaRegCircleQuestion />
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>
+										버킷 UUID입니다.
+									</p>
+								</TooltipContent>
+							</Tooltip>
+						</FormLabel>
+					</TooltipProvider>
 					<FormControl>
-						<Input disabled {...field} />
+						<Input type="hidden" disabled {...field} />
 					</FormControl>
-					<FormDescription>버킷 UUID입니다.</FormDescription>
+					{/* <FormDescription>버킷 UUID입니다.</FormDescription> */}
 					<FormMessage />
 				</FormItem>
 			)}

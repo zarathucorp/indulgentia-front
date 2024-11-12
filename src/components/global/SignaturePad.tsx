@@ -15,12 +15,26 @@ import { useForm } from "react-hook-form";
 import { getErrorMessageToast } from "@/hooks/error.tsx";
 import { useRouter } from "next/navigation";
 
+const MAX_FILE_SIZE = 1024 * 1024; // 1MB
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/gif"];
 
 const SignatureSchema = z.object({
-	file: z.custom((file) => file instanceof File, {
-	  message: "유효한 파일이 업로드 되지 않았습니다"
+	// file: z
+	// 	.custom((file) => file instanceof File, {
+	// 		message: "유효한 파일이 업로드 되지 않았습니다."
+	// 	})
+  file: z
+	.any()
+	.optional()
+	.refine(
+		(file) => !file || ACCEPTED_IMAGE_TYPES.includes(file?.type), {
+			message: "유효한 파일이 업로드 되지 않았습니다."
+		}
+	)
+	.refine((file) => !file || file?.size <= MAX_FILE_SIZE, {
+		message: "파일 크기는 1MB 이하여야 합니다."
 	})
-  });
+});
 
 export type CreateSignatureFormValues = z.infer<typeof SignatureSchema>;
 
@@ -28,9 +42,10 @@ const SignaturePad = () => {
 	const canvasRef = useRef<any>(null);
 	const [isSigned, setIsSigned] = useState<boolean>(false);
 	const [initialSignatureUrl, setInitialSignatureUrl] = useState<string | null>(null);
+	const [isFileSelected, setIsFileSelected] = useState<boolean>(false);
 	const { toast } = useToast();
 	const { data: signatureData } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature", async (url: string) => {
-		const { data } = await axios.get(url, { withCredentials: true });
+		const { data } = await axios.get(url);
 		setInitialSignatureUrl(data.url);
 	});
 
@@ -58,7 +73,6 @@ const SignaturePad = () => {
 		try {
 			const result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature/file", sendData, {
 				timeout: 120000,
-				withCredentials: true,
 				headers: {
 					"Content-Type": "multipart/form-data",
 				},
@@ -81,25 +95,46 @@ const SignaturePad = () => {
 	}
 
 	useEffect(() => {
-		if (initialSignatureUrl) {
-			const loadInitialSignature = () => {
-				const canvas = canvasRef.current.getCanvas();
-				const context = canvas.getContext("2d");
-				const img = new Image();
-				img.src = initialSignatureUrl;
-				img.crossOrigin = "Anonymous";
-				img.onload = () => {
-					canvas.width = canvas.parentElement.offsetWidth;
-					canvas.height = canvas.parentElement.offsetHeight;
-					canvas.style.width = "100%";
-					canvas.style.height = "100%";
-					context.drawImage(img, 0, 0, canvas.width, canvas.height);
-					setIsSigned(true);
-				};
-			};
+    if (initialSignatureUrl) {
+        const loadInitialSignature = () => {
+            const canvas = canvasRef.current.getCanvas();
+            const context = canvas.getContext("2d");
+            const img = new Image();
+            img.src = initialSignatureUrl;
+            img.crossOrigin = "Anonymous";
+            img.onload = () => {
+                // 캔버스 크기를 부모 요소에 맞게 설정
+                canvas.width = canvas.parentElement.offsetWidth;
+                canvas.height = canvas.parentElement.offsetHeight;
+                canvas.style.width = "100%";
+                canvas.style.height = "100%";
 
-			loadInitialSignature();
-		}
+                // 이미지와 캔버스의 가로세로 비율 계산
+                const imgAspectRatio = img.width / img.height;
+                const canvasAspectRatio = canvas.width / canvas.height;
+
+                let drawWidth, drawHeight;
+                // 이미지 비율에 맞게 그릴 크기 계산
+                if (imgAspectRatio > canvasAspectRatio) {
+                    drawWidth = canvas.width;
+                    drawHeight = canvas.width / imgAspectRatio;
+                } else {
+                    drawHeight = canvas.height;
+                    drawWidth = canvas.height * imgAspectRatio;
+                }
+
+                // 이미지를 캔버스 중앙에 위치시키기 위한 좌표 계산
+                const drawX = (canvas.width - drawWidth) / 2;
+                const drawY = (canvas.height - drawHeight) / 2;
+
+                // 이미지 그리기
+                context.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+                setIsSigned(true);
+            };
+        };
+
+        loadInitialSignature();
+			}
 	}, [initialSignatureUrl]);
 
 	useEffect(() => {
@@ -137,12 +172,65 @@ const SignaturePad = () => {
 		};
 	}, []);
 
+	useEffect(() => {
+		if (isFileSelected) {
+			const loadUploadedSignature = () => {
+				const canvas = canvasRef.current.getCanvas();
+				const context = canvas.getContext("2d");
+				const img = new Image();
+				img.src = URL.createObjectURL(form.getValues("file"));
+				img.crossOrigin = "Anonymous";
+				img.onload = () => {
+					const canvasWidth = canvas.parentElement.offsetWidth;
+					const canvasHeight = canvas.parentElement.offsetHeight;
+	
+					// 이미지 비율 계산
+					const imgAspectRatio = img.width / img.height;
+					const canvasAspectRatio = canvasWidth / canvasHeight;
+	
+					let renderWidth, renderHeight, offsetX, offsetY;
+	
+					if (imgAspectRatio > canvasAspectRatio) {
+						// 이미지가 더 넓을 때
+						renderWidth = canvasWidth;
+						renderHeight = canvasWidth / imgAspectRatio;
+						offsetX = 0;
+						offsetY = (canvasHeight - renderHeight) / 2;
+					} else {
+						// 이미지가 더 좁을 때
+						renderWidth = canvasHeight * imgAspectRatio;
+						renderHeight = canvasHeight;
+						offsetX = (canvasWidth - renderWidth) / 2;
+						offsetY = 0;
+					}
+	
+					// 캔버스 크기 설정
+					canvas.width = canvasWidth;
+					canvas.height = canvasHeight;
+	
+					// 이미지 그리기
+					context.clearRect(0, 0, canvasWidth, canvasHeight); // 이전 내용 지우기
+					context.drawImage(img, offsetX, offsetY, renderWidth, renderHeight);
+					setIsSigned(true);
+					canvasRef.current.off();
+				};
+			};
+	
+			loadUploadedSignature();
+		} else {
+			canvasRef.current.clear(); // 리셋
+			setIsSigned(false);
+			canvasRef.current.on();
+		}
+	}, [isFileSelected]);
+	
+
 	const handleSave = async () => {
 		const canvas = canvasRef.current.getCanvas();
 		const dataUrl = canvas.toDataURL("image/png", 1.0) as string;
 
 		try {
-			const { data } = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature", { file: dataUrl as string }, { withCredentials: true });
+			const { data } = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/user/settings/signature", { file: dataUrl as string });
 			console.log(data);
 
 			toast({
@@ -197,7 +285,7 @@ const SignaturePad = () => {
 				</Button>
 				<Button
 					className="px-4 py-2 w-full"
-					disabled={!isSigned} // 버튼 disabled
+					disabled={!isSigned || isFileSelected} // 버튼 disabled
 					onClick={(e) => {
 						e.preventDefault();
 						handleSave();
@@ -210,8 +298,8 @@ const SignaturePad = () => {
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 						<div className="flex justify-center">
-							<SignatureFileField form={form} />
-							<ActionButton type="submit" className="my-1.5">{isSubmitting && <Spinner />}&nbsp;서명 파일 업로드</ActionButton>
+							<SignatureFileField form={form} isFileSelected={isFileSelected} setIsFileSelected={setIsFileSelected} />
+							{ isFileSelected ? (<ActionButton type="submit" className="my-1.5">{isSubmitting && <Spinner />}&nbsp;서명 파일 업로드</ActionButton>) : <></>}
 						</div>	
 					</form>
 				</Form>
@@ -220,8 +308,7 @@ const SignaturePad = () => {
 	);
 };
 
-function SignatureFileField({ form }: { form: any }) {
-	const [isFileSelected, setIsFileSelected] = useState<boolean>(false);
+function SignatureFileField({ form, isFileSelected, setIsFileSelected }: { form: any; isFileSelected: boolean; setIsFileSelected: any; }) {
 
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const files = event.target.files;
@@ -235,6 +322,7 @@ function SignatureFileField({ form }: { form: any }) {
 	const handleFileUnselect = () => {
 		form.setValue("file", null);
 		setIsFileSelected(false);
+		form.trigger("file");
 	};
 
 	return (

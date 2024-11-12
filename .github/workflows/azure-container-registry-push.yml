@@ -50,6 +50,14 @@ jobs:
           echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" >> .env.local
           echo "AZURE_STORAGE_CONNECTION_STRING=${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" >> .env.local
           echo "DEFAULT_AZURE_CONTAINER_NAME=${{ secrets.DEFAULT_AZURE_CONTAINER_NAME }}" >> .env.local
+          echo "NEXT_PUBLIC_GITHUB_APP_INSTALL_URL=${{ secrets.NEXT_PUBLIC_GITHUB_APP_INSTALL_URL }}" >> .env.local
+          echo "GITHUB_APP_ID=${{ secrets.APP_ID }}" >> .env.local
+          echo "GITHUB_CLIENT_ID=${{ secrets.CLIENT_ID }}" >> .env.local
+          echo "GITHUB_CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}" >> .env.local
+          echo "GITHUB_PRIVATE_KEY=${{ secrets.PRIVATE_KEY }}" >> .env.local
+          echo "GITHUB_WEBHOOK_SECRET=${{ secrets.WEBHOOK_SECRET }}" >> .env.local
+          echo "REDIRECT_URI=${{ secrets.REDIRECT_URI }}" >> .env.local
+          echo "NEXT_PUBLIC_CHANNEL_TALK_PLUGIN_KEY=${{ secrets.NEXT_PUBLIC_CHANNEL_TALK_PLUGIN_KEY }}" >> .env.local
           ls -a
 
       - name: Build and push

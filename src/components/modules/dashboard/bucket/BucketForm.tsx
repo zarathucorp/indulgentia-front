@@ -18,8 +18,10 @@ import { KeyedMutator } from "swr";
 import { Spinner } from "@/components/global/Spinner";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTeamMemberList } from "@/hooks/fetch/useTeam";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { FaRegCircleQuestion } from "react-icons/fa6";
 const BucketSchema = z.object({
 	title: z
 		.string()
@@ -53,16 +55,10 @@ export default function NewBucketForm() {
 		defaultValues,
 	});
 
-	const { data: teamUserList, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + "/user/team/list", async (url) => {
-		const result = await axios.get(url, { withCredentials: true });
-		console.log(result.data.data);
-		return result.data.data as TeamUserType[];
-	});
-
 	async function onSubmit(data: CreateBucketFormValues) {
 		setIsCreating(true);
 		try {
-			await axios.post(process.env.NEXT_PUBLIC_API_URL + "/dashboard/bucket/", { ...data }, { withCredentials: true });
+			await axios.post(process.env.NEXT_PUBLIC_API_URL + "/dashboard/bucket/", { ...data });
 		} catch (error) {
 			console.error(error);
 		}
@@ -78,7 +74,7 @@ export default function NewBucketForm() {
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 					<BucketTitleField form={form} />
-					<BucketManagerField form={form} teamUserList={teamUserList || []} isLoading={isLoading} />
+					<BucketManagerField form={form} />
 					<ProjectUUIDField form={form} />
 					<div className="flex justify-center">
 						<Button type="submit">
@@ -100,7 +96,7 @@ export default function NewBucketForm() {
 const handleRemove = async (values: (CreateBucketFormValues & { id: string }) | undefined) => {
 	if (values) {
 		try {
-			await axios.delete(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/${values.id}`, { withCredentials: true });
+			await axios.delete(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/${values.id}`);
 			return;
 		} catch (error) {
 			console.error(error);
@@ -118,17 +114,16 @@ export function EditBucketForm({ bucketInfo, mutate }: { bucketInfo: CreateBucke
 		resolver: zodResolver(BucketSchema),
 		defaultValues: bucketInfo,
 	});
-
-	const { memberList: teamUserList, isLoading } = useTeamMemberList();
+	
 	// const { data: teamUserList, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + "/user/team/list", async (url) => {
-	// 	const result = await axios.get(url, { withCredentials: true });
+	// 	const result = await axios.get(url);
 	// 	console.log(result.data.data);
 	// 	return result.data.data as TeamUserType[];
 	// });
 
 	async function onSubmit(data: CreateBucketFormValues) {
 		try {
-			await axios.put(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/${bucketInfo.id}`, { id: bucketInfo.id, ...data }, { withCredentials: true });
+			await axios.put(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/${bucketInfo.id}`, { id: bucketInfo.id, ...data });
 			toast({
 				title: "버킷 수정 완료",
 				description: `버킷 ${data.title}이 성공적으로 수정되었습니다.`,
@@ -151,7 +146,7 @@ export function EditBucketForm({ bucketInfo, mutate }: { bucketInfo: CreateBucke
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 					<BucketTitleField form={form} />
-					<BucketManagerField form={form} teamUserList={isLoading ? [] : teamUserList} isLoading={isLoading} />
+					<BucketManagerField form={form} />
 					<ProjectUUIDField form={form} />
 					<div className="flex justify-center">
 						<Button type="submit">버킷 수정</Button>
@@ -170,11 +165,26 @@ function BucketTitleField({ form }: { form: any }) {
 			name="title"
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>버킷 이름</FormLabel>
+					{/* <FormLabel>버킷 이름</FormLabel> */}
+					<TooltipProvider>
+						<FormLabel>
+							버킷 이름&nbsp;{" "}
+							<Tooltip delayDuration={100}>
+								<TooltipTrigger>
+									<FaRegCircleQuestion />
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>
+										버킷 이름을 텍스트로 입력합니다.
+									</p>
+								</TooltipContent>
+							</Tooltip>
+						</FormLabel>
+					</TooltipProvider>
 					<FormControl>
 						<Input placeholder="버킷 이름" {...field} />
 					</FormControl>
-					<FormDescription>버킷 이름을 입력합니다.</FormDescription>
+					{/* <FormDescription>버킷 이름을 입력합니다.</FormDescription> */}
 					<FormMessage />
 				</FormItem>
 			)}
@@ -182,8 +192,12 @@ function BucketTitleField({ form }: { form: any }) {
 	);
 }
 
-function BucketManagerField({ form, teamUserList = [], isLoading }: { form: any; teamUserList: TeamUserType[]; isLoading: boolean }) {
-	const validTeamUserList = Array.isArray(teamUserList) ? teamUserList : [];
+function BucketManagerField({ form }: { form: any; }) {
+	const { memberList, isLoading, error } = useTeamMemberList();
+
+	useEffect(() => {
+		console.log(form.getValues("manager_id"));
+	}, [form, memberList, isLoading, error]);
 
 	return (
 		<FormField
@@ -191,26 +205,37 @@ function BucketManagerField({ form, teamUserList = [], isLoading }: { form: any;
 			name="manager_id"
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>버킷 매니저</FormLabel>
+					{/* <FormLabel>버킷 매니저</FormLabel> */}
+					<TooltipProvider>
+						<FormLabel>
+							버킷 매니저&nbsp;{" "}
+							<Tooltip delayDuration={100}>
+								<TooltipTrigger>
+									<FaRegCircleQuestion />
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>
+										버킷 관리자를 선택하세요.
+									</p>
+								</TooltipContent>
+							</Tooltip>
+						</FormLabel>
+					</TooltipProvider>
 					<Select onValueChange={field.onChange} defaultValue={field.value}>
 						<FormControl>
 							<SelectTrigger>
-								<SelectValue placeholder="버킷 매니저를 선택하세요." />
+								<SelectValue placeholder={isLoading ? "버킷 매니저를 선택하세요." : "팀 목록"} />
 							</SelectTrigger>
 						</FormControl>
 						<SelectContent>
-							{isLoading ? (
-								<p>Loading...</p>
-							) : (
-								validTeamUserList.map((user: TeamUserType, index: number) => (
-									<SelectItem key={index} value={user.id}>
-										{user?.last_name === null && user?.first_name === null ? user.email : `${user?.last_name ?? ""}${user?.first_name ?? ""}`}
-									</SelectItem>
-								))
-							)}
+							{memberList.map((member: TeamUserType, index: number) => (
+								<SelectItem value={member.id} key={index}>
+									{member.last_name} {member.first_name} {`<${member.email}>`}
+								</SelectItem>
+							))}
 						</SelectContent>
 					</Select>
-					<FormDescription>버킷 관리자를 선택하세요.</FormDescription>
+					{/* <FormDescription>버킷 관리자를 선택하세요.</FormDescription> */}
 					<FormMessage />
 				</FormItem>
 			)}
@@ -225,11 +250,27 @@ function ProjectUUIDField({ form }: { form: any }) {
 			name="project_id"
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>프로젝트 UUID</FormLabel>
+					{/* <FormLabel>프로젝트 UUID</FormLabel> */}
+					<TooltipProvider>
+						<FormLabel hidden >
+							프로젝트 UUID&nbsp;{" "}
+							<Tooltip delayDuration={100}>
+								<TooltipTrigger>
+									<FaRegCircleQuestion />
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>
+										프로젝트 UUID입니다.
+									</p>
+								</TooltipContent>
+							</Tooltip>
+						</FormLabel>
+					</TooltipProvider>
 					<FormControl>
-						<Input disabled {...field} />
+						{/* <Input disabled {...field} /> */}
+						<Input type="hidden" disabled {...field} />
 					</FormControl>
-					<FormDescription>프로젝트 UUID입니다.</FormDescription>
+					{/* <FormDescription>프로젝트 UUID입니다.</FormDescription> */}
 					<FormMessage />
 				</FormItem>
 			)}

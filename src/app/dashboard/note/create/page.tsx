@@ -1,12 +1,9 @@
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 import NewNoteForm from "@/components/modules/dashboard/note/NoteForm";
-
+import NoteCreateBreadCrumb from "@/components/modules/dashboard/note/NoteCreateBreadCrumb";
 export default function CreateNote() {
 	return (
 		<>
+			<NoteCreateBreadCrumb />
 			<NewNoteForm />
 		</>
 	);

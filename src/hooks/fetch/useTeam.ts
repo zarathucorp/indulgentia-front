@@ -2,9 +2,14 @@ import axios from "axios";
 import { UUID } from "crypto";
 import useSWRImmutable from "swr/immutable";
 import useSWR from "swr";
+
+if (process.env.NODE_ENV === 'development') {
+	axios.defaults.withCredentials = true;
+}
+
 const fetcher = (url: string) =>
 	axios
-		.get(url, { withCredentials: true })
+		.get(url)
 		.then((res) => res.data)
 		.catch(function (error) {
 			if (error.response) {
@@ -27,10 +32,16 @@ type TeamInfoType = {
 	id: UUID;
 	created_at: DateTimeString;
 	updated_at: DateTimeString;
-	name: string;
-	is_premium: boolean;
+	team_name: string;
+	// is_premium: boolean;
 	team_leader_id: UUID;
 	is_deleted: boolean;
+	team_leader_first_name: string | null;
+	team_leader_last_name: string | null;
+	project_num: number;
+	bucket_num: number;
+	note_num: number;
+	linked_repo_num: number;
 };
 
 const useTeamInfo = () => {
@@ -161,16 +172,13 @@ const createTeam = async (team_name: string) => {
 		{
 			name: team_name,
 		},
-		{
-			withCredentials: true,
-		}
 	);
 };
 
 const inviteUser = async (invitee_email: string): Promise<void> => {
 	const { data } = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/user/team/invite", {
 		user_email: invitee_email,
-	});
+	},);
 
 	if (data.status !== "succeed") {
 		throw new Error("유저 초대 실패");
@@ -203,7 +211,7 @@ const useInvitationSendList = () => {
 		},
 	});
 
-	console.log(data?.data);
+	// console.log(data?.data);
 
 	return {
 		invitationSendList: data?.data,
@@ -221,6 +229,10 @@ const useCurrentUserWithPending = () => {
 		numberCurrentUserWithPending: !memberListLoading && !invitationSendListLoading && memberList && invitationSendList && memberList.length + invitationSendList.length,
 		isLoading: memberListLoading || invitationSendListLoading,
 		isError: memberListError || invitationSendListError,
+		mutate: () => {
+			memberListMutate();
+			invitationSendListMutate();
+		},
 	};
 };
 

@@ -9,20 +9,53 @@ import { UsePeriodPolicy, RefundPolicy } from "@/components/global/UsePeriodRefu
 import { useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useTeamInfo } from "@/hooks/fetch/useTeam";
+import { useToast } from "@/components/ui/use-toast";
 export default function PricingPage() {
 	const numbers = Array.from({ length: 41 }, (_, i) => i + 10);
 	const [numUser, setNumUser] = useState<string>("10");
 	const totalPrice = parseInt(numUser) * 100_000;
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	useEffect(() => {
-		const getUser = async () => {
-			const supabase = createClient();
-			const { data: user } = await supabase.auth.getUser();
-			if (user) setIsLoggedIn(true);
-		};
+	const { hasTeam, isLoading, error, mutate } = useTeamInfo();
+	const router = useRouter();
 
+	const { toast } = useToast();
+
+	const getUser = async () => {
+		const supabase = createClient();
+		const { data: { user } } = await supabase.auth.getUser();
+		if (user) {
+			setIsLoggedIn(true)
+		} else {
+			setIsLoggedIn(false)
+		};
+	};
+
+	const handleSubmit = (e: any) => {
+		e.preventDefault();
+		if (isLoggedIn && hasTeam) {
+				router.push(`/payment?type=New&user=${numUser}`);
+		} else if (isLoggedIn && !hasTeam) {
+			toast({
+				title: "팀이 필요합니다.",
+				description: "팀을 생성하거나 초대를 받아야합니다.",
+			})
+			router.push("/setting/team");
+		} else {
+			toast({
+				title: "로그인이 필요합니다.",
+				description: "결제는 로그인 후 가능합니다.",
+			});
+			router.push("/auth/login");
+		}
+	};
+
+	useEffect(() => {
 		getUser();
+		console.log(hasTeam);
 	}, []);
+
 	return (
 		<>
 			<section className="w-full py-12 ">
@@ -37,36 +70,20 @@ export default function PricingPage() {
 									<li>무제한 프로젝트/버킷/노트 생성</li>
 									<li>블록체인을 이용한 전자서명</li>
 								</ul>
+								<form onSubmit={handleSubmit}>
 								<div className="mb-4">
 									<Label htmlFor="num_user" className="block text-sm font-medium text-gray-700 mb-2">
-										유저 수를 선택해주세요
+										유저 수를 선택해주세요. 10명부터 5명씩 추가할 수 있습니다.
 									</Label>
-									<Select name="num_user" value={numUser} onValueChange={setNumUser}>
-										<SelectTrigger className="w-full">
-											<SelectValue placeholder="유저 수 선택" />
-										</SelectTrigger>
-										<SelectContent>
-											{numbers.map((num) => (
-												<SelectItem key={num} value={num.toString()}>
-													{num}명
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
+									<Input type="number" value={numUser} step="5" min="10" onChange={(e) => setNumUser(e.target.value)} />
 								</div>
 								<p className="text-lg font-medium text-gray-800 mb-6">
-									{numUser}명 * 100,000원/1년 = {totalPrice.toLocaleString()}원
+									{Math.ceil(parseInt(numUser)/5)*5}명 * 100,000원/1년 = {totalPrice.toLocaleString()}원
 								</p>
-								{/* <Link href={`/payment?user=${numUser}`}>
-									<Button size="lg" className="w-full text-white">
-										선택하기
-									</Button>
-								</Link> */}
-								<Link href={isLoggedIn ? `/payment?type=New&user=${numUser}` : "/auth/login"}>
-									<Button size="lg" className="w-full text-white">
-										시작하기
-									</Button>
-								</Link>
+								<Button size="lg" className="w-full text-white" type="submit">
+									시작하기
+								</Button>
+								</form>
 							</div>
 						</div>
 					</div>

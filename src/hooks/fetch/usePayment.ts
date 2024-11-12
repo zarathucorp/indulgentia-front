@@ -2,9 +2,14 @@ import axios from "axios";
 import { UUID } from "crypto";
 import useSWR from "swr";
 import useSWRImmutable from "swr/immutable";
+
+if (process.env.NODE_ENV === 'development') {
+	axios.defaults.withCredentials = true;
+}
+
 const fetcher = (url: string) =>
 	axios
-		.get(url, { withCredentials: true })
+		.get(url)
 		.then((res) => {
 			console.log(res.data.data);
 			return res.data.data;
@@ -36,12 +41,13 @@ type currentPlanType = {
 };
 
 const useCurrentPlan = () => {
-	const { data, error, isLoading } = useSWRImmutable<currentPlanType>(process.env.NEXT_PUBLIC_API_URL + "/payment/order/subscription", fetcher);
+	const { data, error, isLoading, mutate } = useSWR<currentPlanType>(process.env.NEXT_PUBLIC_API_URL + "/payment/order/subscription", fetcher);
 
 	return {
 		currentPlan: data,
 		isLoading,
 		error,
+		mutate,
 	};
 };
 const getCurrentPlanAxios = async () => {

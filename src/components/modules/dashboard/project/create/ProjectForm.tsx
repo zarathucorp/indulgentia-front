@@ -2,6 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, UseFormReturn } from "react-hook-form";
+import { useTeamMemberList } from "@/hooks/fetch/useTeam";
+import { TeamUserType } from "@/types/TeamUserType";
 import { z } from "zod";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
@@ -12,12 +14,21 @@ import useSWRImmutable from "swr/immutable";
 import RemoveModal from "@/components/global/RemoveModal";
 import { useToast } from "@/components/ui/use-toast";
 import { ActionButton } from "@/components/ui/actionbutton";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { FaRegCircleQuestion } from "react-icons/fa6";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 const ProjectSchema = z
 	.object({
 		title: z.string().min(1, "프로젝트 이름은 1자보다 길어야 합니다.").max(1000, "프로젝트 이름은 1,000자보다 짧아야 합니다."),
-		project_leader: z.string().max(1000, "연구책임자 이름은 1,000자보다 짧아야 합니다.").optional().nullable(),
-		grant_number: z.string().max(1000, "과제 번호는 1,000자보다 짧아야 합니다.").optional().nullable(),
+		project_leader: z.string().max(1000, "연구책임자 이름은 1,000자보다 짧아야 합니다.").nullable(),
+    grant_number: z
+      .string()
+      .regex(/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/, "과제 번호는 영문, 숫자, 특수문자만 포함할 수 있습니다.")
+      .max(1000, "과제 번호는 1,000자보다 짧아야 합니다.")
+      .optional()
+      .nullable(),
 		start_date: z.string().date("날짜 형식이 아닙니다.").optional().nullable(),
 		end_date: z.string().date("날짜 형식이 아닙니다.").optional().nullable(),
 	})
@@ -36,24 +47,53 @@ const preprocessValues = (values: CreateProjectFormValues & { id: string }) => (
 
 const useTeamId = () => {
 	const { data: teamInfo } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/team/", async (url: string) => {
-		const { data } = await axios.get(url, { withCredentials: true });
+		const { data } = await axios.get(url);
 		return data.data;
 	});
 	return teamInfo?.id;
 };
 
-const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValues> }) => (
+const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValues> }) => {	
+	const { memberList, isLoading, error } = useTeamMemberList();
+	const [customValue, setCustomValue] = useState("");
+	const [selectedValue, setSelectedValue] = useState("");
+
+  useEffect(() => {
+    // form에서 project_leader 초기값 가져오기
+    const initialProjectLeader = form.getValues("project_leader");
+    if (initialProjectLeader) {
+      setCustomValue(initialProjectLeader); // 기존 값이 있을 때 Input에 표시
+    }
+		console.log("initialProjectLeader", initialProjectLeader);
+  }, [form]);
+
+	return (
 	<>
 		<FormField
 			control={form.control}
 			name="title"
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>프로젝트 이름</FormLabel>
+					{/* <FormLabel>프로젝트 이름</FormLabel> */}
+					<TooltipProvider>
+						<FormLabel>
+							프로젝트 이름&nbsp;{" "}
+							<Tooltip delayDuration={100}>
+								<TooltipTrigger>
+									<FaRegCircleQuestion />
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>
+										프로젝트 이름을 텍스트로 입력합니다.
+									</p>
+								</TooltipContent>
+							</Tooltip>
+						</FormLabel>
+					</TooltipProvider>
 					<FormControl>
 						<Input placeholder="프로젝트 이름" {...field} />
 					</FormControl>
-					<FormDescription>프로젝트 이름을 입력합니다.</FormDescription>
+					{/* <FormDescription>프로젝트 이름을 입력합니다.</FormDescription> */}
 					<FormMessage />
 				</FormItem>
 			)}
@@ -63,11 +103,65 @@ const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValu
 			name="project_leader"
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>연구책임자</FormLabel>
+					{/* <FormLabel>연구책임자</FormLabel> */}
+					<TooltipProvider>
+						<FormLabel>
+							연구책임자&nbsp;{" "}
+							<Tooltip delayDuration={100}>
+								<TooltipTrigger>
+									<FaRegCircleQuestion />
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>
+										연구책임자의 이름을 텍스트로 입력합니다.
+									</p>
+									<p>
+										팀 목록에서 선택하기와 직접 입력하기 중 선택할 수 있습니다.
+									</p>
+								</TooltipContent>
+							</Tooltip>
+						</FormLabel>
+					</TooltipProvider>
 					<FormControl>
-						<Input placeholder="연구책임자" {...field} value={field.value ?? ""} />
+						{/* <Input placeholder="연구책임자" {...field} value={field.value ?? ""} /> */}
+						<div>
+							<Input
+								placeholder={selectedValue ? `${selectedValue}` : `연구책임자`}
+								{...field}
+								value={customValue}
+								onChange={(e) => {
+									setCustomValue(e.target.value);
+									setSelectedValue(""); // Input 사용 시 Select 값 초기화
+									field.onChange(e.target.value); // FormField 값 업데이트
+								}}
+							/>
+							<Select
+								disabled={isLoading || memberList === null}
+								onValueChange={(value) => {
+									setSelectedValue(value);
+									setCustomValue(""); // Select 사용 시 Input 값 초기화
+									field.onChange(value); // FormField 값 업데이트
+								}}
+								value={selectedValue}
+							>
+								<SelectTrigger
+									className="mt-1"
+								>
+								<SelectValue placeholder={isLoading ? "연구책임자를 불러오는 중입니다." : "팀 목록"} />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectGroup>
+										{memberList.map((member: TeamUserType, index: number) => (
+											<SelectItem value={`${member.last_name} ${member.first_name}`} key={index}>
+												{member.last_name} {member.first_name} {`<${member.email}>`}
+											</SelectItem>
+										))}
+									</SelectGroup>
+								</SelectContent>
+							</Select>
+						</div>
 					</FormControl>
-					<FormDescription>연구책임자의 이름을 입력합니다.</FormDescription>
+					{/* <FormDescription>연구책임자의 이름을 입력합니다.</FormDescription> */}
 					<FormMessage />
 				</FormItem>
 			)}
@@ -77,11 +171,29 @@ const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValu
 			name="grant_number"
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>과제 번호</FormLabel>
+					{/* <FormLabel>과제 번호</FormLabel> */}
+					<TooltipProvider>
+						<FormLabel>
+							과제 번호&nbsp;{" "}
+							<Tooltip delayDuration={100}>
+								<TooltipTrigger>
+									<FaRegCircleQuestion />
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>
+										과제 번호를 텍스트로 입력합니다.
+									</p>
+									<p>
+										* 영문, 숫자, 특수문자 사용 가능
+									</p>
+								</TooltipContent>
+							</Tooltip>
+						</FormLabel>
+					</TooltipProvider>
 					<FormControl>
 						<Input placeholder="과제 번호" {...field} value={field.value ?? ""} />
 					</FormControl>
-					<FormDescription>과제 번호를 입력합니다.</FormDescription>
+					{/* <FormDescription>과제 번호를 입력합니다.</FormDescription> */}
 					<FormMessage />
 				</FormItem>
 			)}
@@ -91,14 +203,29 @@ const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValu
 			name="start_date"
 			render={({ field }) => (
 				<FormItem className="flex flex-col">
-					<FormLabel>연구 시작일</FormLabel>
+					{/* <FormLabel>연구 시작일</FormLabel> */}
+					<TooltipProvider>
+						<FormLabel>
+							연구 시작일&nbsp;{" "}
+							<Tooltip delayDuration={100}>
+								<TooltipTrigger>
+									<FaRegCircleQuestion />
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>
+										연구 시작일을 선택하세요.
+									</p>
+								</TooltipContent>
+							</Tooltip>
+						</FormLabel>
+					</TooltipProvider>
 					<DatePicker
 						field={{
 							...field,
 							onChange: (date: Date) => field.onChange(date.toLocaleDateString("en-CA")), // Convert to ISO date string
 						}}
 					/>
-					<FormDescription>연구 시작일을 선택하세요.</FormDescription>
+					{/* <FormDescription>연구 시작일을 선택하세요.</FormDescription> */}
 					<FormMessage />
 				</FormItem>
 			)}
@@ -108,25 +235,40 @@ const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValu
 			name="end_date"
 			render={({ field }) => (
 				<FormItem className="flex flex-col">
-					<FormLabel>연구 종료일</FormLabel>
+					{/* <FormLabel>연구 종료일</FormLabel> */}
+					<TooltipProvider>
+						<FormLabel>
+							연구 종료일&nbsp;{" "}
+							<Tooltip delayDuration={100}>
+								<TooltipTrigger>
+									<FaRegCircleQuestion />
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>
+										연구 종료일을 선택하세요.
+									</p>
+								</TooltipContent>
+							</Tooltip>
+						</FormLabel>
+					</TooltipProvider>
 					<DatePicker
 						field={{
 							...field,
 							onChange: (date: Date) => field.onChange(date.toLocaleDateString("en-CA")), // Convert to ISO date string
 						}}
 					/>
-					<FormDescription>연구 종료일을 선택하세요.</FormDescription>
+					{/* <FormDescription>연구 종료일을 선택하세요.</FormDescription> */}
 					<FormMessage />
 				</FormItem>
 			)}
 		/>
 	</>
-);
+)};
 
 const handleRemove = async (values: (CreateProjectFormValues & { id: string }) | undefined) => {
 	if (values) {
 		try {
-			await axios.delete(process.env.NEXT_PUBLIC_API_URL + `/dashboard/project/${values.id}`, { withCredentials: true });
+			await axios.delete(process.env.NEXT_PUBLIC_API_URL + `/dashboard/project/${values.id}`);
 			console.log("Project removed successfully");
 			return;
 		} catch (error) {
@@ -147,7 +289,7 @@ const NewProjectForm = () => {
 	const onSubmit = async (data: CreateProjectFormValues) => {
 		const apiUrl = process.env.NEXT_PUBLIC_API_URL + "/dashboard/project/";
 		const payload = { team_id: teamId, ...data };
-		const options = { withCredentials: true };
+		const options = {};
 		console.log(payload);
 		try {
 			await axios.post(apiUrl, payload, options);
@@ -194,7 +336,7 @@ const EditProjectForm = ({ projectInfo, mutate }: { projectInfo: CreateProjectFo
 	const onSubmit = async (data: CreateProjectFormValues) => {
 		const apiUrl = process.env.NEXT_PUBLIC_API_URL + `/dashboard/project/${projectInfo.id}`;
 		const payload = { id: projectInfo.id, team_id: teamId, ...data };
-		const options = { withCredentials: true };
+		const options = {};
 
 		try {
 			await axios.put(apiUrl, payload, options);

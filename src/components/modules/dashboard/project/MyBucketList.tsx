@@ -32,7 +32,7 @@ export default function MyBucketList({ bucketList, projectId }: { bucketList: Bu
 							<TableHead>내 버킷</TableHead>
 							<TableHead className="hidden md:table-cell">상태</TableHead>
 							<TableHead className="hidden md:table-cell">버킷 매니저</TableHead>
-							<TableHead className="hidden xl:table-cell">GitHub 연결</TableHead>
+							<TableHead className="hidden xl:table-cell">GitHub 연동</TableHead>
 							{/* <TableHead className="hidden xl:table-cell"></TableHead> */}
 							{/* <TableHead className="hidden md:table-cell">수행 기간</TableHead> */}
 							<TableHead>

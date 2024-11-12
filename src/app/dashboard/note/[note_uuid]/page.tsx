@@ -29,7 +29,7 @@ export default function ViewNote() {
 	const [downloadURL, setDownloadURL] = useState<string>("");
 
 	const { data, isValidating, error, mutate, isLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + `/dashboard/note/file/${params.note_uuid}`, async (url) => {
-		const result = await axios.get(url, { withCredentials: true });
+		const result = await axios.get(url);
 		if (result.status !== 200) {
 			const error = new Error("An error occurred while fetching the data.");
 			throw error;
@@ -39,7 +39,7 @@ export default function ViewNote() {
 	});
 
 	const { data: breadcrumbData, isLoading: isBreadcrumbLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + `/dashboard/note/${params.note_uuid}/breadcrumb`, async (url) => {
-		const result = await axios.get(url, { withCredentials: true });
+		const result = await axios.get(url);
 		if (result.status !== 200) {
 			const error = new Error("An error occurred while fetching the data.");
 			throw error;

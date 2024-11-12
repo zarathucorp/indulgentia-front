@@ -3,7 +3,19 @@ import { updateSession } from "@/utils/supabase/middleware";
 import { createClient } from "@/utils/supabase/server";
 
 export default async function middleware(request: NextRequest) {
-	// Dashboard로 접근하는 경우
+	// 루트 경로로 접근하는 경우
+	if (request.nextUrl.pathname === "/") {
+		const supabase = createClient();
+
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
+		if (user) {
+				return NextResponse.redirect(new URL("/dashboard", request.url));
+		}
+	}
+
+	// Dashboard 페이지로 접근하는 경우
 	if (request.nextUrl.pathname.startsWith("/dashboard")) {
 		const supabase = createClient();
 
@@ -28,5 +40,6 @@ export const config = {
 		 * Feel free to modify this pattern to include more paths.
 		 */
 		"/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+		"/",
 	],
 };

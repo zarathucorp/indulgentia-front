@@ -15,10 +15,10 @@ export default function Footer() {
 						{/* <p className="mt-2 text-sm">Company Introduction: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p> */}
 					</div>
 					<div className="mb-6 md:mb-0 md:flex md:items-center">
-						<Link href="https://www.zarathu.com/">
+						<Link href="/help/terms-conditions">
 							<span className="block md:inline md:mr-4">이용약관</span>
 						</Link>
-						<Link href="https://www.zarathu.com/">
+						<Link href="/help/privacy-policy">
 							<span className="block md:inline md:mr-4">개인정보처리방침</span>
 						</Link>
 						<Link href="/help/refund-policy">

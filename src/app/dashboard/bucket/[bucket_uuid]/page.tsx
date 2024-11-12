@@ -22,11 +22,13 @@ import { NoNote } from "@/components/global/NoContent";
 
 import { handleNoteRemove } from "../../note/[note_uuid]/handleNoteRemove";
 import convertKST from "@/utils/time/convertKST";
-import NoteType from "@/types/NoteType";
+import NoteType, { NoteTypeWithUserSetting } from "@/types/NoteType";
+import { maskUUID } from "@/lib/utils";
+import { FaArrowsRotate } from "react-icons/fa6";
 
 // API fetcher 함수
 const fetcher = async (url: string) => {
-	const result = await axios.get(url, { withCredentials: true });
+	const result = await axios.get(url);
 	if (result.status !== 200) {
 		throw new Error("An error occurred while fetching the data.");
 	}
@@ -38,7 +40,7 @@ export default function Note() {
 	const [dateRange, setDateRange] = useState<DateRange | undefined>();
 
 	// SWR을 사용한 데이터 fetching
-	const { data: notes, error: noteError, mutate: mutateNoteList } = useSWR<NoteType[]>(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/note/list/${params.bucket_uuid}`, fetcher);
+	const { data: notes, error: noteError, mutate: mutateNoteList } = useSWR<NoteTypeWithUserSetting[]>(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/note/list/${params.bucket_uuid}`, fetcher);
 
 	const { data: breadcrumbData, isLoading: isBreadcrumbLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/bucket/${params.bucket_uuid}/breadcrumb`, fetcher);
 
@@ -74,11 +76,11 @@ export default function Note() {
 				<div className="space-y-4">
 					<div className="grid gap-2">
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-							{filteredNotes?.map((note: NoteType) => (
+							{filteredNotes?.map((note: NoteTypeWithUserSetting) => (
 								<Card key={note.id}>
 									<CardHeader>
 										<CardTitle>{note.title}</CardTitle>
-										<CardDescription>노트 ID: {note.id}</CardDescription>
+										{/* <CardDescription>노트 ID: {maskUUID(note.id)}</CardDescription> */}
 									</CardHeader>
 									<CardContent>
 										<div className="grid w-full items-center gap-4">
@@ -86,7 +88,7 @@ export default function Note() {
 												<Label>생성일시: {convertKST(note.created_at)}</Label>
 											</div>
 											<div className="flex flex-col space-y-1.5">
-												<Label>작성자: {note.user_id}</Label>
+												<Label>작성자: {note.user_setting.last_name} {note.user_setting.first_name}</Label>
 											</div>
 										</div>
 									</CardContent>
@@ -119,6 +121,7 @@ export default function Note() {
 							<Button className="w-full">버킷 설정</Button>
 						</Link>
 					</div>
+					<div className="flex items-center gap-2">
 					<Popover>
 						<PopoverTrigger asChild>
 							<Button className="w-full justify-start text-left font-normal" variant="outline">
@@ -136,6 +139,14 @@ export default function Note() {
 							/>
 						</PopoverContent>
 					</Popover>
+					<Button
+						className="inline-flex items-center justify-center rounded-md bg-gray-900 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
+						onClick={() => setDateRange(undefined)}
+						disabled={!dateRange}
+					>
+						<FaArrowsRotate />
+					</Button>
+					</div>
 				</div>
 			</div>
 		</>
