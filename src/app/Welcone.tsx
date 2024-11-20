@@ -4,6 +4,7 @@ import { Divide } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { SiHiveBlockchain } from "react-icons/si";
+import Image from "next/image";
 export default function WelcomePage() {
 	return (
 		<main className="flex flex-col">
@@ -47,6 +48,119 @@ export default function WelcomePage() {
 					</div>
 				</div>
 			</section>
+			<Separator />
+			<section className="py-16 md:py-24 lg:py-32">
+				<div className="container mx-auto px-4 md:px-6 lg:px-8">
+					<div className="max-w-3xl mx-auto text-center space-y-6">
+						<h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">시작하기</h2>
+						<p className="text-lg md:text-xl lg:text-2xl text-gray-600 dark:text-gray-400">간단하게 전자연구노트를 시작해볼까요?</p>
+					</div>
+					<div className="grid grid-cols-1 gap-8">
+						<div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 space-y-4">
+							<PlayIcon className="w-10 h-10 text-[#4b0082]" />
+							<h3 className="text-xl font-bold">회원가입</h3>
+							<div className="relative group flex justify-center">
+								{/* <Image
+									src="/demo1.png"
+									alt="static-demo1"
+									width={400}
+									height={400}
+									className="object-cover relative group-hover:hidden"
+									priority
+								/>
+								<Image
+									src="/demo1.gif"
+									alt="gif-demo1"
+									width={400}
+									height={400}
+									className="object-cover relative hidden group-hover:block"
+									priority
+								/> */}
+								<ArcadeEmbed url="https://demo.arcade.software/zQZzQI4JBZb5wBfgcKfU?embed&embed_mobile=tab&embed_desktop=inline&show_copy_link=true" title="연구실록 - 회원가입" />
+							</div>
+							{/* <p className="text-gray-600 dark:text-gray-400">
+								데모 영상 1
+							</p> */}
+						</div>
+					</div>
+					<div className="grid grid-cols-1 gap-8">
+						<div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 space-y-4">
+							<PlayIcon className="w-10 h-10 text-[#4b0082]" />
+							<h3 className="text-xl font-bold">팀 생성</h3>
+							<div className="relative group flex justify-center">
+								{/* <Image
+									src="/demo2.png"
+									alt="static-demo2"
+									width={400}
+									height={400}
+									className="object-cover relative group-hover:hidden"
+									priority
+								/>
+								<Image
+									src="/demo2.gif"
+									alt="gif-demo2"
+									width={400}
+									height={400}
+									className="object-cover relative hidden group-hover:block"
+									priority
+								/> */}
+								<ArcadeEmbed url="https://demo.arcade.software/lJIIuwyVG0udDw5pZ2cC?embed&embed_mobile=tab&embed_desktop=inline&show_copy_link=true" title="연구실록 - 팀 생성"/>
+							</div>
+							{/* <p className="text-gray-600 dark:text-gray-400">
+								데모 영상 2
+							</p> */}
+						</div>
+					</div>
+					<div className="grid grid-cols-1 gap-8">
+						<div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 space-y-4">
+							<PlayIcon className="w-10 h-10 text-[#4b0082]" />
+							<h3 className="text-xl font-bold">노트 생성</h3>
+							<div className="relative group flex justify-center">
+								{/* <Image
+									src="/demo3.png"
+									alt="static-demo3"
+									width={400}
+									height={400}
+									className="object-cover relative group-hover:hidden"
+									priority
+								/>
+								<Image
+									src="/demo3.gif"
+									alt="gif-demo3"
+									width={400}
+									height={400}
+									className="object-cover relative hidden group-hover:block"
+									priority
+								/> */}
+								<ArcadeEmbed url="https://demo.arcade.software/Ub33ZpumCmM20zJTMnux?embed&embed_mobile=tab&embed_desktop=inline&show_copy_link=true" title="연구실록 - 노트 생성"/>
+							</div>
+							{/* <p className="text-gray-600 dark:text-gray-400">
+								데모 영상 3
+							</p> */}
+						</div>
+					</div>
+				</div>
+			</section>
+			<Separator />
+			<section className="py-8 md:py-12 lg:py-16">
+				<div className="container mx-auto px-4 md:px-6 lg:px-8">
+					<div className="grid grid-cols-1 gap-8">
+						<div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 space-y-4">
+							<QuestionMarkIcon className="w-10 h-10 text-[#4b0082]" />
+							<h3 className="text-xl font-bold">연구실록에 대해 더 자세히 알고 싶으신가요?</h3>
+							<p className="text-gray-600 dark:text-gray-400">
+								<Button>
+									<a href="https://zarathu.gitbook.io/rndsillog-docs" target="_blank" className="flex items-center">
+										연구실록 사용자가이드&nbsp;
+										<ExternalLinkIcon className="w-4 h-4 inline-block ml-1" />
+									</a>
+								</Button>
+							</p>
+						</div>
+					</div>
+				</div>
+			</section>
+			<Separator />
 		</main>
 	);
 }
@@ -111,4 +225,48 @@ function ShareIcon(props: React.SVGAttributes<SVGElement>) {
 			<line x1="12" x2="12" y1="2" y2="15" />
 		</svg>
 	);
+}
+
+function QuestionMarkIcon(props: React.SVGAttributes<SVGElement>) {
+	return (
+		<svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+			<circle cx="12" cy="12" r="10" />
+			<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+			<line x1="12" y1="17" x2="12.01" y2="17" />
+		</svg>
+	);
+}
+
+function ExternalLinkIcon(props: React.SVGAttributes<SVGElement>) {
+	return (
+		<svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+			<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+			<polyline points="15 3 21 3 21 9" />
+			<line x1="10" y1="14" x2="21" y2="3" />
+		</svg>
+	);
+}
+
+function PlayIcon(props: React.SVGAttributes<SVGElement>) {
+	return (
+		<svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+			<polygon points="5 3 19 12 5 21 5 3" />
+		</svg>
+	)
+}
+
+export function ArcadeEmbed({ url, title="연구실록 - Zarathu Corporation" }: { url: string, title?: string }) {
+  return (
+    <div style={{ position: 'relative', paddingBottom: 'calc(51.48437500000001% + 41px)', height: 0, width: '80%', display: 'flex', justifyContent: 'center' }}>
+      <iframe
+        src={url}
+        title={title}
+        frameBorder="0"
+        loading="lazy"
+        allowFullScreen
+        allow="clipboard-write"
+        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '80%', colorScheme: 'light', display: 'block' }}
+      />
+    </div>
+  )
 }
