@@ -138,7 +138,7 @@ export function AccountForm() {
 									<FormLabel>
 										성&nbsp;{" "}
 										<Tooltip delayDuration={100}>
-											<TooltipTrigger>
+											<TooltipTrigger type="button">
 												<FaRegCircleQuestion />
 											</TooltipTrigger>
 											<TooltipContent>
@@ -169,7 +169,7 @@ export function AccountForm() {
 									<FormLabel>
 										이름&nbsp;{" "}
 										<Tooltip delayDuration={100}>
-											<TooltipTrigger>
+											<TooltipTrigger type="button">
 												<FaRegCircleQuestion />
 											</TooltipTrigger>
 											<TooltipContent>
@@ -201,7 +201,7 @@ export function AccountForm() {
 								<FormLabel>
 									이메일&nbsp;{" "}
 									<Tooltip delayDuration={100}>
-										<TooltipTrigger>
+										<TooltipTrigger type="button">
 											<FaRegCircleQuestion />
 										</TooltipTrigger>
 										<TooltipContent>
@@ -230,7 +230,7 @@ export function AccountForm() {
 							<FormLabel className="flex">
 								GitHub 계정 연결&nbsp;{" "}
 								<Tooltip delayDuration={100}>
-									<TooltipTrigger>
+									<TooltipTrigger type="button">
 										<FaRegCircleQuestion />
 									</TooltipTrigger>
 									<TooltipContent>
