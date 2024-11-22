@@ -126,7 +126,15 @@ export function AccountForm() {
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+			<form
+				onSubmit={form.handleSubmit(onSubmit)}
+				onKeyDown={(e) => {
+					if (e.key === "Enter") {
+						e.preventDefault();
+					}
+				}}
+				className="grid gap-4"
+			>
 				<div className="grid grid-cols-2 gap-4">
 					<FormField
 						control={form.control}
@@ -138,7 +146,7 @@ export function AccountForm() {
 									<FormLabel>
 										성&nbsp;{" "}
 										<Tooltip delayDuration={100}>
-											<TooltipTrigger>
+											<TooltipTrigger type="button">
 												<FaRegCircleQuestion />
 											</TooltipTrigger>
 											<TooltipContent>
@@ -169,7 +177,7 @@ export function AccountForm() {
 									<FormLabel>
 										이름&nbsp;{" "}
 										<Tooltip delayDuration={100}>
-											<TooltipTrigger>
+											<TooltipTrigger type="button">
 												<FaRegCircleQuestion />
 											</TooltipTrigger>
 											<TooltipContent>
@@ -201,7 +209,7 @@ export function AccountForm() {
 								<FormLabel>
 									이메일&nbsp;{" "}
 									<Tooltip delayDuration={100}>
-										<TooltipTrigger>
+										<TooltipTrigger type="button">
 											<FaRegCircleQuestion />
 										</TooltipTrigger>
 										<TooltipContent>
@@ -230,7 +238,7 @@ export function AccountForm() {
 							<FormLabel className="flex">
 								GitHub 계정 연결&nbsp;{" "}
 								<Tooltip delayDuration={100}>
-									<TooltipTrigger>
+									<TooltipTrigger type="button">
 										<FaRegCircleQuestion />
 									</TooltipTrigger>
 									<TooltipContent>

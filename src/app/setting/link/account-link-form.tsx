@@ -63,7 +63,7 @@ export function AccountLinkForm() {
 			<Label className="flex">
 				연결한 계정&nbsp;{" "}
 				<Tooltip delayDuration={100}>
-					<TooltipTrigger>
+					<TooltipTrigger type="button">
 						<FaRegCircleQuestion />
 					</TooltipTrigger>
 					<TooltipContent>
@@ -85,7 +85,7 @@ export function AccountLinkForm() {
 				<Label className="flex">
 					<FaGithub/>&nbsp;GitHub 연결&nbsp;{" "}
 					<Tooltip delayDuration={100}>
-						<TooltipTrigger>
+						<TooltipTrigger type="button">
 							<FaRegCircleQuestion />
 						</TooltipTrigger>
 						<TooltipContent>
