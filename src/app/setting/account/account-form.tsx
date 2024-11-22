@@ -126,7 +126,15 @@ export function AccountForm() {
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+			<form
+				onSubmit={form.handleSubmit(onSubmit)}
+				onKeyDown={(e) => {
+					if (e.key === "Enter") {
+						e.preventDefault();
+					}
+				}}
+				className="grid gap-4"
+			>
 				<div className="grid grid-cols-2 gap-4">
 					<FormField
 						control={form.control}
