@@ -57,7 +57,7 @@ export default function Project() {
 				)}
 			</div>
 
-			<div className="flex min-h-screen max-w-screen-xl flex-col mx-auto">{isLoading ? <DashboardLoading /> : <>{data && <MyBucketList bucketList={data} projectId={params.project_uuid} />}</>}</div>
+			<div className="flex max-w-screen-xl flex-col mx-auto">{isLoading ? <DashboardLoading /> : <>{data && <MyBucketList bucketList={data} projectId={params.project_uuid} />}</>}</div>
 		</>
 	);
 }
