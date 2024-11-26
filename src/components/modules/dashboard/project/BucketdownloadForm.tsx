@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,38 +11,38 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Spinner } from "@/components/global/Spinner";
 
-interface NoteDownloadFormProps {
-  selectedNotes: string[];
+interface BucketDownloadFormProps {
+  selectedBuckets: string[];
 }
 
-const NotedownloadSchema = z.object({
-  note_ids: z.array(z.string().uuid()),
+const BucketdownloadSchema = z.object({
+  bucket_ids: z.array(z.string().uuid()),
   is_merged_required: z.boolean(),
   is_filename_id: z.boolean(),
 });
 
-export type NoteDownloadFormValues = z.infer<typeof NotedownloadSchema>;
+export type BucketDownloadFormValues = z.infer<typeof BucketdownloadSchema>;
 
-export default function NotedownloadForm({ selectedNotes }: NoteDownloadFormProps) {
+export default function BucketdownloadForm({ selectedBuckets }: BucketDownloadFormProps) {
   const { toast } = useToast();
   const [isCreating, setIsCreating] = useState<boolean>(false);
 
-  const defaultValues: NoteDownloadFormValues = {
-    note_ids: selectedNotes,
+  const defaultValues: BucketDownloadFormValues = {
+    bucket_ids: selectedBuckets,
     is_merged_required: false,
     is_filename_id: false,
   };
 
   const form = useForm({
-    resolver: zodResolver(NotedownloadSchema),
+    resolver: zodResolver(BucketdownloadSchema),
     defaultValues,
   });
 
-  async function onSubmit(data: NoteDownloadFormValues) {
+  async function onSubmit(data: BucketDownloadFormValues) {
     setIsCreating(true);
     try {
       console.log(data);
-      const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/dashboard/note/file", { ...data }, {
+      const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/dashboard/bucket/file", { ...data }, {
         responseType: 'blob', // Blob 형태로 응답 받기
       });
 
@@ -51,7 +53,7 @@ export default function NotedownloadForm({ selectedNotes }: NoteDownloadFormProp
 
       // 파일명 설정
       const contentDisposition = response.headers['content-disposition'];
-      let fileName = 'default-filename.zip'; // 기본 파일명
+      let fileName = 'Report'; // 기본 파일명
       if (contentDisposition) {
 
         // `filename*` 처리
@@ -88,7 +90,7 @@ export default function NotedownloadForm({ selectedNotes }: NoteDownloadFormProp
     }
   }
 
-  if (selectedNotes.length === undefined || selectedNotes.length === 0) {
+  if (selectedBuckets.length === undefined || selectedBuckets.length === 0) {
     return null;
   }
 
@@ -96,7 +98,7 @@ export default function NotedownloadForm({ selectedNotes }: NoteDownloadFormProp
     <div className="w-full my-2 mx-2">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-          <SelectedNotesField form={form} />
+          <SelectedBucketsField form={form} />
           <IsMergedRequiredField form={form} />
           <IsFilenameIdField form={form} />
           <FormMessage />
@@ -117,14 +119,14 @@ export default function NotedownloadForm({ selectedNotes }: NoteDownloadFormProp
   );
 }
 
-function SelectedNotesField({ form }: { form: any }) {
+function SelectedBucketsField({ form }: { form: any }) {
   return (
     <FormField
       control={form.control}
-      name="note_ids"
+      name="bucket_ids"
       render={({ field }) => (
         <FormItem className="w-full">
-          <FormLabel><strong>{field.value.length}</strong> 개의 노트가 선택되었습니다.</FormLabel>
+          <FormLabel><strong>{field.value.length}</strong> 개의 버킷이 선택되었습니다.</FormLabel>
           <FormControl>
             <input type="hidden" {...field} />
           </FormControl>

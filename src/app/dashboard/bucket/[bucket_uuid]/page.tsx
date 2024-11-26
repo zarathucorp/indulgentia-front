@@ -121,8 +121,10 @@ export default function Note() {
                   onClick={() => toggleDownload && handleNoteClick(note.id)}
                 >
                   <CardHeader className="relative">
-										{toggleDownload && selectedNotes.includes(note.id) && (
-											<Badge className="absolute top-2 left-2">{selectedNotes.indexOf(note.id) + 1}</Badge>
+										{toggleDownload && selectedNotes.includes(note.id) ? (
+											<Badge className="absolute top-0 left-0">{selectedNotes.indexOf(note.id) + 1}</Badge>
+										) : (
+											<Badge className="absolute invisible top-0 left-0" />
 										)}
                     <CardTitle>
                       {note.title}
@@ -140,7 +142,7 @@ export default function Note() {
                     </div>
                   </CardContent>
                   <CardFooter className="flex justify-between">
-                    {!toggleDownload && (
+                    {!toggleDownload ? (
                       <>
                         <RemoveModal
                           targetEntity={note.title}
@@ -155,7 +157,12 @@ export default function Note() {
                           <Button>노트 보기</Button>
                         </Link>
                       </>
-                    )}
+                    ) : (							
+                      <>												
+												<Button disabled className="bg-red-500 hover:bg-red-700">노트 삭제</Button>
+												<Button disabled >노트 보기</Button>
+                      </>
+										)}
                   </CardFooter>
                 </Card>
               ))}
@@ -204,7 +211,7 @@ export default function Note() {
       {toggleDownload ? (
         <div className="fixed bottom-0 left-0 right-0 p-4 bg-gray-900/75 text-gray-50">
           <div className="flex items-center justify-between">
-            <div className="flex-1">선택된 노트: {selectedNotes.length}개</div>
+            <div className="flex-1">선택된 노트: <strong>{selectedNotes.length}</strong> 개</div>
             <div className="flex space-x-2">
               <Button onClick={handleSelectAll}>
                 {selectedNotes.length === filteredNotes?.length ? "전체 선택 해제" : "전체 선택"}
