@@ -164,7 +164,9 @@ export default function Note() {
                       </>
                     ) : (							
                       <>												
-												<Button disabled className="bg-red-500 hover:bg-red-700">노트 삭제</Button>
+												{isLeader ? (<Button disabled className="bg-red-500 hover:bg-red-700">노트 삭제</Button>) : (
+                          <Button disabled className="invisible" />
+                        )}
 												<Button disabled >노트 보기</Button>
                       </>
 										)}
