@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useTeamInfo } from "@/hooks/fetch/useTeam";
 
 import Image from "next/image";
 import { MoreHorizontal } from "lucide-react";
@@ -14,10 +15,12 @@ import BucketType from "@/types/BucketType";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import BucketdownloadForm from "@/components/modules/dashboard/project/BucketdownloadForm";
+import { Wrench } from 'lucide-react';
 
 export default function MyBucketList({ bucketList, projectId }: { bucketList: BucketType[]; projectId: string }) {
   const [toggleDownload, setToggleDownload] = useState(false);
   const [selectedBuckets, setSelectedBuckets] = useState<string[]>([]);
+  const { isLeader } = useTeamInfo();
 
   // 버킷 클릭 핸들러
   const handleBucketClick = (bucketId: string) => {
@@ -57,11 +60,13 @@ export default function MyBucketList({ bucketList, projectId }: { bucketList: Bu
 				<CardHeader>
 					<CardTitle className="grid grid-cols-3 md:grid-cols-4 xl:grid-cols-6">
 						<div className="col-span-1">내 버킷</div>
-						<Link href={`/dashboard/project/${projectId}/setting`} className="col-start-2 md:col-start-3 xl:col-start-5">
-							<Button className="w-full righ">프로젝트 설정</Button>
-						</Link>
+						{isLeader ? (<Link href={`/dashboard/project/${projectId}/setting`} className="col-start-2 md:col-start-3 xl:col-start-5">
+							<Button variant={"outline"} className="w-full pr-[40px]"><Wrench/>&nbsp;프로젝트 설정</Button>
+						</Link>) : (
+							null
+						)}
 						<Link href={`/dashboard/bucket/create?project=${projectId}`} className="col-start-3 md:col-start-4 xl:col-start-6">
-							<Button className="w-full righ">새 버킷</Button>
+							<Button className="w-full ">새 버킷</Button>
 						</Link>
 					</CardTitle>
 					<CardDescription>버킷 목록입니다.</CardDescription>
