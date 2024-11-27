@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { ko } from "date-fns/locale"; // 한국어 로케일 추가
 import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
+import { useTeamInfo } from "@/hooks/fetch/useTeam";
 
 import { Button } from "@/components/ui/button";
 import { PopoverTrigger,  PopoverContent, Popover } from "@/components/ui/popover";
@@ -28,6 +29,7 @@ import convertKST from "@/utils/time/convertKST";
 import NoteType, { NoteTypeWithUserSetting } from "@/types/NoteType";
 import { FaArrowsRotate } from "react-icons/fa6";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogDescription, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Wrench } from 'lucide-react';
 
 // API fetcher 함수
 const fetcher = async (url: string) => {
@@ -43,6 +45,7 @@ export default function Note() {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [toggleDownload, setToggleDownload] = useState(false);
   const [selectedNotes, setSelectedNotes] = useState<string[]>([]);
+  const { isLeader } = useTeamInfo();
 
   // SWR을 사용한 데이터 fetching
   const { data: notes, error: noteError, mutate: mutateNoteList } = useSWR<NoteTypeWithUserSetting[]>(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/note/list/${params.bucket_uuid}`, fetcher);
@@ -144,7 +147,7 @@ export default function Note() {
                   <CardFooter className="flex justify-between">
                     {!toggleDownload ? (
                       <>
-                        <RemoveModal
+                        {isLeader ? (<RemoveModal
                           targetEntity={note.title}
                           removeType="Note"
                           onRemoveConfirmed={async () => {
@@ -152,7 +155,9 @@ export default function Note() {
                             await mutateNoteList();
                           }}
                           parentUUID={params.bucket_uuid}
-                        />
+                        />) : (
+                          <Button disabled className="invisible" />
+                        )}
                         <Link href={`/dashboard/note/${note.id}`}>
                           <Button>노트 보기</Button>
                         </Link>
@@ -176,9 +181,11 @@ export default function Note() {
               <Button className="w-full">노트 생성</Button>
             </Link>
             <Button onClick={handleToggleDownload} className="w-full">노트 다운로드</Button>
-            <Link href={`/dashboard/bucket/${params.bucket_uuid}/setting`}>
-              <Button className="w-full">버킷 설정</Button>
-            </Link>
+            {isLeader ? (<Link href={`/dashboard/bucket/${params.bucket_uuid}/setting`}>
+              <Button variant={"outline"} className="w-full pr-[40px]"><Wrench/>&nbsp;버킷 설정</Button>
+            </Link>) : (
+              <Button variant={"outline"} className="w-full invisible" disabled />
+            )}
           </div>
           <div className="flex items-center gap-2">
             <Popover>
