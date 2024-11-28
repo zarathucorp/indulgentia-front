@@ -106,7 +106,7 @@ export const columns: ColumnDef<Note>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Title
+          제목
           <ArrowUpDown />
         </Button>
       )
@@ -130,10 +130,13 @@ export const columns: ColumnDef<Note>[] = [
   },
   {
     accessorKey: "is_github",
-    header: "Is GitHub",
-    cell: ({ row }) => (
-      <div className="">{row.getValue("is_github") ? "Yes" : "No"}</div>
-    ),
+    header: "GitHub 노트 여부",
+    cell: ({ row }) => {
+      if (row.getValue("is_github")) {
+        return <div className="text-green-500">예</div>;
+      }
+      return <div className="text-red-500">아니오</div>;
+    },
   },
   {
     accessorKey: "github_type",
@@ -143,12 +146,24 @@ export const columns: ColumnDef<Note>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          GitHub Type
+          GitHub 타입
           <ArrowUpDown />
         </Button>
       )
     },
-    cell: ({ row }) => <div className="">{row.getValue("github_type")}</div>,
+    cell: ({ row }) => {
+      if (!row.getValue("github_type")) {
+        return <div className="lowercase">-</div>
+      } else if (row.getValue("github_type") === "Commit") {
+        return <div className="text-blue-500">Commit</div>;
+      } else if (row.getValue("github_type") === "Issue") {
+        return <div className="text-yellow-500">Issue</div>;
+      } else if (row.getValue("github_type") === "PR") {
+        return <div className="text-green-500">PR</div>;
+      } else {
+        return <div className="text-red-500">{row.getValue("github_type")}</div>
+      }
+    },
   },
   {
     accessorKey: "github_link",
@@ -158,7 +173,7 @@ export const columns: ColumnDef<Note>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          GitHub Link
+          GitHub 링크
           <ArrowUpDown />
         </Button>
       )
@@ -173,7 +188,7 @@ export const columns: ColumnDef<Note>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          PDF Hash
+          PDF 해시값
           <ArrowUpDown />
         </Button>
       )
@@ -188,12 +203,13 @@ export const columns: ColumnDef<Note>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Created At
+          생성일
           <ArrowUpDown />
         </Button>
       )
     },
-    cell: ({ row }) => {      
+    cell: ({ row }) => {
+      if (!row.getValue("created_at")) return <div className="lowercase">-</div>;
       const createdAt = new Date(row.getValue("created_at"));
       const localDateString = createdAt.toLocaleString(); // 로컬 시간으로 변환
       return <div className="lowercase">{localDateString}</div>;
@@ -207,7 +223,7 @@ export const columns: ColumnDef<Note>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Updated At
+          수정일
           <ArrowUpDown />
         </Button>
       )
@@ -235,16 +251,16 @@ export const columns: ColumnDef<Note>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem><Link href={`/admin/user/${user.id}`}>자세히</Link></DropdownMenuItem>
-            <DropdownMenuSeparator />
+            {/* <DropdownMenuItem><Link href={``}>자세히</Link></DropdownMenuItem>
+            <DropdownMenuSeparator /> */}
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(user.id)}
             >
               ID 복사
             </DropdownMenuItem>
-            <DropdownMenuItem>노트 이력</DropdownMenuItem>
+            {/* <DropdownMenuItem>노트 이력</DropdownMenuItem>
             <DropdownMenuItem>이메일 발송</DropdownMenuItem>
-            <DropdownMenuItem>관리자 권한 토글</DropdownMenuItem>
+            <DropdownMenuItem>관리자 권한 토글</DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
       )
@@ -274,14 +290,11 @@ export function AdminNoteHistoryTable({
 
   React.useEffect(() => {
     let filtered = data;
-    if (team_id) {
-      filtered = filtered.filter((note) => note.team_id === team_id);
-    }
     if (user_id) {
       filtered = filtered.filter((note) => note.user_id === user_id);
     }
     setFilteredData(filtered);
-  }, [team_id, user_id, data]);
+  }, [user_id, data]);
   
 
   const table = useReactTable({

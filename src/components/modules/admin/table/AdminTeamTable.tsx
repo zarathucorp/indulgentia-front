@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import { useSearchParams } from "next/navigation";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -45,7 +46,7 @@ export type Team = {
   updated_at: Date
   name: string
   team_leader_id: UUID
-  // last_note_created_at: Date
+  last_note_created_at: Date
 }
 
 export const columns: ColumnDef<Team>[] = [
@@ -153,10 +154,10 @@ export const columns: ColumnDef<Team>[] = [
       )
     },
     cell: ({ row }) => {
-      // const createdAt = new Date(row.getValue("last_activity_at"));
-      // const localDateString = createdAt.toLocaleString(); // 로컬 시간으로 변환
-      // return <div className="lowercase">{localDateString}</div>;
-      return <div className="lowercase"><i>미구현</i></div>;
+      if (!row.getValue("last_note_created_at")) return <div className="lowercase">-</div>;
+      const createdAt = new Date(row.getValue("last_note_created_at"));
+      const localDateString = createdAt.toLocaleString(); // 로컬 시간으로 변환
+      return <div className="lowercase">{localDateString}</div>;
     },
   },
   {
@@ -184,6 +185,8 @@ export const columns: ColumnDef<Team>[] = [
             >
               ID 복사
             </DropdownMenuItem>
+            <DropdownMenuItem>1년 구독 추가</DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuItem>노트 이력</DropdownMenuItem>
             <DropdownMenuItem>영수증 발급</DropdownMenuItem>
             <DropdownMenuItem>이메일 발송</DropdownMenuItem>
@@ -208,10 +211,22 @@ export function AdminTeamTable({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
+
+  const [filteredData, setFilteredData] = React.useState(data);
+  const params = useSearchParams();
+  const { id } = params.get("id") ? { id: params.get("id") } : { id: null };
+
+  React.useEffect(() => {
+    let filtered = data;
+    if (id) {
+      filtered = filtered.filter((user) => user.id === id);
+    }
+    setFilteredData(filtered);
+  }, [id, data]);
   
 
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

@@ -12,11 +12,11 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { AdminNoteHistoryTable, Note } from "@/components/modules/admin/table/AdminNoteHistoryTable";
+import { AdminPaymentHistoryTable, Order } from "@/components/modules/admin/table/AdminPaymentHistoryTable";
 
 type FetchResultType<T> = {
   status: "succeed" | "error";
-  notes: T;
+  orders: T;
 };
 
 const fetcher = async (url: string) => {
@@ -29,33 +29,31 @@ const fetcher = async (url: string) => {
 	return result.data;
 }
 
-export default function AdminNoteHistoryPage() {
+export default function AdminPaymentHistoryPage() {
 	const params = useParams<{ team_id: string, user_id: string }>();
-  const fetchUrl = params.team_id 
-    ? `${process.env.NEXT_PUBLIC_API_URL}/admin/note/list?team_id=${params.team_id}`
-    : `${process.env.NEXT_PUBLIC_API_URL}/admin/note/list`;
+  const fetchUrl = `${process.env.NEXT_PUBLIC_API_URL}/admin/payment/order/list`;
 
   const {
     data,
     isLoading,
     error,
     mutate,
-  } = useSWR<FetchResultType<Note[]>>(fetchUrl, fetcher, {
+  } = useSWR<FetchResultType<Order[]>>(fetchUrl, fetcher, {
     revalidateOnMount: true,
     revalidateOnReconnect: true,
   });
 
   return (
-    <ContentLayout title="Admin Note History">
-      <AdminNoteHistoryBreadcrumb team_id={params.team_id} user_id={params.user_id}/>
+    <ContentLayout title="Admin Payment History">
+      <AdminPaymentHistoryBreadcrumb team_id={params.team_id} user_id={params.user_id}/>
       {error ? (
         <p>에러가 발생했습니다.</p>
       ) : isLoading ? (
         <p>데이터를 로딩하는 중입니다.</p>
       ) : (
       data && (
-        <AdminNoteHistoryTable
-          data={data.notes}
+        <AdminPaymentHistoryTable
+          data={data.orders}
           mutate={mutate}
         />
         )
@@ -64,7 +62,7 @@ export default function AdminNoteHistoryPage() {
   );
 }
 
-function AdminNoteHistoryBreadcrumb({ team_id, user_id }: { team_id: string | null; user_id: string | null; }) {
+function AdminPaymentHistoryBreadcrumb({ team_id, user_id }: { team_id: string | null; user_id: string | null; }) {
   return (
     <Breadcrumb>
       <BreadcrumbList>
@@ -76,14 +74,14 @@ function AdminNoteHistoryBreadcrumb({ team_id, user_id }: { team_id: string | nu
         <BreadcrumbSeparator />
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Link href="/admin/note-history">노트 이력</Link>
+            <Link href="/admin/payment-history">결제 이력</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         {team_id && (
           <>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href={`/admin/note-history?team_id=${team_id}`}>?team_id={team_id}</Link>
+                <Link href={`/admin/payment-history?team_id=${team_id}`}>?team_id={team_id}</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
           </>
@@ -92,7 +90,7 @@ function AdminNoteHistoryBreadcrumb({ team_id, user_id }: { team_id: string | nu
             <>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href={`/admin/note-history?user_id=${user_id}`}>?user_id={user_id}</Link>
+                  <Link href={`/admin/payment-history?user_id=${user_id}`}>?user_id={user_id}</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
             </>

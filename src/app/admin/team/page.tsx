@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import useSWR from "swr";
 import axios from "axios";
 
@@ -39,9 +40,12 @@ export default function AdminTeamPage() {
     revalidateOnReconnect: true,
   });
 
+  const params = useSearchParams();
+  const { id } = params.get("id") ? { id: params.get("id") } : { id: null };
+
   return (
     <ContentLayout title="Admin Team">
-      <AdminTeamBreadcrumb />
+      <AdminTeamBreadcrumb id={id} />
       {error ? (
         <p>에러가 발생했습니다.</p>
       ) : isLoading ? (
@@ -58,7 +62,7 @@ export default function AdminTeamPage() {
   );
 }
 
-function AdminTeamBreadcrumb() {
+function AdminTeamBreadcrumb({ id }: { id: string | null; }) {
   return (
     <Breadcrumb>
       <BreadcrumbList>
@@ -73,6 +77,15 @@ function AdminTeamBreadcrumb() {
             <Link href="/admin/team">팀</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
+        {id && (
+          <>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href={`/admin/team?id=${id}`}>?id={id}</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          </>
+          )}
       </BreadcrumbList>
     </Breadcrumb>
   );

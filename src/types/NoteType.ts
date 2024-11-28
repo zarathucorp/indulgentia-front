@@ -20,6 +20,7 @@ interface BaseNoteTypWithUserSetting extends BaseNoteType {
 		is_deleted: boolean,
 		github_token: string,
 		has_signature: boolean,
+		last_note_created_at: Date,
 	}
 }
 

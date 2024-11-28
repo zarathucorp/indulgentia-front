@@ -38,24 +38,55 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { UUID } from "crypto";
+import { DataTableFacetedFilter } from "@/components/modules/admin/table/FacetedFilter";
+import ColumnFilterSwitch from "@/components/modules/admin/table/ColumnFilterSwitch";
 
 
-export type User = {
+export type Order = {
   id: UUID
   team_id: UUID
-  has_signature: boolean
-  is_admin: boolean
-  first_name: string
-  last_name: string
-  email: string
-  github_token: string
+  order_no: string
+  status: string // READY, IN_PROGRESS, WAITING_FOR_DEPOSIT, DONE, CANCELED, PARTIAL_CANCELED, ABORTED, EXPIRES
+  payment_key: string
+  purchase_datetime: Date
+  is_canceled: boolean
+  total_amount: number
+  purchase_user_id: UUID
+  payment_method: string
+  currency: string
+  notes: string
   created_at: Date
-  last_sign_in_at: Date
-  last_note_created_at: Date
-  // avatar_url: string
+  updated_at: Date
 }
 
-export const columns: ColumnDef<User>[] = [
+const statusOptions = [
+  { label: "READY", value: "READY" },
+  { label: "IN_PROGRESS", value: "IN_PROGRESS" },
+  { label: "WAITING_FOR_DEPOSIT", value: "WAITING_FOR_DEPOSIT" },
+  { label: "DONE", value: "DONE" },
+  { label: "CANCELED", value: "CANCELED" },
+  { label: "PARTIAL_CANCELED", value: "PARTIAL_CANCELED" },
+  { label: "ABORTED", value: "ABORTED" },
+  { label: "EXPIRES", value: "EXPIRES" },
+]
+
+const isCanceledOptions = [
+  { label: "취소", value: true },
+  { label: "-", value: false },
+]
+
+const currencyOptions = [
+  { label: "USD", value: "USD" },
+  { label: "KRW", value: "KRW" },
+  { label: "-", value: "" },
+]
+
+const paymentMethodOptions = [
+  { label: "간편결제", value: "간편결제" },
+  { label: "-", value: "" },
+]
+
+export const columns: ColumnDef<Order>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -86,70 +117,85 @@ export const columns: ColumnDef<User>[] = [
     ),
   },
   {
-    accessorKey: "avatar_url",
-    header: "프로필",
-    cell: ({ row }) => (
-      <div className="lowercase"><i>미구현</i></div>
-    ),
+    accessorKey: "order_no",
+    header: "주문 번호",
+    cell: ({ row }) => <div className="">{row.getValue("order_no")}</div>,
   },
   {
-    accessorKey: "last_name",
+    accessorKey: "status",
+    header: "상태",
+    cell: ({ row }) => <div className="">{row.getValue("status")}</div>,
+  },
+  {
+    accessorKey: "payment_key",
+    header: "결제 키",
+    cell: ({ row }) => <div className="">{row.getValue("payment_key")}</div>,
+  },
+  {
+    accessorKey: "purchase_datetime",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          성
+          결제일
           <ArrowUpDown />
         </Button>
       )
     },
-    cell: ({ row }) => <div className="">{row.getValue("last_name")}</div>,
+    cell: ({ row }) => {
+      const purchaseDatetime = new Date(row.getValue("purchase_datetime"));
+      const localDateString = purchaseDatetime.toLocaleString();
+      return <div className="">{localDateString}</div>;
+    },
   },
   {
-    accessorKey: "first_name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          이름
-          <ArrowUpDown />
-        </Button>
-      )
+    accessorKey: "is_canceled",
+    header: "취소 여부",
+    cell: ({ row }) => {
+      if (row.getValue("is_canceled")) {
+        return <div className="text-red-500">취소</div>;
+      }
+      return <div className="">-</div>;
     },
-    cell: ({ row }) => <div className="">{row.getValue("first_name")}</div>,
   },
   {
-    accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          계정 이메일
-          <ArrowUpDown />
-        </Button>
-      )
+    accessorKey: "total_amount",
+    header: "총 금액",
+    cell: ({ row }) => {
+      const totalAmount: number = row.getValue("total_amount");
+      return <div className="">{totalAmount.toLocaleString()}</div>;
     },
-    cell: ({ row }) => <div className="">{row.getValue("email")}</div>,
+  },
+  {
+    accessorKey: "currency",
+    header: "통화",
+    cell: ({ row }) => <div className="">{row.getValue("currency")}</div>,
   },
   {
     accessorKey: "team_id",
-    header: "팀 id",
-    cell: ({ row }) => {
-      if (row.getValue("team_id") === null) {
-        return <div className="lowercase">-</div>;
-      }
-      return (
-        <Link href={`/admin/user?team_id=${row.getValue("team_id")}`}>
-          {(row.getValue("team_id") as string).slice(0, 4)}...
-        </Link>
-      );
-    },
+    header: "팀 ID",
+    cell: ({ row }) => (
+      <Link href={`/admin/team?id=${row.getValue("team_id")}`}>{(row.getValue("team_id") as string).slice(0, 4)}...</Link>
+    ),
+  },
+  {
+    accessorKey: "purchase_user_id",
+    header: "구매자 ID",
+    cell: ({ row }) => (
+      <Link href={`/admin/user?id=${row.getValue("purchase_user_id")}`}>{(row.getValue("purchase_user_id") as string).slice(0, 4)}...</Link>
+    ),
+  },
+  {
+    accessorKey: "payment_method",
+    header: "결제 방법",
+    cell: ({ row }) => <div className="">{row.getValue("payment_method")}</div>,
+  },
+  {
+    accessorKey: "notes",
+    header: "비고",
+    cell: ({ row }) => <div className="">{row.getValue("notes")}</div>,
   },
   {
     accessorKey: "created_at",
@@ -172,63 +218,23 @@ export const columns: ColumnDef<User>[] = [
     },
   },
   {
-    accessorKey: "last_sign_in_at",
+    accessorKey: "updated_at",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          마지막 접속일
+          수정일
           <ArrowUpDown />
         </Button>
       )
     },
     cell: ({ row }) => {
-      if (!row.getValue("last_sign_in_at")) return <div className="lowercase">-</div>;
-      const createdAt = new Date(row.getValue("last_sign_in_at"));
+      if (!row.getValue("updated_at")) return <div className="lowercase">-</div>;
+      const createdAt = new Date(row.getValue("updated_at"));
       const localDateString = createdAt.toLocaleString(); // 로컬 시간으로 변환
       return <div className="lowercase">{localDateString}</div>;
-    },
-  },
-  {
-    accessorKey: "last_note_created_at",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          마지막 노트 생성일
-          <ArrowUpDown />
-        </Button>
-      )
-    },
-    cell: ({ row }) => {
-      if (!row.getValue("last_note_created_at")) return <div className="lowercase">-</div>;
-      const createdAt = new Date(row.getValue("last_note_created_at"));
-      const localDateString = createdAt.toLocaleString(); // 로컬 시간으로 변환
-      return <div className="lowercase">{localDateString}</div>;
-    },
-  },
-  {
-    accessorKey: "has_signature",
-    header: "서명 여부",
-    cell: ({ row }) => {
-      if (row.getValue("has_signature")) {
-        return <div className="text-green-500">예</div>;
-      }
-      return <div className="text-red-500">아니오</div>;
-    },
-  },
-  {
-    accessorKey: "is_admin",
-    header: "관리자 여부",
-    cell: ({ row }) => {
-      if (row.getValue("is_admin")) {
-        return <div className="text-green-500">예</div>;
-      }
-      return <div className="text-red-500">아니오</div>;
     },
   },
   {
@@ -247,19 +253,16 @@ export const columns: ColumnDef<User>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem><Link href={`/admin/user/${user.id}`}>자세히</Link></DropdownMenuItem>
-            <DropdownMenuSeparator />
+            {/* <DropdownMenuItem><Link href={``}>자세히</Link></DropdownMenuItem>
+            <DropdownMenuSeparator /> */}
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(user.id)}
             >
               ID 복사
             </DropdownMenuItem>
-            <DropdownMenuItem>팀 생성</DropdownMenuItem>
-            <DropdownMenuItem>관리자 권한 토글</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>노트 이력</DropdownMenuItem>
+            {/* <DropdownMenuItem>노트 이력</DropdownMenuItem>
             <DropdownMenuItem>이메일 발송</DropdownMenuItem>
-            <DropdownMenuItem>비밀번호 변경 메일</DropdownMenuItem>
+            <DropdownMenuItem>관리자 권한 토글</DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
       )
@@ -267,11 +270,11 @@ export const columns: ColumnDef<User>[] = [
   },
 ]
 
-export function AdminUserTable({
+export function AdminPaymentHistoryTable({
   data,
   mutate,
 }: {
-  data: User[];
+  data: Order[];
   mutate: () => void;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -283,22 +286,22 @@ export function AdminUserTable({
   const [rowSelection, setRowSelection] = React.useState({})
 
   const params = useSearchParams();
-  const { team_id } = params.get("team_id") ? { team_id: params.get("team_id") } : { team_id: null };
-  const { id } = params.get("id") ? { id: params.get("id") } : { id: null };
+  const { team_id, user_id } = params.get("team_id") || params.get("user_id") ? { team_id: params.get("team_id"), user_id: params.get("user_id") } : { team_id: null, user_id: null };
 
   const [filteredData, setFilteredData] = React.useState(data);
-  const [searchColumn, setSearchColumn] = React.useState("email");
+  const [searchColumn, setSearchColumn] = React.useState("order_no");
 
   React.useEffect(() => {
     let filtered = data;
     if (team_id) {
-      filtered = filtered.filter((user) => user.team_id === team_id);
+      filtered = filtered.filter((order) => order.team_id === team_id);
     }
-    if (id) {
-      filtered = filtered.filter((user) => user.id === id);
+    if (user_id) {
+      filtered = filtered.filter((order) => order.purchase_user_id === user_id);
     }
     setFilteredData(filtered);
-  }, [team_id, id, data]);
+  }, [team_id, user_id, data]);
+  
 
   const table = useReactTable({
     data: filteredData,
@@ -318,10 +321,7 @@ export function AdminUserTable({
       rowSelection,
     },
     initialState: {
-      columnFilters: [
-        ...(team_id ? [{ id: "team_id", value: team_id }] : []),
-        ...(id ? [{ id: "id", value: id }] : []),
-      ],
+      columnFilters: team_id ? [{ id: "team_id", value: team_id }] : [],
     },
   })
 
@@ -336,22 +336,28 @@ export function AdminUserTable({
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuCheckboxItem
-              checked={searchColumn === "email"}
-              onCheckedChange={() => setSearchColumn("email")}
+              checked={searchColumn === "order_no"}
+              onCheckedChange={() => setSearchColumn("order_no")}
             >
-              이메일
+              주문 번호
             </DropdownMenuCheckboxItem>
             <DropdownMenuCheckboxItem
-              checked={searchColumn === "last_name"}
-              onCheckedChange={() => setSearchColumn("last_name")}
+              checked={searchColumn === "status"}
+              onCheckedChange={() => setSearchColumn("status")}
             >
-              성
+              상태
             </DropdownMenuCheckboxItem>
             <DropdownMenuCheckboxItem
-              checked={searchColumn === "first_name"}
-              onCheckedChange={() => setSearchColumn("first_name")}
+              checked={searchColumn === "payment_key"}
+              onCheckedChange={() => setSearchColumn("payment_key")}
             >
-              이름
+              결제 키
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem
+              checked={searchColumn === "notes"}
+              onCheckedChange={() => setSearchColumn("notes")}
+            >
+              비고
             </DropdownMenuCheckboxItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -363,6 +369,42 @@ export function AdminUserTable({
           }
           className="max-w-sm ml-2"
         />
+        {table.getColumn("status") && (
+          <DataTableFacetedFilter
+            column={table.getColumn("status")}
+            title="상태"
+            options={statusOptions.map((option) => ({
+              label: option.label,
+              value: option.value,
+            }))}
+          />
+        )}
+        {table.getColumn("currency") && (
+          <DataTableFacetedFilter
+            column={table.getColumn("currency")}
+            title="통화"
+            options={currencyOptions.map((option) => ({
+              label: option.label,
+              value: option.value,
+            }))}
+          />
+        )}
+        {table.getColumn("payment_method") && (
+          <DataTableFacetedFilter
+            column={table.getColumn("payment_method")}
+            title="결제 방법"
+            options={paymentMethodOptions.map((option) => ({
+              label: option.label,
+              value: option.value,
+            }))}
+          />
+        )}
+        {table.getColumn("is_canceled") && (
+          <ColumnFilterSwitch
+            column={table.getColumn("is_canceled")}
+            title="취소 여부"
+          />
+        )}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">

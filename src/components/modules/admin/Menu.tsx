@@ -13,6 +13,7 @@ import {
   FileClock,
   LucideIcon,
   AreaChart,
+  RefreshCcw,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
@@ -102,6 +103,13 @@ export function getMenuList(pathname: string): Group[] {
       groupLabel: "결제",
       menus: [
         {
+          href: "/admin/subscription-history",
+          label: "구독 이력",
+          active: pathname.includes("/admin"),
+          icon: RefreshCcw,
+          submenus: [],
+        },
+        {
           href: "/admin/payment-history",
           label: "결제 이력",
           active: pathname.includes("/admin"),
@@ -109,8 +117,8 @@ export function getMenuList(pathname: string): Group[] {
           submenus: [],
         },
         {
-          href: "/admin/receipt",
-          label: "영수증 발급",
+          href: "/admin/tosspayments",
+          label: "토스페이먼츠",
           active: pathname.includes("/admin"),
           icon: ReceiptText,
           submenus: [],

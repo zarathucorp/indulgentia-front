@@ -38,24 +38,27 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { UUID } from "crypto";
+import { DataTableFacetedFilter } from "@/components/modules/admin/table/FacetedFilter";
+import ColumnFilterSwitch from "@/components/modules/admin/table/ColumnFilterSwitch";
 
+const isActionOptions = [
+  { label: "활성", value: true },
+  { label: "비활성", value: false },
+]
 
-export type User = {
+export type Subscription = {
   id: UUID
   team_id: UUID
-  has_signature: boolean
-  is_admin: boolean
-  first_name: string
-  last_name: string
-  email: string
-  github_token: string
+  started_at: Date
+  expired_at: Date
+  max_members: number
+  is_active: boolean
+  order_no: string
   created_at: Date
-  last_sign_in_at: Date
-  last_note_created_at: Date
-  // avatar_url: string
+  updated_at: Date
 }
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<Subscription>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -86,69 +89,83 @@ export const columns: ColumnDef<User>[] = [
     ),
   },
   {
-    accessorKey: "avatar_url",
-    header: "프로필",
-    cell: ({ row }) => (
-      <div className="lowercase"><i>미구현</i></div>
-    ),
-  },
-  {
-    accessorKey: "last_name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          성
-          <ArrowUpDown />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div className="">{row.getValue("last_name")}</div>,
-  },
-  {
-    accessorKey: "first_name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          이름
-          <ArrowUpDown />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div className="">{row.getValue("first_name")}</div>,
-  },
-  {
-    accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          계정 이메일
-          <ArrowUpDown />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div className="">{row.getValue("email")}</div>,
-  },
-  {
     accessorKey: "team_id",
-    header: "팀 id",
+    header: "팀 ID",
     cell: ({ row }) => {
-      if (row.getValue("team_id") === null) {
-        return <div className="lowercase">-</div>;
-      }
+      if (!row.getValue("team_id")) return <div className="lowercase">-</div>;
+      return <Link href={`/admin/team?id=${row.getValue("team_id")}`}>{(row.getValue("team_id") as string).slice(0, 4)}...</Link>
+    },
+  },
+  {
+    accessorKey: "started_at",
+    header: ({ column }) => {
       return (
-        <Link href={`/admin/user?team_id=${row.getValue("team_id")}`}>
-          {(row.getValue("team_id") as string).slice(0, 4)}...
-        </Link>
-      );
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          시작일
+          <ArrowUpDown />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      if (!row.getValue("started_at")) return <div className="lowercase">-</div>;
+      const createdAt = new Date(row.getValue("started_at"));
+      const localDateString = createdAt.toLocaleString(); // 로컬 시간으로 변환
+      return <div className="lowercase">{localDateString}</div>;
+    },
+  },
+  {
+    accessorKey: "expired_at",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          만료일
+          <ArrowUpDown />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      if (!row.getValue("created_at")) return <div className="lowercase">-</div>;
+      const createdAt = new Date(row.getValue("expired_at"));
+      const localDateString = createdAt.toLocaleString(); // 로컬 시간으로 변환
+      return <div className="lowercase">{localDateString}</div>;
+    },
+  },
+  {
+    accessorKey: "max_members",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          최대 인원
+          <ArrowUpDown />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div className="">{row.getValue("max_members")}</div>,
+  },
+  {
+    accessorKey: "is_active",
+    header: "활성 여부",
+    cell: ({ row }) => {
+      if (row.getValue("is_active")) {
+        return <div className="text-green-500">활성</div>;
+      }
+      return <div className="text-red-500">비활성</div>;
+    },
+  },
+  {
+    accessorKey: "order_no",
+    header: "주문 번호",
+    cell: ({ row }) => {
+      return <div className="">{row.getValue("order_no")}</div>;
     },
   },
   {
@@ -172,63 +189,23 @@ export const columns: ColumnDef<User>[] = [
     },
   },
   {
-    accessorKey: "last_sign_in_at",
+    accessorKey: "updated_at",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          마지막 접속일
+          수정일
           <ArrowUpDown />
         </Button>
       )
     },
     cell: ({ row }) => {
-      if (!row.getValue("last_sign_in_at")) return <div className="lowercase">-</div>;
-      const createdAt = new Date(row.getValue("last_sign_in_at"));
+      if (!row.getValue("updated_at")) return <div className="lowercase">-</div>;
+      const createdAt = new Date(row.getValue("updated_at"));
       const localDateString = createdAt.toLocaleString(); // 로컬 시간으로 변환
       return <div className="lowercase">{localDateString}</div>;
-    },
-  },
-  {
-    accessorKey: "last_note_created_at",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          마지막 노트 생성일
-          <ArrowUpDown />
-        </Button>
-      )
-    },
-    cell: ({ row }) => {
-      if (!row.getValue("last_note_created_at")) return <div className="lowercase">-</div>;
-      const createdAt = new Date(row.getValue("last_note_created_at"));
-      const localDateString = createdAt.toLocaleString(); // 로컬 시간으로 변환
-      return <div className="lowercase">{localDateString}</div>;
-    },
-  },
-  {
-    accessorKey: "has_signature",
-    header: "서명 여부",
-    cell: ({ row }) => {
-      if (row.getValue("has_signature")) {
-        return <div className="text-green-500">예</div>;
-      }
-      return <div className="text-red-500">아니오</div>;
-    },
-  },
-  {
-    accessorKey: "is_admin",
-    header: "관리자 여부",
-    cell: ({ row }) => {
-      if (row.getValue("is_admin")) {
-        return <div className="text-green-500">예</div>;
-      }
-      return <div className="text-red-500">아니오</div>;
     },
   },
   {
@@ -247,19 +224,16 @@ export const columns: ColumnDef<User>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem><Link href={`/admin/user/${user.id}`}>자세히</Link></DropdownMenuItem>
-            <DropdownMenuSeparator />
+            {/* <DropdownMenuItem><Link href={``}>자세히</Link></DropdownMenuItem>
+            <DropdownMenuSeparator /> */}
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(user.id)}
             >
               ID 복사
             </DropdownMenuItem>
-            <DropdownMenuItem>팀 생성</DropdownMenuItem>
-            <DropdownMenuItem>관리자 권한 토글</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>노트 이력</DropdownMenuItem>
+            {/* <DropdownMenuItem>노트 이력</DropdownMenuItem>
             <DropdownMenuItem>이메일 발송</DropdownMenuItem>
-            <DropdownMenuItem>비밀번호 변경 메일</DropdownMenuItem>
+            <DropdownMenuItem>관리자 권한 토글</DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
       )
@@ -267,11 +241,11 @@ export const columns: ColumnDef<User>[] = [
   },
 ]
 
-export function AdminUserTable({
+export function AdminSubscriptionHistoryTable({
   data,
   mutate,
 }: {
-  data: User[];
+  data: Subscription[];
   mutate: () => void;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -284,21 +258,17 @@ export function AdminUserTable({
 
   const params = useSearchParams();
   const { team_id } = params.get("team_id") ? { team_id: params.get("team_id") } : { team_id: null };
-  const { id } = params.get("id") ? { id: params.get("id") } : { id: null };
 
   const [filteredData, setFilteredData] = React.useState(data);
-  const [searchColumn, setSearchColumn] = React.useState("email");
 
   React.useEffect(() => {
     let filtered = data;
     if (team_id) {
-      filtered = filtered.filter((user) => user.team_id === team_id);
-    }
-    if (id) {
-      filtered = filtered.filter((user) => user.id === id);
+      filtered = filtered.filter((subscription) => subscription.team_id === team_id);
     }
     setFilteredData(filtered);
-  }, [team_id, id, data]);
+  }, [team_id, data]);
+  
 
   const table = useReactTable({
     data: filteredData,
@@ -318,51 +288,27 @@ export function AdminUserTable({
       rowSelection,
     },
     initialState: {
-      columnFilters: [
-        ...(team_id ? [{ id: "team_id", value: team_id }] : []),
-        ...(id ? [{ id: "id", value: id }] : []),
-      ],
+      columnFilters: team_id ? [{ id: "team_id", value: team_id }] : [],
     },
   })
 
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-0">
-              검색 기준 <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuCheckboxItem
-              checked={searchColumn === "email"}
-              onCheckedChange={() => setSearchColumn("email")}
-            >
-              이메일
-            </DropdownMenuCheckboxItem>
-            <DropdownMenuCheckboxItem
-              checked={searchColumn === "last_name"}
-              onCheckedChange={() => setSearchColumn("last_name")}
-            >
-              성
-            </DropdownMenuCheckboxItem>
-            <DropdownMenuCheckboxItem
-              checked={searchColumn === "first_name"}
-              onCheckedChange={() => setSearchColumn("first_name")}
-            >
-              이름
-            </DropdownMenuCheckboxItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
         <Input
-          placeholder="검색.."
-          value={(table.getColumn(searchColumn)?.getFilterValue() as string) ?? ""}
+          placeholder="주문 번호로 검색.."
+          value={(table.getColumn("order_no")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn(searchColumn)?.setFilterValue(event.target.value)
+            table.getColumn("order_no")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm ml-2"
+          className="max-w-sm"
         />
+        {table.getColumn("is_active") && (
+          <ColumnFilterSwitch
+            column={table.getColumn("is_active")}
+            title="활성 여부"
+          />
+        )}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
