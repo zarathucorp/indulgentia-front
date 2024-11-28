@@ -36,6 +36,7 @@
 		"@sentry/nextjs": "^8.34.0",
 		"@supabase/ssr": "^0.3.0",
 		"@supabase/supabase-js": "^2.43.1",
+		"@tanstack/react-table": "^8.20.5",
 		"@tosspayments/payment-widget-sdk": "^0.10.2",
 		"axios": "^1.6.8",
 		"class-variance-authority": "^0.7.0",

@@ -11,6 +11,7 @@ const AdminDropdownMenu: React.FC = () => {
     useEffect(() => {
         mutate();
         // 관리자 여부 확인
+        console.log(userInfo);
         if (userInfo?.is_admin) {
             setIsAdmin(true);
         } else {

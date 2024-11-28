@@ -8,7 +8,7 @@ import {
   BreadcrumbList,
 } from "@/components/ui/breadcrumb";
 
-export default function DashboardPage() {
+export default function AdminDashboardPage() {
   return (
     <ContentLayout title="Admin Dashboard">
       <Breadcrumb>

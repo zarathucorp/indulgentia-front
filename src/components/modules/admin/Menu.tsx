@@ -84,7 +84,7 @@ export function getMenuList(pathname: string): Group[] {
       menus: [
         {
           href: "/admin/note-history",
-          label: "노트 이력 발급",
+          label: "노트 이력",
           active: pathname.includes("/admin"),
           icon: FileClock,
           submenus: [],
@@ -121,14 +121,14 @@ export function getMenuList(pathname: string): Group[] {
       groupLabel: "알림",
       menus: [
         {
-          href: "/admin/announcement",
+          href: "/admin/site-notification",
           label: "사이트 공지",
           active: pathname.includes("/admin"),
           icon: Megaphone,
           submenus: [],
         },
         {
-          href: "/admin/email",
+          href: "/admin/email-notification",
           label: "이메일 공지",
           active: pathname.includes("/admin"),
           icon: Mail,
