@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CircleUser } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import AdminDropdownMenu from "@/components/global/Navbar/AdminDropdownMenu";
 
 export default async function UserBadge() {
 	const supabase = createClient();
@@ -35,6 +36,7 @@ export default async function UserBadge() {
 						<DropdownMenuItem className="cursor-pointer">설정</DropdownMenuItem>
 					</Link>
 					<DropdownMenuItem className="cursor-pointer">고객지원</DropdownMenuItem>
+					<AdminDropdownMenu />
 					<DropdownMenuSeparator />
 					<form action={signOut}>
 						<button type="submit">

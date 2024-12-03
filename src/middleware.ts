@@ -33,6 +33,18 @@ export default async function middleware(request: NextRequest) {
 				return NextResponse.redirect(new URL("/dashboard", request.url));
 		}
 	}
+	// auth 페이지로 접근하는 경우
+	if (request.nextUrl.pathname.startsWith("/auth")) {
+		const supabase = createClient();
+		if (request.nextUrl.pathname === "/auth/login" || request.nextUrl.pathname === "/auth/signup") {
+			const {
+				data: { user },
+			} = await supabase.auth.getUser();
+			if (user) {
+				return NextResponse.redirect(new URL("/dashboard", request.url));
+			}
+		}
+	}
 
 	// Dashboard 페이지로 접근하는 경우
 	if (request.nextUrl.pathname.startsWith("/dashboard")) {
@@ -59,6 +71,17 @@ export default async function middleware(request: NextRequest) {
 	}
 	return await updateSession(request);
 }
+
+	// Admin 페이지로 접근하는 경우
+	if (request.nextUrl.pathname.startsWith("/admin")) {
+    const token = request.cookies.get("token")?.value || '';
+    const cookies = request.headers.get('cookie') || '';
+    const userInfo = await fetchUserInfo(token, cookies);
+		console.log(userInfo);
+		if (!userInfo || !userInfo.is_admin) {
+			return NextResponse.redirect(new URL("/dashboard", request.url));
+		}
+	}
 
 export const config = {
 	matcher: [
