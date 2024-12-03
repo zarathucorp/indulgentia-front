@@ -13,7 +13,9 @@ export default function AdminSiteNotificationPage() {
   return (
     <ContentLayout title="Admin Site Notification">
       <AdminSiteNotificationBreadcrumb />
-      <h1 className="mt-5"><i>미구현</i></h1>
+      <h1 className="mt-5">
+        <i>미구현</i>
+      </h1>
     </ContentLayout>
   );
 }

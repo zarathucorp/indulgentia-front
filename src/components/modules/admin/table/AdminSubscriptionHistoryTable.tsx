@@ -1,7 +1,8 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Link from "next/link"
+import * as React from "react";
+import Link from "next/link";
+import axios, { AxiosResponse } from "axios";
 import { useSearchParams } from "next/navigation";
 import {
   ColumnDef,
@@ -14,11 +15,11 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+} from "@tanstack/react-table";
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -27,8 +28,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -36,7 +37,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import { UUID } from "crypto";
 import { DataTableFacetedFilter } from "@/components/modules/admin/table/FacetedFilter";
 import ColumnFilterSwitch from "@/components/modules/admin/table/ColumnFilterSwitch";
@@ -44,19 +45,19 @@ import ColumnFilterSwitch from "@/components/modules/admin/table/ColumnFilterSwi
 const isActionOptions = [
   { label: "활성", value: true },
   { label: "비활성", value: false },
-]
+];
 
 export type Subscription = {
-  id: UUID
-  team_id: UUID
-  started_at: Date
-  expired_at: Date
-  max_members: number
-  is_active: boolean
-  order_no: string
-  created_at: Date
-  updated_at: Date
-}
+  id: UUID;
+  team_id: UUID;
+  started_at: Date;
+  expired_at: Date;
+  max_members: number;
+  is_active: boolean;
+  order_no: string;
+  created_at: Date;
+  updated_at: Date;
+};
 
 export const columns: ColumnDef<Subscription>[] = [
   {
@@ -93,7 +94,11 @@ export const columns: ColumnDef<Subscription>[] = [
     header: "팀 ID",
     cell: ({ row }) => {
       if (!row.getValue("team_id")) return <div className="lowercase">-</div>;
-      return <Link href={`/admin/team?id=${row.getValue("team_id")}`}>{(row.getValue("team_id") as string).slice(0, 4)}...</Link>
+      return (
+        <Link href={`/admin/team?id=${row.getValue("team_id")}`}>
+          {(row.getValue("team_id") as string).slice(0, 4)}...
+        </Link>
+      );
     },
   },
   {
@@ -107,10 +112,11 @@ export const columns: ColumnDef<Subscription>[] = [
           시작일
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      if (!row.getValue("started_at")) return <div className="lowercase">-</div>;
+      if (!row.getValue("started_at"))
+        return <div className="lowercase">-</div>;
       const createdAt = new Date(row.getValue("started_at"));
       const localDateString = createdAt.toLocaleString(); // 로컬 시간으로 변환
       return <div className="lowercase">{localDateString}</div>;
@@ -127,10 +133,11 @@ export const columns: ColumnDef<Subscription>[] = [
           만료일
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      if (!row.getValue("created_at")) return <div className="lowercase">-</div>;
+      if (!row.getValue("created_at"))
+        return <div className="lowercase">-</div>;
       const createdAt = new Date(row.getValue("expired_at"));
       const localDateString = createdAt.toLocaleString(); // 로컬 시간으로 변환
       return <div className="lowercase">{localDateString}</div>;
@@ -147,7 +154,7 @@ export const columns: ColumnDef<Subscription>[] = [
           최대 인원
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => <div className="">{row.getValue("max_members")}</div>,
   },
@@ -179,10 +186,11 @@ export const columns: ColumnDef<Subscription>[] = [
           생성일
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      if (!row.getValue("created_at")) return <div className="lowercase">-</div>;
+      if (!row.getValue("created_at"))
+        return <div className="lowercase">-</div>;
       const createdAt = new Date(row.getValue("created_at"));
       const localDateString = createdAt.toLocaleString(); // 로컬 시간으로 변환
       return <div className="lowercase">{localDateString}</div>;
@@ -199,10 +207,11 @@ export const columns: ColumnDef<Subscription>[] = [
           수정일
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      if (!row.getValue("updated_at")) return <div className="lowercase">-</div>;
+      if (!row.getValue("updated_at"))
+        return <div className="lowercase">-</div>;
       const createdAt = new Date(row.getValue("updated_at"));
       const localDateString = createdAt.toLocaleString(); // 로컬 시간으로 변환
       return <div className="lowercase">{localDateString}</div>;
@@ -212,7 +221,7 @@ export const columns: ColumnDef<Subscription>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const user = row.original
+      const subscription = row.original;
 
       return (
         <DropdownMenu>
@@ -224,22 +233,72 @@ export const columns: ColumnDef<Subscription>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            {/* <DropdownMenuItem><Link href={``}>자세히</Link></DropdownMenuItem>
-            <DropdownMenuSeparator /> */}
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(user.id)}
+              onClick={() => navigator.clipboard.writeText(subscription.id)}
             >
               ID 복사
             </DropdownMenuItem>
-            {/* <DropdownMenuItem>노트 이력</DropdownMenuItem>
-            <DropdownMenuItem>이메일 발송</DropdownMenuItem>
-            <DropdownMenuItem>관리자 권한 토글</DropdownMenuItem> */}
+            <DropdownMenuItem
+              onClick={async () => {
+                try {
+                  const newExpiredAt = new Date(subscription.expired_at);
+                  newExpiredAt.setFullYear(newExpiredAt.getFullYear() + 1);
+
+                  const axiosData: AxiosResponse = await axios.put(
+                    process.env.NEXT_PUBLIC_API_URL +
+                      `/admin/payment/subscription/${subscription.id}`,
+                    {
+                      team_id: subscription.team_id,
+                      started_at: subscription.started_at,
+                      expired_at: newExpiredAt.toISOString(), // ISO 문자열로 변환
+                      max_members: subscription.max_members,
+                      is_active: subscription.is_active,
+                      order_no: subscription.order_no,
+                    }
+                  );
+                  if (axiosData.data.status === "succeed") {
+                    alert("1년 구독이 추가되었습니다.");
+                  }
+                } catch (error) {
+                  console.error(error);
+                  alert("1년 구독 추가에 실패하였습니다.");
+                }
+              }}
+            >
+              1년 추가
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={async () => {
+                try {
+                  const axiosData: AxiosResponse = await axios.put(
+                    process.env.NEXT_PUBLIC_API_URL +
+                      `/admin/payment/subscription/${subscription.id}`,
+                    {
+                      team_id: subscription.team_id,
+                      started_at: subscription.started_at,
+                      expired_at: subscription.expired_at,
+                      max_members: subscription.max_members,
+                      is_active: !subscription.is_active,
+                      order_no: subscription.order_no,
+                    }
+                  );
+                  if (axiosData.data.status === "succeed") {
+                    alert("활성 상태가 수정되었습니다.");
+                  }
+                } catch (error) {
+                  console.error(error);
+                  alert("활성 상태 수정이 실패하였습니다.");
+                }
+              }}
+            >
+              활성 토글
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-]
+];
 
 export function AdminSubscriptionHistoryTable({
   data,
@@ -248,27 +307,30 @@ export function AdminSubscriptionHistoryTable({
   data: Subscription[];
   mutate: () => void;
 }) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
-  )
+  );
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+    React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
 
   const params = useSearchParams();
-  const { team_id } = params.get("team_id") ? { team_id: params.get("team_id") } : { team_id: null };
+  const { team_id } = params.get("team_id")
+    ? { team_id: params.get("team_id") }
+    : { team_id: null };
 
   const [filteredData, setFilteredData] = React.useState(data);
 
   React.useEffect(() => {
     let filtered = data;
     if (team_id) {
-      filtered = filtered.filter((subscription) => subscription.team_id === team_id);
+      filtered = filtered.filter(
+        (subscription) => subscription.team_id === team_id
+      );
     }
     setFilteredData(filtered);
   }, [team_id, data]);
-  
 
   const table = useReactTable({
     data: filteredData,
@@ -290,14 +352,16 @@ export function AdminSubscriptionHistoryTable({
     initialState: {
       columnFilters: team_id ? [{ id: "team_id", value: team_id }] : [],
     },
-  })
+  });
 
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
           placeholder="주문 번호로 검색.."
-          value={(table.getColumn("order_no")?.getFilterValue() as string) ?? ""}
+          value={
+            (table.getColumn("order_no")?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
             table.getColumn("order_no")?.setFilterValue(event.target.value)
           }
@@ -331,7 +395,7 @@ export function AdminSubscriptionHistoryTable({
                   >
                     {column.id}
                   </DropdownMenuCheckboxItem>
-                )
+                );
               })}
           </DropdownMenuContent>
         </DropdownMenu>
@@ -351,7 +415,7 @@ export function AdminSubscriptionHistoryTable({
                             header.getContext()
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -411,5 +475,5 @@ export function AdminSubscriptionHistoryTable({
         </div>
       </div>
     </div>
-  )
+  );
 }

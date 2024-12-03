@@ -1,7 +1,8 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Link from "next/link"
+import * as React from "react";
+import Link from "next/link";
+import axios, { AxiosResponse } from "axios";
 import { useSearchParams } from "next/navigation";
 import {
   ColumnDef,
@@ -14,11 +15,11 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+} from "@tanstack/react-table";
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -27,8 +28,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -36,24 +37,23 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import { UUID } from "crypto";
 
-
 export type User = {
-  id: UUID
-  team_id: UUID
-  has_signature: boolean
-  is_admin: boolean
-  first_name: string
-  last_name: string
-  email: string
-  github_token: string
-  created_at: Date
-  last_sign_in_at: Date
-  last_note_created_at: Date
+  id: UUID;
+  team_id: UUID;
+  has_signature: boolean;
+  is_admin: boolean;
+  first_name: string;
+  last_name: string;
+  email: string;
+  github_token: string;
+  created_at: Date;
+  last_sign_in_at: Date;
+  last_note_created_at: Date;
   // avatar_url: string
-}
+};
 
 export const columns: ColumnDef<User>[] = [
   {
@@ -89,7 +89,9 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: "avatar_url",
     header: "프로필",
     cell: ({ row }) => (
-      <div className="lowercase"><i>미구현</i></div>
+      <div className="lowercase">
+        <i>미구현</i>
+      </div>
     ),
   },
   {
@@ -103,7 +105,7 @@ export const columns: ColumnDef<User>[] = [
           성
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => <div className="">{row.getValue("last_name")}</div>,
   },
@@ -118,7 +120,7 @@ export const columns: ColumnDef<User>[] = [
           이름
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => <div className="">{row.getValue("first_name")}</div>,
   },
@@ -133,7 +135,7 @@ export const columns: ColumnDef<User>[] = [
           계정 이메일
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => <div className="">{row.getValue("email")}</div>,
   },
@@ -162,10 +164,11 @@ export const columns: ColumnDef<User>[] = [
           생성일
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      if (!row.getValue("created_at")) return <div className="lowercase">-</div>;
+      if (!row.getValue("created_at"))
+        return <div className="lowercase">-</div>;
       const createdAt = new Date(row.getValue("created_at"));
       const localDateString = createdAt.toLocaleString(); // 로컬 시간으로 변환
       return <div className="lowercase">{localDateString}</div>;
@@ -182,10 +185,11 @@ export const columns: ColumnDef<User>[] = [
           마지막 접속일
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      if (!row.getValue("last_sign_in_at")) return <div className="lowercase">-</div>;
+      if (!row.getValue("last_sign_in_at"))
+        return <div className="lowercase">-</div>;
       const createdAt = new Date(row.getValue("last_sign_in_at"));
       const localDateString = createdAt.toLocaleString(); // 로컬 시간으로 변환
       return <div className="lowercase">{localDateString}</div>;
@@ -202,10 +206,11 @@ export const columns: ColumnDef<User>[] = [
           마지막 노트 생성일
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      if (!row.getValue("last_note_created_at")) return <div className="lowercase">-</div>;
+      if (!row.getValue("last_note_created_at"))
+        return <div className="lowercase">-</div>;
       const createdAt = new Date(row.getValue("last_note_created_at"));
       const localDateString = createdAt.toLocaleString(); // 로컬 시간으로 변환
       return <div className="lowercase">{localDateString}</div>;
@@ -235,7 +240,7 @@ export const columns: ColumnDef<User>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const user = row.original
+      const user = row.original;
 
       return (
         <DropdownMenu>
@@ -247,25 +252,126 @@ export const columns: ColumnDef<User>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem><Link href={`/admin/user/${user.id}`}>자세히</Link></DropdownMenuItem>
+            <Link href={`/admin/user?id=${user.id}`}>
+              <DropdownMenuItem>자세히</DropdownMenuItem>
+            </Link>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(user.id)}
             >
               ID 복사
             </DropdownMenuItem>
-            <DropdownMenuItem>팀 생성</DropdownMenuItem>
-            <DropdownMenuItem>관리자 권한 토글</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={async () => {
+                try {
+                  const axiosData: AxiosResponse = await axios.post(
+                    process.env.NEXT_PUBLIC_API_URL +
+                      `/admin/user/${user.id}/create-team`
+                  );
+                  if (axiosData.data.status === "succeed") {
+                    alert("임시 팀 생성에 성공하였습니다.");
+                  }
+                } catch (error) {
+                  console.error(error);
+                  alert("임시 팀 생성에 실패하였습니다.");
+                }
+              }}
+            >
+              임시 팀 생성
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={async () => {
+                try {
+                  const axiosData: AxiosResponse = await axios.post(
+                    process.env.NEXT_PUBLIC_API_URL +
+                      `/admin/user/reset-password`,
+                    { email: user.email }
+                  );
+                  if (axiosData.data.status === "succeed") {
+                    alert(
+                      `비밀번호를 "${user.email}"로 초기화에 성공하였습니다.`
+                    );
+                  }
+                } catch (error) {
+                  console.error(error);
+                  alert("비밀번호 초기화에 실패하였습니다.");
+                }
+              }}
+            >
+              비밀번호 초기화
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={async () => {
+                try {
+                  const axiosData: AxiosResponse = await axios.post(
+                    process.env.NEXT_PUBLIC_API_URL +
+                      `/admin/user/${user.id}/set-admin`,
+                    { email: user.email, is_admin: !user.is_admin }
+                  );
+                  if (axiosData.data.status === "succeed") {
+                    alert("관리자 권한 토글에 성공하였습니다.");
+                  }
+                } catch (error) {
+                  console.error(error);
+                  alert("관리자 권한 토글에 실패하였습니다.");
+                }
+              }}
+            >
+              관리자 권한 토글
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={async () => {
+                try {
+                  const axiosData: AxiosResponse = await axios.post(
+                    process.env.NEXT_PUBLIC_API_URL + `/admin/user/delete`,
+                    { email: user.email }
+                  );
+                  if (axiosData.data.status === "succeed") {
+                    alert("유저 삭제에 성공하였습니다.");
+                  }
+                } catch (error) {
+                  console.error(error);
+                  alert("유저 삭제에 실패하였습니다.");
+                }
+              }}
+            >
+              유저 삭제
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>노트 이력</DropdownMenuItem>
-            <DropdownMenuItem>이메일 발송</DropdownMenuItem>
-            <DropdownMenuItem>비밀번호 변경 메일</DropdownMenuItem>
+            <Link href={`/admin/note-history?user_id=${user.id}`}>
+              <DropdownMenuItem>노트 이력</DropdownMenuItem>
+            </Link>
+            <DropdownMenuItem>
+              <i>*이메일 발송</i>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <i>*회원가입 인증 메일 재발송</i>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={async () => {
+                try {
+                  const axiosData: AxiosResponse = await axios.post(
+                    process.env.NEXT_PUBLIC_API_URL +
+                      `/admin/user/send-reset-password-email`,
+                    { email: user.email }
+                  );
+                  if (axiosData.data.status === "succeed") {
+                    alert("비밀번호 변경 메일 발송에 성공하였습니다.");
+                  }
+                } catch (error) {
+                  console.error(error);
+                  alert("비밀번호 변경 메일 발송에 실패하였습니다.");
+                }
+              }}
+            >
+              비밀번호 변경 메일
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-]
+];
 
 export function AdminUserTable({
   data,
@@ -274,16 +380,18 @@ export function AdminUserTable({
   data: User[];
   mutate: () => void;
 }) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
-  )
+  );
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+    React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
 
   const params = useSearchParams();
-  const { team_id } = params.get("team_id") ? { team_id: params.get("team_id") } : { team_id: null };
+  const { team_id } = params.get("team_id")
+    ? { team_id: params.get("team_id") }
+    : { team_id: null };
   const { id } = params.get("id") ? { id: params.get("id") } : { id: null };
 
   const [filteredData, setFilteredData] = React.useState(data);
@@ -323,7 +431,7 @@ export function AdminUserTable({
         ...(id ? [{ id: "id", value: id }] : []),
       ],
     },
-  })
+  });
 
   return (
     <div className="w-full">
@@ -357,7 +465,9 @@ export function AdminUserTable({
         </DropdownMenu>
         <Input
           placeholder="검색.."
-          value={(table.getColumn(searchColumn)?.getFilterValue() as string) ?? ""}
+          value={
+            (table.getColumn(searchColumn)?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
             table.getColumn(searchColumn)?.setFilterValue(event.target.value)
           }
@@ -385,7 +495,7 @@ export function AdminUserTable({
                   >
                     {column.id}
                   </DropdownMenuCheckboxItem>
-                )
+                );
               })}
           </DropdownMenuContent>
         </DropdownMenu>
@@ -405,7 +515,7 @@ export function AdminUserTable({
                             header.getContext()
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -465,5 +575,5 @@ export function AdminUserTable({
         </div>
       </div>
     </div>
-  )
+  );
 }

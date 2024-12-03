@@ -8,15 +8,18 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button"
-
+import { Button } from "@/components/ui/button";
 
 export default function AdminTosspaymentsPage() {
   return (
     <ContentLayout title="Admin Tosspayments">
       <AdminTosspaymentsBreadcrumb />
       <Button variant={"link"} className="mt-4">
-        <Link href="https://app.tosspayments.com/" target="_blank" rel="noopener noreferrer">
+        <Link
+          href="https://app.tosspayments.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           토스 상점관리자 바로가기
         </Link>
       </Button>

@@ -13,7 +13,9 @@ export default function AdminEmailNotificationPage() {
   return (
     <ContentLayout title="Admin Email Notification">
       <AdminEmailNotificationBreadcrumb />
-      <h1 className="mt-5"><i>미구현</i></h1>
+      <h1 className="mt-5">
+        <i>미구현</i>
+      </h1>
     </ContentLayout>
   );
 }

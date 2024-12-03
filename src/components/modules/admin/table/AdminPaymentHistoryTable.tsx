@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Link from "next/link"
+import * as React from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
   ColumnDef,
@@ -14,11 +14,11 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+} from "@tanstack/react-table";
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -27,8 +27,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -36,28 +36,27 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import { UUID } from "crypto";
 import { DataTableFacetedFilter } from "@/components/modules/admin/table/FacetedFilter";
 import ColumnFilterSwitch from "@/components/modules/admin/table/ColumnFilterSwitch";
 
-
 export type Order = {
-  id: UUID
-  team_id: UUID
-  order_no: string
-  status: string // READY, IN_PROGRESS, WAITING_FOR_DEPOSIT, DONE, CANCELED, PARTIAL_CANCELED, ABORTED, EXPIRES
-  payment_key: string
-  purchase_datetime: Date
-  is_canceled: boolean
-  total_amount: number
-  purchase_user_id: UUID
-  payment_method: string
-  currency: string
-  notes: string
-  created_at: Date
-  updated_at: Date
-}
+  id: UUID;
+  team_id: UUID;
+  order_no: string;
+  status: string; // READY, IN_PROGRESS, WAITING_FOR_DEPOSIT, DONE, CANCELED, PARTIAL_CANCELED, ABORTED, EXPIRES
+  payment_key: string;
+  purchase_datetime: Date;
+  is_canceled: boolean;
+  total_amount: number;
+  purchase_user_id: UUID;
+  payment_method: string;
+  currency: string;
+  notes: string;
+  created_at: Date;
+  updated_at: Date;
+};
 
 const statusOptions = [
   { label: "READY", value: "READY" },
@@ -68,23 +67,23 @@ const statusOptions = [
   { label: "PARTIAL_CANCELED", value: "PARTIAL_CANCELED" },
   { label: "ABORTED", value: "ABORTED" },
   { label: "EXPIRES", value: "EXPIRES" },
-]
+];
 
 const isCanceledOptions = [
   { label: "취소", value: true },
   { label: "-", value: false },
-]
+];
 
 const currencyOptions = [
   { label: "USD", value: "USD" },
   { label: "KRW", value: "KRW" },
   { label: "-", value: "" },
-]
+];
 
 const paymentMethodOptions = [
   { label: "간편결제", value: "간편결제" },
   { label: "-", value: "" },
-]
+];
 
 export const columns: ColumnDef<Order>[] = [
   {
@@ -142,9 +141,11 @@ export const columns: ColumnDef<Order>[] = [
           결제일
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
+      if (!row.getValue("purchase_datetime"))
+        return <div className="lowercase">-</div>;
       const purchaseDatetime = new Date(row.getValue("purchase_datetime"));
       const localDateString = purchaseDatetime.toLocaleString();
       return <div className="">{localDateString}</div>;
@@ -177,14 +178,18 @@ export const columns: ColumnDef<Order>[] = [
     accessorKey: "team_id",
     header: "팀 ID",
     cell: ({ row }) => (
-      <Link href={`/admin/team?id=${row.getValue("team_id")}`}>{(row.getValue("team_id") as string).slice(0, 4)}...</Link>
+      <Link href={`/admin/team?id=${row.getValue("team_id")}`}>
+        {(row.getValue("team_id") as string).slice(0, 4)}...
+      </Link>
     ),
   },
   {
     accessorKey: "purchase_user_id",
     header: "구매자 ID",
     cell: ({ row }) => (
-      <Link href={`/admin/user?id=${row.getValue("purchase_user_id")}`}>{(row.getValue("purchase_user_id") as string).slice(0, 4)}...</Link>
+      <Link href={`/admin/user?id=${row.getValue("purchase_user_id")}`}>
+        {(row.getValue("purchase_user_id") as string).slice(0, 4)}...
+      </Link>
     ),
   },
   {
@@ -208,10 +213,11 @@ export const columns: ColumnDef<Order>[] = [
           생성일
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      if (!row.getValue("created_at")) return <div className="lowercase">-</div>;
+      if (!row.getValue("created_at"))
+        return <div className="lowercase">-</div>;
       const createdAt = new Date(row.getValue("created_at"));
       const localDateString = createdAt.toLocaleString(); // 로컬 시간으로 변환
       return <div className="lowercase">{localDateString}</div>;
@@ -228,10 +234,11 @@ export const columns: ColumnDef<Order>[] = [
           수정일
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      if (!row.getValue("updated_at")) return <div className="lowercase">-</div>;
+      if (!row.getValue("updated_at"))
+        return <div className="lowercase">-</div>;
       const createdAt = new Date(row.getValue("updated_at"));
       const localDateString = createdAt.toLocaleString(); // 로컬 시간으로 변환
       return <div className="lowercase">{localDateString}</div>;
@@ -241,7 +248,7 @@ export const columns: ColumnDef<Order>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const user = row.original
+      const payment = row.original;
 
       return (
         <DropdownMenu>
@@ -256,19 +263,22 @@ export const columns: ColumnDef<Order>[] = [
             {/* <DropdownMenuItem><Link href={``}>자세히</Link></DropdownMenuItem>
             <DropdownMenuSeparator /> */}
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(user.id)}
+              onClick={() => navigator.clipboard.writeText(payment.id)}
             >
               ID 복사
             </DropdownMenuItem>
+            <Link href={`/admin/payment-history/${payment.id}`}>
+              <DropdownMenuItem>수정</DropdownMenuItem>
+            </Link>
             {/* <DropdownMenuItem>노트 이력</DropdownMenuItem>
             <DropdownMenuItem>이메일 발송</DropdownMenuItem>
             <DropdownMenuItem>관리자 권한 토글</DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-]
+];
 
 export function AdminPaymentHistoryTable({
   data,
@@ -277,16 +287,19 @@ export function AdminPaymentHistoryTable({
   data: Order[];
   mutate: () => void;
 }) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
-  )
+  );
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+    React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
 
   const params = useSearchParams();
-  const { team_id, user_id } = params.get("team_id") || params.get("user_id") ? { team_id: params.get("team_id"), user_id: params.get("user_id") } : { team_id: null, user_id: null };
+  const { team_id, user_id } =
+    params.get("team_id") || params.get("user_id")
+      ? { team_id: params.get("team_id"), user_id: params.get("user_id") }
+      : { team_id: null, user_id: null };
 
   const [filteredData, setFilteredData] = React.useState(data);
   const [searchColumn, setSearchColumn] = React.useState("order_no");
@@ -301,7 +314,6 @@ export function AdminPaymentHistoryTable({
     }
     setFilteredData(filtered);
   }, [team_id, user_id, data]);
-  
 
   const table = useReactTable({
     data: filteredData,
@@ -323,7 +335,7 @@ export function AdminPaymentHistoryTable({
     initialState: {
       columnFilters: team_id ? [{ id: "team_id", value: team_id }] : [],
     },
-  })
+  });
 
   return (
     <div className="w-full">
@@ -363,7 +375,9 @@ export function AdminPaymentHistoryTable({
         </DropdownMenu>
         <Input
           placeholder="검색.."
-          value={(table.getColumn(searchColumn)?.getFilterValue() as string) ?? ""}
+          value={
+            (table.getColumn(searchColumn)?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
             table.getColumn(searchColumn)?.setFilterValue(event.target.value)
           }
@@ -427,7 +441,7 @@ export function AdminPaymentHistoryTable({
                   >
                     {column.id}
                   </DropdownMenuCheckboxItem>
-                )
+                );
               })}
           </DropdownMenuContent>
         </DropdownMenu>
@@ -447,7 +461,7 @@ export function AdminPaymentHistoryTable({
                             header.getContext()
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -507,5 +521,5 @@ export function AdminPaymentHistoryTable({
         </div>
       </div>
     </div>
-  )
+  );
 }

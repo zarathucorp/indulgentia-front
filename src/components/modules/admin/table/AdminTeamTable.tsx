@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Link from "next/link"
+import * as React from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
   ColumnDef,
@@ -14,11 +14,11 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+} from "@tanstack/react-table";
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -27,8 +27,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -36,18 +36,18 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import { UUID } from "crypto";
-
+import axios, { AxiosResponse } from "axios";
 
 export type Team = {
-  id: UUID
-  created_at: Date
-  updated_at: Date
-  name: string
-  team_leader_id: UUID
-  last_note_created_at: Date
-}
+  id: UUID;
+  created_at: Date;
+  updated_at: Date;
+  name: string;
+  team_leader_id: UUID;
+  last_note_created_at: Date;
+};
 
 export const columns: ColumnDef<Team>[] = [
   {
@@ -90,7 +90,7 @@ export const columns: ColumnDef<Team>[] = [
           팀명
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => <div className="lowercase">{row.getValue("name")}</div>,
   },
@@ -98,7 +98,9 @@ export const columns: ColumnDef<Team>[] = [
     accessorKey: "team_leader_id",
     header: "팀장 id",
     cell: ({ row }) => (
-      <Link href={`/admin/user?id=${row.getValue("team_leader_id")}`}>{(row.getValue("team_leader_id") as string).slice(0, 4)}...</Link>
+      <Link href={`/admin/user?id=${row.getValue("team_leader_id")}`}>
+        {(row.getValue("team_leader_id") as string).slice(0, 4)}...
+      </Link>
     ),
   },
   {
@@ -112,7 +114,7 @@ export const columns: ColumnDef<Team>[] = [
           생성일
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
       const createdAt = new Date(row.getValue("created_at"));
@@ -131,10 +133,11 @@ export const columns: ColumnDef<Team>[] = [
           수정일
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      if (!row.getValue("updated_at")) return <div className="lowercase">-</div>;
+      if (!row.getValue("updated_at"))
+        return <div className="lowercase">-</div>;
       const createdAt = new Date(row.getValue("updated_at"));
       const localDateString = createdAt.toLocaleString(); // 로컬 시간으로 변환
       return <div className="lowercase">{localDateString}</div>;
@@ -151,10 +154,11 @@ export const columns: ColumnDef<Team>[] = [
           마지막 노트 생성일
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      if (!row.getValue("last_note_created_at")) return <div className="lowercase">-</div>;
+      if (!row.getValue("last_note_created_at"))
+        return <div className="lowercase">-</div>;
       const createdAt = new Date(row.getValue("last_note_created_at"));
       const localDateString = createdAt.toLocaleString(); // 로컬 시간으로 변환
       return <div className="lowercase">{localDateString}</div>;
@@ -164,38 +168,67 @@ export const columns: ColumnDef<Team>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const team = row.original
+      const team = row.original;
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <Link href={`/admin/user?team_id=${team.id}`}>
-              <DropdownMenuItem>자세히</DropdownMenuItem>
-            </Link>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(team.id)}
-            >
-              ID 복사
-            </DropdownMenuItem>
-            <DropdownMenuItem>1년 구독 추가</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>노트 이력</DropdownMenuItem>
-            <DropdownMenuItem>영수증 발급</DropdownMenuItem>
-            <DropdownMenuItem>이메일 발송</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <Link href={`/admin/user?team_id=${team.id}`}>
+                <DropdownMenuItem>자세히</DropdownMenuItem>
+              </Link>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(team.id)}
+              >
+                ID 복사
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={async () => {
+                  try {
+                    const axiosData: AxiosResponse = await axios.post(
+                      process.env.NEXT_PUBLIC_API_URL +
+                        `/admin/team/${team.id}/add-1year`,
+                      {}
+                    );
+                    if (axiosData.data.status === "succeed") {
+                      alert("최초 1년 구독이 추가되었습니다.");
+                    }
+                  } catch (error) {
+                    console.error(error);
+                    alert("최초 1년 구독 추가에 실패하였습니다.");
+                  }
+                }}
+              >
+                최초 1년 구독 추가
+              </DropdownMenuItem>
+              <Link href={`/admin/team/${team.id}`}>
+                <DropdownMenuItem>유저 추가</DropdownMenuItem>
+              </Link>
+              <DropdownMenuSeparator />
+              <Link href={`/admin/note-history?team_id=${team.id}`}>
+                <DropdownMenuItem>노트 이력</DropdownMenuItem>
+              </Link>
+              <Link href={`/admin/tosspayments`}>
+                <DropdownMenuItem>영수증 발급</DropdownMenuItem>
+              </Link>
+              <DropdownMenuItem>
+                <i>*이메일 발송</i>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </>
+      );
     },
   },
-]
+];
 
 export function AdminTeamTable({
   data,
@@ -204,13 +237,13 @@ export function AdminTeamTable({
   data: Team[];
   mutate: () => void;
 }) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
-  )
+  );
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+    React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
 
   const [filteredData, setFilteredData] = React.useState(data);
   const params = useSearchParams();
@@ -223,7 +256,6 @@ export function AdminTeamTable({
     }
     setFilteredData(filtered);
   }, [id, data]);
-  
 
   const table = useReactTable({
     data: filteredData,
@@ -242,7 +274,7 @@ export function AdminTeamTable({
       columnVisibility,
       rowSelection,
     },
-  })
+  });
 
   return (
     <div className="w-full">
@@ -277,7 +309,7 @@ export function AdminTeamTable({
                   >
                     {column.id}
                   </DropdownMenuCheckboxItem>
-                )
+                );
               })}
           </DropdownMenuContent>
         </DropdownMenu>
@@ -297,7 +329,7 @@ export function AdminTeamTable({
                             header.getContext()
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -357,5 +389,5 @@ export function AdminTeamTable({
         </div>
       </div>
     </div>
-  )
+  );
 }
