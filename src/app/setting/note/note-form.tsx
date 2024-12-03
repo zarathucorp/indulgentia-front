@@ -21,7 +21,7 @@ export function NoteForm() {
 				<Label className="flex" htmlFor="team-uuid">
 					서명&nbsp;{" "}
 					<Tooltip delayDuration={100}>
-						<TooltipTrigger>
+						<TooltipTrigger type="button">
 							<FaRegCircleQuestion />
 						</TooltipTrigger>
 						<TooltipContent>

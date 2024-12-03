@@ -15,6 +15,7 @@ type UserInfoType = {
 	last_name: string;
 	email: string;
 	github_token: boolean;
+	is_leader: boolean;
 };
 
 const fetcher = async (url: string) => await axios.get(url).then((res) => res.data.data as UserInfoType);

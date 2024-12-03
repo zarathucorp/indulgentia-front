@@ -79,7 +79,7 @@ const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValu
 						<FormLabel>
 							프로젝트 이름&nbsp;{" "}
 							<Tooltip delayDuration={100}>
-								<TooltipTrigger>
+								<TooltipTrigger type="button">
 									<FaRegCircleQuestion />
 								</TooltipTrigger>
 								<TooltipContent>
@@ -108,7 +108,7 @@ const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValu
 						<FormLabel>
 							연구책임자&nbsp;{" "}
 							<Tooltip delayDuration={100}>
-								<TooltipTrigger>
+								<TooltipTrigger type="button">
 									<FaRegCircleQuestion />
 								</TooltipTrigger>
 								<TooltipContent>
@@ -176,7 +176,7 @@ const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValu
 						<FormLabel>
 							과제 번호&nbsp;{" "}
 							<Tooltip delayDuration={100}>
-								<TooltipTrigger>
+								<TooltipTrigger type="button">
 									<FaRegCircleQuestion />
 								</TooltipTrigger>
 								<TooltipContent>
@@ -208,7 +208,7 @@ const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValu
 						<FormLabel>
 							연구 시작일&nbsp;{" "}
 							<Tooltip delayDuration={100}>
-								<TooltipTrigger>
+								<TooltipTrigger type="button">
 									<FaRegCircleQuestion />
 								</TooltipTrigger>
 								<TooltipContent>
@@ -240,7 +240,7 @@ const ProjectFormFields = ({ form }: { form: UseFormReturn<CreateProjectFormValu
 						<FormLabel>
 							연구 종료일&nbsp;{" "}
 							<Tooltip delayDuration={100}>
-								<TooltipTrigger>
+								<TooltipTrigger type="button">
 									<FaRegCircleQuestion />
 								</TooltipTrigger>
 								<TooltipContent>

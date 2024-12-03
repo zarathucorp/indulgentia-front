@@ -58,6 +58,20 @@ export default async function middleware(request: NextRequest) {
 		}
 	}
 
+	// /setting 페이지로 접근하는 경우
+	if (request.nextUrl.pathname.endsWith("/setting")) {
+    const token = request.cookies.get("token")?.value || '';
+    const cookies = request.headers.get('cookie') || '';
+    const userInfo = await fetchUserInfo(token, cookies);
+		console.log(userInfo);
+		if (!userInfo || !userInfo.is_leader) {
+			const redirectPathname = request.nextUrl.pathname.replace("/setting", "");
+			return NextResponse.redirect(new URL(redirectPathname, request.url));
+		}
+	}
+	return await updateSession(request);
+}
+
 	// Admin 페이지로 접근하는 경우
 	if (request.nextUrl.pathname.startsWith("/admin")) {
     const token = request.cookies.get("token")?.value || '';
@@ -65,12 +79,9 @@ export default async function middleware(request: NextRequest) {
     const userInfo = await fetchUserInfo(token, cookies);
 		console.log(userInfo);
 		if (!userInfo || !userInfo.is_admin) {
-			return NextResponse.redirect(new URL('/dashboard', request.url));
+			return NextResponse.redirect(new URL("/dashboard", request.url));
 		}
 	}
-
-	return await updateSession(request);
-}
 
 export const config = {
 	matcher: [

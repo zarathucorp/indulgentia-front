@@ -129,7 +129,7 @@ function NoteTitleField({ form }: { form: any }) {
 						<FormLabel>
 							노트 이름&nbsp;{" "}
 							<Tooltip delayDuration={100}>
-								<TooltipTrigger>
+								<TooltipTrigger type="button">
 									<FaRegCircleQuestion />
 								</TooltipTrigger>
 								<TooltipContent>
@@ -163,7 +163,7 @@ function NoteDescriptionField({ form }: { form: any }) {
 						<FormLabel>
 							노트 내용&nbsp;{" "}
 							<Tooltip delayDuration={100}>
-								<TooltipTrigger>
+								<TooltipTrigger type="button">
 									<FaRegCircleQuestion />
 								</TooltipTrigger>
 								<TooltipContent>
@@ -203,7 +203,7 @@ function NoteTagField({ form }: { form: any }) {
 						<FormLabel>
 							노트 태그&nbsp;{" "}
 							<Tooltip delayDuration={100}>
-								<TooltipTrigger>
+								<TooltipTrigger type="button">
 									<FaRegCircleQuestion />
 								</TooltipTrigger>
 								<TooltipContent>
@@ -255,7 +255,7 @@ function NoteFileField({ form }: { form: any }) {
 						<FormLabel>
 							노트 파일&nbsp;{" "}
 							<Tooltip delayDuration={100}>
-								<TooltipTrigger>
+								<TooltipTrigger type="button">
 									<FaRegCircleQuestion />
 								</TooltipTrigger>
 								<TooltipContent>
@@ -305,7 +305,7 @@ function BucketUUIDField({ form }: { form: any }) {
 						<FormLabel hidden >
 							버킷 UUID&nbsp;{" "}
 							<Tooltip delayDuration={100}>
-								<TooltipTrigger>
+								<TooltipTrigger type="button">
 									<FaRegCircleQuestion />
 								</TooltipTrigger>
 								<TooltipContent>
