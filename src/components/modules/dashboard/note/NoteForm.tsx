@@ -52,7 +52,26 @@ const NoteSchema = z.object({
     }),
   description: z
     .string()
-    .min(1, { message: "노트 내용은 1자보다 길어야 합니다." }),
+    .max(1000, {
+      message:
+        "노트 내용은 1000자보다 짧아야 합니다. 많은 내용이 필요하면 파일 첨부 방식을 이용해주세요.",
+    })
+    .refine(
+      (value: string) => {
+        const valueArray = value
+          .split("\n")
+          .filter((line) => line.trim() !== "");
+        if (valueArray.length > 20) {
+          return false;
+        }
+        return true;
+      },
+      {
+        message:
+          "노트 내용은 20줄보다 짧아야 합니다. 많은 내용이 필요하면 파일 첨부 방식을 이용해주세요.",
+      }
+    )
+    .optional(),
   tags: z.string().optional(),
   files: z.array(z.instanceof(File)).optional(),
   bucket_id: z.string().uuid(),
@@ -96,7 +115,10 @@ export default function NewNoteForm() {
     sendData.append("title", data.title);
     sendData.append("file_name", data.title);
     sendData.append("bucket_id", data.bucket_id);
-    sendData.append("description", data.description);
+    sendData.append(
+      "description",
+      (data.description && data.description) || ""
+    );
     sendData.append("is_github", false.toString());
 
     try {
@@ -180,9 +202,13 @@ function NoteTitleField({ form }: { form: any }) {
 }
 
 function NoteDescriptionField({ form }: { form: any }) {
-  useEffect(() => {
-    console.log(form.watch("description"));
-  }, [form.watch("description")]);
+  // useEffect(() => {
+  //   const description = form.watch("description");
+  //   if (typeof description === "string") {
+  //     console.log("text size", description.length);
+  //     console.log("text line count", description.split("\n").length);
+  //   }
+  // }, [form.watch("description")]);
 
   return (
     <FormField
@@ -201,6 +227,9 @@ function NoteDescriptionField({ form }: { form: any }) {
                 <TooltipContent>
                   <p>노트 내용을 텍스트로 입력합니다.</p>
                   <p>마크 다운 형식으로 작성할 수 있습니다.</p>
+                  <p>
+                    <i>* 많은 내용이 필요하면 파일 첨부 방식을 이용해주세요.</i>
+                  </p>
                 </TooltipContent>
               </Tooltip>
             </FormLabel>
