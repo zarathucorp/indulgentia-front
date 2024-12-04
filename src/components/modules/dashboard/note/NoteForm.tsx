@@ -320,7 +320,7 @@ function NoteFileField({ form }: { form: any }) {
                   <p>* 권장사항</p>
                   <p>
                     - 파일 형식: PPT, PPTX, DOC, DOCX, XLS, XLSX, HWP, HWPX,
-                    JPG, PNG, PDF, MD(준비중)
+                    JPG, PNG, PDF, MD
                   </p>
                   <p>- 파일 갯수: 20개 이하</p>
                 </TooltipContent>
@@ -334,7 +334,7 @@ function NoteFileField({ form }: { form: any }) {
               onChange={handleFileChange}
               isFileSelected={isFileSelected}
               fileUnselectHandling={handleFileUnselect}
-              accept="application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/x-hwp,application/x-hwpx,image/jpeg,image/png,application/pdf,.hwp,.hwpx"
+              accept="application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/x-hwp,application/x-hwpx,image/jpeg,image/png,application/pdf,.hwp,.hwpx,.md,.markdown"
             />
           </FormControl>
           {/* <FormDescription>노트 파일을 업로드합니다.</FormDescription> */}
