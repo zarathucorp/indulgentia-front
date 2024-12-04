@@ -1,4 +1,6 @@
-import {withSentryConfig} from "@sentry/nextjs";
+import { withSentryConfig } from "@sentry/nextjs";
+import removeImports from 'next-remove-imports';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 				i18n: {
@@ -61,4 +63,4 @@ const sentryOptions = {
 
 const finalConfig = process.env.NODE_ENV === "production" ? withSentryConfig(nextConfig, sentryOptions) : nextConfig;
 
-export default finalConfig;
+export default removeImports()(finalConfig);
