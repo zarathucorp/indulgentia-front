@@ -62,6 +62,13 @@ export default async function middleware(request: NextRequest) {
 		if (!user) {
 			return NextResponse.redirect(new URL("/auth/login", request.url));
 		}
+		const token = request.cookies.get("token")?.value || "";
+		const cookies = request.headers.get("cookie") || "";
+		const userInfo = await fetchUserInfo(token, cookies);
+		console.log(userInfo);
+		if (!userInfo || !userInfo.is_leader) {
+			return NextResponse.redirect(new URL("/setting/team", request.url));
+		}
 	}
 
 	// /setting 페이지로 접근하는 경우
