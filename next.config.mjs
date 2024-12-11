@@ -63,4 +63,5 @@ const sentryOptions = {
 
 const finalConfig = process.env.NODE_ENV === "production" ? withSentryConfig(nextConfig, sentryOptions) : nextConfig;
 
-export default removeImports()(finalConfig);
+// 메모리 누수로 인해 sentryOptions를 일시적으로 사용하지 않음
+export default removeImports()(nextConfig);
