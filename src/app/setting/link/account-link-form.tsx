@@ -53,6 +53,7 @@ import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { MdEmail } from "react-icons/md";
 import { FaGithub } from "react-icons/fa";
+import { useOnborda } from "onborda";
 
 export function AccountLinkForm() {
   const {
@@ -93,111 +94,131 @@ export function AccountLinkForm() {
     console.log(userProvider);
   }, [userProvider]);
 
+  const { startOnborda, currentStep } = useOnborda();
+
+  useEffect(() => {
+    const hasVistedLinkSetting = localStorage.getItem("hasVistedLinkSetting");
+    console.log("hasVistedLinkSetting", hasVistedLinkSetting);
+    if (!hasVistedLinkSetting) {
+      startOnborda("setting-link");
+      localStorage.setItem("hasVistedLinkSetting", "true");
+    }
+  }, [startOnborda]);
+
   return (
     <div className="">
-      <TooltipProvider>
-        <Label className="flex">
-          연결한 계정&nbsp;{" "}
-          <Tooltip delayDuration={100}>
-            <TooltipTrigger type="button">
-              <FaRegCircleQuestion />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>계정이 연결된 곳을 확인합니다.</p>
-              <p>서비스 제공자: 이메일, 구글, 네이버, 카카오</p>
-              <p>
-                <i>* 네이버, 카카오 연결은 준비중입니다.</i>
-              </p>
-            </TooltipContent>
-          </Tooltip>
-        </Label>
-      </TooltipProvider>
-      <div className="mt-2 mb-4 flex items-center gap-2">
-        {userProvider === "google" ? (
-          <>
-            <FcGoogle />
-            <p>Google</p>
-          </>
-        ) : userProvider === "email" ? (
-          <>
-            <MdEmail />
-            <p>Email</p>
-          </>
-        ) : (
-          "연동된 계정이 없습니다."
-        )}
+      <div id="onborda-step2">
+        <TooltipProvider>
+          <Label className="flex">
+            연결한 계정&nbsp;{" "}
+            <Tooltip delayDuration={100}>
+              <TooltipTrigger type="button">
+                <FaRegCircleQuestion />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>계정이 연결된 곳을 확인합니다.</p>
+                <p>서비스 제공자: 이메일, 구글, 네이버, 카카오</p>
+                <p>
+                  <i>* 네이버, 카카오 연결은 준비중입니다.</i>
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </Label>
+        </TooltipProvider>
+        <div className="mt-2 mb-4 flex items-center gap-2">
+          {userProvider === "google" ? (
+            <>
+              <FcGoogle />
+              <p>Google</p>
+            </>
+          ) : userProvider === "email" ? (
+            <>
+              <MdEmail />
+              <p>Email</p>
+            </>
+          ) : (
+            "연동된 계정이 없습니다."
+          )}
+        </div>
       </div>
-      <TooltipProvider>
-        <Label className="flex">
-          <FaGithub />
-          &nbsp;GitHub 연결&nbsp;{" "}
-          <Tooltip delayDuration={100}>
-            <TooltipTrigger type="button">
-              <FaRegCircleQuestion />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>
-                &apos;GitHub 계정 연결&apos; 버튼이 반응하지 않는 경우
-                &apos;토큰 다시 받아오기&apos;를 사용하시기 바랍니다.
-              </p>
-              <p>다음과 같은 상황에서 일어날 수 있습니다.</p>
-              <p>
-                - GitHub 계정 연동을 해제하고 GitHub 상에서는 연구실록을
-                삭제하지 않은 경우
-              </p>
-              <p>
-                - 여러 개의 연구실록 계정에서 동일한 GitHub 계정으로 로그인 한
-                경우
-              </p>
-            </TooltipContent>
-          </Tooltip>
-        </Label>
-      </TooltipProvider>
-      <div className="mt-2 flex items-center gap-2">
-        <Input
-          type="email"
-          disabled
-          value={
-            isLoadingGithub
-              ? "정보를 불러오는 중입니다."
-              : githubError || githubUsername
-          }
-        />
-        <a
-          target="_blank"
-          href={process.env.NEXT_PUBLIC_GITHUB_APP_INSTALL_URL || "#"}
-        >
-          <Button type="button">GitHub 계정 연결</Button>
-        </a>
-        <a href="https://github.com/login/oauth/authorize?client_id=Iv23li79mqTdxRfQ2tpK&redirect_uri=https://rndsillog.com/next-api/github/callback">
-          <Button type="button">토큰 다시 받아오기</Button>
-        </a>
-        {githubError ? (
-          <Button
-            type="button"
-            onClick={async () => {
-              try {
-                await disconnectGitHub();
-                toast({
-                  title: "연결 해제에 성공하였습니다.",
-                  description: `연결 해제에 성공하였습니다.`,
-                });
-              } catch (e: any) {
-                toast({
-                  title: "연결 해제에 실패하였습니다.",
-                  description: `연결 해제에 실패하였습니다: ${e.message}`,
-                });
-              } finally {
-                await mutateGithub();
-              }
-            }}
-            className={`bg-red-500 hover:bg-red-700 ${
-              githubError ? "hidden" : ""
-            }`}
+      <div id="onborda-step3">
+        <TooltipProvider>
+          <Label className="flex">
+            <FaGithub />
+            &nbsp;GitHub 연결&nbsp;{" "}
+            <Tooltip delayDuration={100}>
+              <TooltipTrigger type="button">
+                <FaRegCircleQuestion />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>
+                  &apos;GitHub 계정 연결&apos; 버튼이 반응하지 않는 경우
+                  &apos;토큰 다시 받아오기&apos;를 사용하시기 바랍니다.
+                </p>
+                <p>다음과 같은 상황에서 일어날 수 있습니다.</p>
+                <p>
+                  - GitHub 계정 연동을 해제하고 GitHub 상에서는 연구실록을
+                  삭제하지 않은 경우
+                </p>
+                <p>
+                  - 여러 개의 연구실록 계정에서 동일한 GitHub 계정으로 로그인 한
+                  경우
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </Label>
+        </TooltipProvider>
+        <div className="mt-2 flex items-center gap-2">
+          <Input
+            id="onborda-step4"
+            type="email"
+            disabled
+            value={
+              isLoadingGithub
+                ? "정보를 불러오는 중입니다."
+                : githubError || githubUsername
+            }
+          />
+          <a
+            target="_blank"
+            href={process.env.NEXT_PUBLIC_GITHUB_APP_INSTALL_URL || "#"}
           >
-            연결 해제
-          </Button>
-        ) : null}
+            <Button id="onborda-step5" type="button">
+              GitHub 계정 연결
+            </Button>
+          </a>
+          <a href="https://github.com/login/oauth/authorize?client_id=Iv23li79mqTdxRfQ2tpK&redirect_uri=https://rndsillog.com/next-api/github/callback">
+            <Button id="onborda-step6" type="button">
+              토큰 다시 받아오기
+            </Button>
+          </a>
+          {githubError ? (
+            <Button
+              type="button"
+              onClick={async () => {
+                try {
+                  await disconnectGitHub();
+                  toast({
+                    title: "연결 해제에 성공하였습니다.",
+                    description: `연결 해제에 성공하였습니다.`,
+                  });
+                } catch (e: any) {
+                  toast({
+                    title: "연결 해제에 실패하였습니다.",
+                    description: `연결 해제에 실패하였습니다: ${e.message}`,
+                  });
+                } finally {
+                  await mutateGithub();
+                }
+              }}
+              className={`bg-red-500 hover:bg-red-700 ${
+                githubError ? "hidden" : ""
+              }`}
+            >
+              연결 해제
+            </Button>
+          ) : null}
+        </div>
         {/* <Button
 					type="button"
 					onClick={async () => {

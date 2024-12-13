@@ -26,7 +26,7 @@ const CustomCard: React.FC<CardComponentProps> = ({
   arrow,
 }) => {
   // Onborda hooks
-  const { closeOnborda, setCurrentStep } = useOnborda();
+  const { closeOnborda, setCurrentStep, currentTour } = useOnborda();
 
   function handleConfetti() {
     closeOnborda();
@@ -57,12 +57,13 @@ const CustomCard: React.FC<CardComponentProps> = ({
       <CardContent>{step.content}</CardContent>
       <CardFooter>
         <div className="flex justify-between w-full">
-          {/* {currentStep !== 0 && (
+          {currentTour !== "team-onboarding" && currentStep !== 0 && (
             <Button onClick={() => prevStep()}>이전</Button>
-          )} */}
-          {currentStep + 1 !== totalSteps && (
-            <Button onClick={() => setCurrentStep(0)}>처음으로</Button>
           )}
+          {currentStep + 1 !== totalSteps &&
+            currentTour == "team-onboarding" && (
+              <Button onClick={() => setCurrentStep(0)}>처음으로</Button>
+            )}
           {currentStep + 1 !== totalSteps && (
             <Button onClick={() => nextStep()} className="ml-auto">
               다음
