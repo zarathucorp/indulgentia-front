@@ -201,7 +201,8 @@ export function LeaderTeamExitModal({
               발생합니다.
             </p>
             <p>
-              삭제하려면 &quot;<b>{teamInfo.name}</b>&quot;라고 입력하십시오.
+              삭제하려면 &quot;<b>{teamInfo.team_name}</b>&quot;라고
+              입력하십시오.
             </p>
           </DialogDescription>
         </DialogHeader>
@@ -218,7 +219,7 @@ export function LeaderTeamExitModal({
             variant="outline"
             onClick={async () => {
               try {
-                if (teamInfo.name !== confirmEntityName) {
+                if (teamInfo.team_name !== confirmEntityName) {
                   throw new Error(
                     "입력한 값이 삭제할 대상과 일치하지 않습니다."
                   );
@@ -228,14 +229,16 @@ export function LeaderTeamExitModal({
                 );
                 toast({
                   title: "삭제 완료",
-                  description: `팀 ${teamInfo.name}의 삭제가 완료되었습니다.`,
+                  description: `팀 ${teamInfo.team_name}의 삭제가 완료되었습니다.`,
                 });
                 teamMutate();
                 setIsOpen(false);
               } catch (e: any) {
                 toast({
                   title: "삭제 실패",
-                  description: `팀 ${teamInfo.name}의 삭제가 실패하였습니다. ${
+                  description: `팀 ${
+                    teamInfo.team_name
+                  }의 삭제가 실패하였습니다. ${
                     e?.response?.data?.detail ?? e.message
                   }`,
                 });
