@@ -34,7 +34,7 @@ type TeamInfoType = {
 	created_at: DateTimeString;
 	updated_at: DateTimeString;
 	team_name: string;
-	// is_premium: boolean;
+	is_premium: boolean;
 	team_leader_id: UUID;
 	is_deleted: boolean;
 	team_leader_first_name: string | null;
