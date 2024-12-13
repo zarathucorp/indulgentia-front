@@ -24,6 +24,28 @@ const fetchUserInfo = async (token: string, cookies: string) => {
 	}
 };
 
+const fetchTeamInfo = async (token: string, cookies: string) => {
+	try {
+		const response = await fetch(
+			process.env.NEXT_PUBLIC_API_URL + "/user/team",
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+					Cookie: cookies,
+				},
+			},
+		);
+		if (!response.ok) {
+			throw new Error("Network response was not ok");
+		}
+		const data = await response.json();
+		return data.data;
+	} catch (error) {
+		console.error("Error fetching team info:", error);
+		return null;
+	}
+};
+
 export default async function middleware(request: NextRequest) {
 	// 루트 경로로 접근하는 경우
 	if (request.nextUrl.pathname === "/") {
@@ -56,6 +78,7 @@ export default async function middleware(request: NextRequest) {
 	if (request.nextUrl.pathname.startsWith("/dashboard")) {
 		const supabase = createClient();
 
+		// 로그인하지 않은 경우
 		const {
 			data: { user },
 		} = await supabase.auth.getUser();
@@ -64,10 +87,19 @@ export default async function middleware(request: NextRequest) {
 		}
 		const token = request.cookies.get("token")?.value || "";
 		const cookies = request.headers.get("cookie") || "";
+
+		// 팀이 없는 경우
 		const userInfo = await fetchUserInfo(token, cookies);
 		console.log(userInfo);
-		if (!userInfo || !userInfo.is_leader) {
+		if (!userInfo.team_id) {
 			return NextResponse.redirect(new URL("/setting/team", request.url));
+		}
+
+		// 결제 정보가 없는 경우
+		const teamInfo = await fetchTeamInfo(token, cookies);
+		console.log(teamInfo);
+		if (!teamInfo.is_premium) {
+			return NextResponse.redirect(new URL("/setting/payment", request.url));
 		}
 	}
 
