@@ -52,7 +52,7 @@ export function CreateTeamModal() {
         open={openModal}
         onOpenChange={!isOnbordaVisible ? setOpenModal : () => {}}
         // onOpenChange={setOpenModal}
-        // {...(isOnbordaVisible ? { modal: false } : {})}
+        {...(currentStep === 1 && isOnbordaVisible ? { modal: false } : {})}
       >
         <DialogTrigger asChild>
           <Button id="onborda-step2" variant="outline" disabled={hasTeam}>
@@ -61,6 +61,7 @@ export function CreateTeamModal() {
         </DialogTrigger>
         <DialogContent
           id="onborda-step3"
+          // className={`sm:max-w-[425px]`}
           className={`sm:max-w-[425px] ${
             currentStep === 1 && isOnbordaVisible ? "invisible" : ""
           }`}
