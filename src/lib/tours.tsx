@@ -6,7 +6,7 @@ export const steps: Tour[] = [
     tour: "team-onboarding",
     steps: [
       {
-        icon: <>👋</>,
+        icon: <></>,
         title: "연구실록 가입을 환영합니다",
         content: <>팀을 만들고 연구실록을 시작하세요!</>,
         selector: "#onborda-step1",
@@ -16,7 +16,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🪄</>,
+        icon: <></>,
         title: "팀 생성 버튼",
         content: (
           <>
@@ -32,7 +32,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🎩</>,
+        icon: <></>,
         title: "팀 생성 화면",
         content: <>팀 정보를 입력하고 팀을 생성하세요.</>,
         selector: "#onborda-step3",
@@ -42,7 +42,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🌀</>,
+        icon: <></>,
         title: "팀 이름",
         content: (
           <>
@@ -58,7 +58,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>👉</>,
+        icon: <></>,
         title: "팀 생성 버튼",
         content: <>버튼을 클릭하면 팀이 생성됩니다.</>,
         selector: "#onborda-step5",
@@ -68,7 +68,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>👉</>,
+        icon: <></>,
         title: "팀 이름 확인",
         content: (
           <>
@@ -86,7 +86,7 @@ export const steps: Tour[] = [
         nextRoute: "/pricing",
       },
       {
-        icon: <>⭐️</>,
+        icon: <></>,
         title: "팀 플랜",
         content: (
           <>
@@ -107,7 +107,7 @@ export const steps: Tour[] = [
     tour: "setting-account",
     steps: [
       {
-        icon: <>👋</>,
+        icon: <></>,
         title: "계정 설정",
         content: (
           <>
@@ -122,7 +122,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🪄</>,
+        icon: <></>,
         title: "이름 설정",
         content: (
           <>
@@ -138,7 +138,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🎩</>,
+        icon: <></>,
         title: "이메일 설정",
         content: (
           <>
@@ -154,7 +154,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🌀</>,
+        icon: <></>,
         title: "비밀번호 초기화 버튼",
         content: <>클릭하여 비밀번호를 초기화할 수 있습니다.</>,
         selector: "#onborda-step4",
@@ -164,7 +164,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>👉</>,
+        icon: <></>,
         title: "설정 업데이트 버튼",
         content: <>클릭하여 작성한 내용으로 설정이 업데이트됩니다.</>,
         selector: "#onborda-step5",
@@ -174,7 +174,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>👉</>,
+        icon: <></>,
         title: "계정 탈퇴 버튼",
         content: (
           <>
@@ -197,7 +197,7 @@ export const steps: Tour[] = [
     tour: "setting-team", // 팀 생성 랜딩페이지 추가 시 사용
     steps: [
       {
-        icon: <>👋</>,
+        icon: <></>,
         title: "팀 설정 페이지",
         content: (
           <>
@@ -217,7 +217,7 @@ export const steps: Tour[] = [
     tour: "setting-note",
     steps: [
       {
-        icon: <>👋</>,
+        icon: <></>,
         title: "노트 설정",
         content: (
           <>
@@ -232,7 +232,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🪄</>,
+        icon: <></>,
         title: "서명 설정",
         content: (
           <>사용자의 서명 설정입니다. 노트 서명과 관련된 기능이 있습니다.</>
@@ -244,7 +244,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🎩</>,
+        icon: <></>,
         title: "서명 입력",
         content: (
           <>
@@ -261,7 +261,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🌀</>,
+        icon: <></>,
         title: "서명 초기화 버튼",
         content: <>클릭하여 서명을 초기화할 수 있습니다.</>,
         selector: "#onborda-step4",
@@ -271,7 +271,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>👉</>,
+        icon: <></>,
         title: "서명 저장 버튼",
         content: <>클릭하여 작성한 내용으로 서명이 저장됩니다.</>,
         selector: "#onborda-step5",
@@ -281,7 +281,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>👉</>,
+        icon: <></>,
         title: "서명 파일 업로드 창",
         content: (
           <>
@@ -307,7 +307,7 @@ export const steps: Tour[] = [
     tour: "setting-link",
     steps: [
       {
-        icon: <>👋</>,
+        icon: <></>,
         title: "연결 설정",
         content: (
           <>
@@ -321,7 +321,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🪄</>,
+        icon: <></>,
         title: "연결한 계정",
         content: (
           <>
@@ -339,7 +339,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🎩</>,
+        icon: <></>,
         title: "GitHub 연결 설정",
         content: <>GitHub 연결 설정 칸입니다.</>,
         selector: "#onborda-step3",
@@ -349,7 +349,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🌀</>,
+        icon: <></>,
         title: "GitHub 계정",
         content: (
           <>
@@ -364,7 +364,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>👉</>,
+        icon: <></>,
         title: "GitHub 연결 버튼",
         content: <>클릭하여 GitHub 계정과 연결합니다.</>,
         selector: "#onborda-step5",
@@ -374,7 +374,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>👉</>,
+        icon: <></>,
         title: "토큰 다시 받아오기 버튼",
         content: (
           <>
@@ -402,7 +402,7 @@ export const steps: Tour[] = [
     tour: "setting-payment",
     steps: [
       {
-        icon: <>👋</>,
+        icon: <></>,
         title: "결제 설정",
         content: (
           <>
@@ -416,7 +416,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🪄</>,
+        icon: <></>,
         title: "팀 플랜 시작하기 버튼",
         content: <>클릭하여 팀 플랜 설정 페이지로 이동합니다.</>,
         selector: "#onborda-step2",
@@ -426,7 +426,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🎩</>,
+        icon: <></>,
         title: "현재 플랜",
         content: (
           <>
@@ -449,7 +449,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🌀</>,
+        icon: <></>,
         title: "결제 이력",
         content: (
           <>
@@ -473,7 +473,7 @@ export const steps: Tour[] = [
     tour: "dashboard-project",
     steps: [
       {
-        icon: <>👋</>,
+        icon: <></>,
         title: "탐색 경로",
         content: (
           <>
@@ -487,7 +487,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>👋</>,
+        icon: <></>,
         title: "내 프로젝트",
         content: (
           <>프로젝트 목록 페이지입니다. 팀 전체 프로젝트를 볼 수 있습니다.</>
@@ -499,7 +499,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🪄</>,
+        icon: <></>,
         title: "새 프로젝트 버튼",
         content: <>새 프로젝트 버튼을 클릭하여 프로젝트를 만들어보세요.</>,
         selector: "#onborda-step3",
@@ -509,7 +509,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🎩</>,
+        icon: <></>,
         title: "프로젝트 목록",
         content: (
           <>
@@ -524,7 +524,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🌀</>,
+        icon: <></>,
         title: "프로젝트 이름",
         content: <>프로젝트 생성시 입력한 이름이 표시됩니다.</>,
         selector: "#onborda-step5",
@@ -534,7 +534,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>👉</>,
+        icon: <></>,
         title: "연구책임자",
         content: (
           <>
@@ -549,7 +549,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>👉</>,
+        icon: <></>,
         title: "과제번호",
         content: (
           <>
@@ -564,7 +564,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>⭐️</>,
+        icon: <></>,
         title: "연구 시작일",
         content: (
           <>
@@ -579,7 +579,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>⭐️</>,
+        icon: <></>,
         title: "연구 종료일",
         content: (
           <>
@@ -594,7 +594,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>⭐️</>,
+        icon: <></>,
         title: "관리 버튼",
         content: (
           <>
@@ -611,12 +611,12 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>⭐️</>,
+        icon: <></>,
         title: "프로젝트 다운로드 버튼",
         content: (
           <>
             프로젝트 다운로드 버튼을 클릭하여 다운로드 모드로 전환합니다.
-            다운로드 모드 전환시 다른 기능은 비활성화 됩니다.
+            다운로드 모드 전환시 다른 기능은 비활성화 됩��다.
           </>
         ),
         selector: "#onborda-step11",
@@ -631,7 +631,7 @@ export const steps: Tour[] = [
     tour: "dashboard-bucket",
     steps: [
       {
-        icon: <>👋</>,
+        icon: <></>,
         title: "탐색 경로",
         content: (
           <>
@@ -645,7 +645,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>👋</>,
+        icon: <></>,
         title: "내 버킷",
         content: (
           <>
@@ -659,7 +659,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🪄</>,
+        icon: <></>,
         title: "프로젝트 설정 버튼",
         content: (
           <>
@@ -674,7 +674,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🪄</>,
+        icon: <></>,
         title: "새 버킷 버튼",
         content: <>새 버킷 버튼을 클릭하여 버킷을 만들어보세요.</>,
         selector: "#onborda-step4",
@@ -684,7 +684,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🎩</>,
+        icon: <></>,
         title: "버킷 목록",
         content: (
           <>
@@ -699,7 +699,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🌀</>,
+        icon: <></>,
         title: "버킷 이름",
         content: <> 버킷 생성시 입력한 이름이 표시됩니다.</>,
         selector: "#onborda-step6",
@@ -709,7 +709,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>👉</>,
+        icon: <></>,
         title: "상태",
         content: <>버킷 상태입니다.</>,
         selector: "#onborda-step7",
@@ -719,7 +719,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>👉</>,
+        icon: <></>,
         title: "버킷 매니저",
         content: <>버킷 생성시 팀원 중에 선택할 수 있습니다.</>,
         selector: "#onborda-step8",
@@ -729,7 +729,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>⭐️</>,
+        icon: <></>,
         title: "GitHub 연동",
         content: (
           <>
@@ -744,7 +744,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>⭐️</>,
+        icon: <></>,
         title: "관리 버튼",
         content: (
           <>
@@ -761,7 +761,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>⭐️</>,
+        icon: <></>,
         title: "버킷 다운로드 버튼",
         content: (
           <>
@@ -781,7 +781,7 @@ export const steps: Tour[] = [
     tour: "dashboard-note",
     steps: [
       {
-        icon: <>👋</>,
+        icon: <></>,
         title: "탐색 경로",
         content: (
           <>
@@ -795,7 +795,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>👋</>,
+        icon: <></>,
         title: "내 노트",
         content: (
           <>노트 목록 페이지입니다. 해당 버킷의 전체 노트를 볼 수 있습니다.</>
@@ -807,7 +807,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🎩</>,
+        icon: <></>,
         title: "노트 목록",
         content: (
           <>
@@ -822,7 +822,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🪄</>,
+        icon: <></>,
         title: "노트 생성 버튼",
         content: <>노트 생성 버튼을 클릭하여 노트를 만들어보세요.</>,
         selector: "#onborda-step4",
@@ -832,7 +832,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🪄</>,
+        icon: <></>,
         title: "노트 다운로드 버튼",
         content: (
           <>
@@ -847,7 +847,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🪄</>,
+        icon: <></>,
         title: "버킷 설정 버튼",
         content: (
           <>
@@ -863,7 +863,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>⭐️</>,
+        icon: <></>,
         title: "노트 조회 날짜",
         content: (
           <>
@@ -884,7 +884,7 @@ export const steps: Tour[] = [
     tour: "dashboard-noteDetail",
     steps: [
       {
-        icon: <>👋</>,
+        icon: <></>,
         title: "탐색 경로",
         content: (
           <>
@@ -898,7 +898,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       // {
-      //   icon: <>👋</>,
+      //   icon: <></>,
       //   title: "노트 상세보기",
       //   content: (
       //     <>
@@ -913,7 +913,7 @@ export const steps: Tour[] = [
       //   pointerRadius: 24,
       // },
       {
-        icon: <>🎩</>,
+        icon: <></>,
         title: "노트 PDF 뷰어",
         content: (
           <>
@@ -928,7 +928,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🪄</>,
+        icon: <></>,
         title: "노트 이름",
         content: (
           <>
@@ -943,7 +943,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🪄</>,
+        icon: <></>,
         title: "노트 작성자",
         content: (
           <>노트 작성자의 이름입니다. 사용자가 임의로 수정할 수 없습니다.</>
@@ -955,7 +955,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🪄</>,
+        icon: <></>,
         title: "노트 프로젝트",
         content: <>노트가 소속된 프로젝트 이름입니다.</>,
         selector: "#onborda-step6",
@@ -965,7 +965,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>⭐️</>,
+        icon: <></>,
         title: "노트 버킷",
         content: <>노트가 소속된 버킷 이름입니다.</>,
         selector: "#onborda-step7",
@@ -975,7 +975,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>⭐️</>,
+        icon: <></>,
         title: "노트 고유 ID",
         content: (
           <>
@@ -989,7 +989,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>⭐️</>,
+        icon: <></>,
         title: "블록체인 기록 ID",
         content: (
           <>
@@ -1004,7 +1004,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>⭐️</>,
+        icon: <></>,
         title: "노트 다운로드 버튼",
         content: (
           <>
@@ -1019,7 +1019,7 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>⭐️</>,
+        icon: <></>,
         title: "노트 삭제 버튼",
         content: <>노트 삭제 버튼을 클릭하여 해당 노트를 삭제합니다.</>,
         selector: "#onborda-step11",
