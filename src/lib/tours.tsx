@@ -1,4 +1,5 @@
 import { Tour } from "onborda/src/types";
+import { Button } from "@/components/ui/button";
 
 export const steps: Tour[] = [
   {
@@ -353,7 +354,7 @@ export const steps: Tour[] = [
         content: (
           <>
             연결된 GitHub를 확인하는 칸입니다. 연결된 GitHub 계정이 없을시
-            "GitHub 로그인이 필요합니다." 라고 표시됩니다.
+            &quot;GitHub 로그인이 필요합니다.&quot; 라고 표시됩니다.
           </>
         ),
         selector: "#onborda-step4",
@@ -473,99 +474,156 @@ export const steps: Tour[] = [
     steps: [
       {
         icon: <>👋</>,
-        title: "연구실록 가입을 환영합니다",
-        content: <>팀을 만들고 연구실록을 시작하세요!</>,
+        title: "탐색 경로",
+        content: (
+          <>
+            대시보드 탐색 경로 입니다. 클릭하여 해당 경로로 접근할 수 있습니다.
+          </>
+        ),
         selector: "#onborda-step1",
-        side: "right",
+        side: "bottom",
+        showControls: true,
+        pointerPadding: 20,
+        pointerRadius: 24,
+      },
+      {
+        icon: <>👋</>,
+        title: "내 프로젝트",
+        content: (
+          <>프로젝트 목록 페이지입니다. 팀 전체 프로젝트를 볼 수 있습니다.</>
+        ),
+        selector: "#onborda-step2",
+        side: "bottom",
         showControls: true,
         pointerPadding: 20,
         pointerRadius: 24,
       },
       {
         icon: <>🪄</>,
-        title: "팀 생성 버튼",
-        content: (
-          <>
-            팀 생성 버튼을 클릭하여 팀을 만들어보세요.
-            <br />
-            <i>* 지금은 다음 버튼을 눌러서 진행하세요.</i>
-          </>
-        ),
-        selector: "#onborda-step2",
-        side: "right",
+        title: "새 프로젝트 버튼",
+        content: <>새 프로젝트 버튼을 클릭하여 프로젝트를 만들어보세요.</>,
+        selector: "#onborda-step3",
+        side: "bottom",
         showControls: true,
         pointerPadding: 20,
         pointerRadius: 24,
       },
       {
         icon: <>🎩</>,
-        title: "팀 생성 화면",
-        content: <>팀 정보를 입력하고 팀을 생성하세요.</>,
-        selector: "#onborda-step3",
-        side: "right",
+        title: "프로젝트 목록",
+        content: (
+          <>
+            프로젝트들이 나열됩니다. 프로젝트 이름, 연구책임자, 과제번호, 연구
+            시작일, 연구 종료일, 관리 버튼이 표시됩니다.
+          </>
+        ),
+        selector: "#onborda-step4",
+        side: "bottom",
         showControls: true,
         pointerPadding: 20,
         pointerRadius: 24,
       },
       {
         icon: <>🌀</>,
-        title: "팀 이름",
-        content: (
-          <>
-            팀 이름을 입력하세요.
-            <br />
-            <i>* 팀 이름은 처음 설정하면 수정하기 어렵습니다.</i>
-          </>
-        ),
-        selector: "#onborda-step4",
-        side: "right",
-        showControls: true,
-        pointerPadding: 20,
-        pointerRadius: 24,
-      },
-      {
-        icon: <>👉</>,
-        title: "팀 생성 버튼",
-        content: <>버튼을 클릭하면 팀이 생성됩니다.</>,
+        title: "프로젝트 이름",
+        content: <>프로젝트 생성시 입력한 이름이 표시됩니다.</>,
         selector: "#onborda-step5",
-        side: "right",
+        side: "bottom",
         showControls: true,
         pointerPadding: 20,
         pointerRadius: 24,
       },
       {
         icon: <>👉</>,
-        title: "팀 이름 확인",
+        title: "연구책임자",
         content: (
           <>
-            팀이 생성되었습니다.{" "}
-            <i>
-              <br />* 소속된 팀 없다면 처음부터 다시 해주세요.
-            </i>
+            프로젝트 생성시 팀원 중에 선택하거나 텍스트로 자유롭게 적을 수
+            있습니다.
           </>
         ),
         selector: "#onborda-step6",
-        side: "right",
+        side: "bottom",
         showControls: true,
         pointerPadding: 20,
         pointerRadius: 24,
-        nextRoute: "/pricing",
       },
       {
-        icon: <>⭐️</>,
-        title: "팀 플랜",
+        icon: <>👉</>,
+        title: "과제번호",
         content: (
           <>
-            연구실록을 이용하기 위해서는 팀 플랜이 있어야 합니다. 팀 플랜에 대한
-            구체적인 사항은 문의하기를 통해 문의해주세요.
+            프로젝트 생성시 입력한 과제번호가 표시됩니다. 영문과 숫자 및
+            특수문자만 입력 가능합니다.
           </>
         ),
         selector: "#onborda-step7",
-        side: "right",
+        side: "bottom",
         showControls: true,
         pointerPadding: 20,
         pointerRadius: 24,
-        prevRoute: "/setting/team",
+      },
+      {
+        icon: <>⭐️</>,
+        title: "연구 시작일",
+        content: (
+          <>
+            프로젝트 생성시 입력한 연구 시작일이 표시됩니다. 2025-01-01 형식으로
+            확인할 수 있습니다.
+          </>
+        ),
+        selector: "#onborda-step8",
+        side: "bottom",
+        showControls: true,
+        pointerPadding: 20,
+        pointerRadius: 24,
+      },
+      {
+        icon: <>⭐️</>,
+        title: "연구 종료일",
+        content: (
+          <>
+            프로젝트 생성시 입력한 연구 종료일이 표시됩니다. 2025-01-01 형식으로
+            확인할 수 있습니다.
+          </>
+        ),
+        selector: "#onborda-step9",
+        side: "bottom",
+        showControls: true,
+        pointerPadding: 20,
+        pointerRadius: 24,
+      },
+      {
+        icon: <>⭐️</>,
+        title: "관리 버튼",
+        content: (
+          <>
+            프로젝트 관리 버튼이 배치되는 칸입니다. 프로젝트 관리 버튼을
+            클릭하여 프로젝트 내부의 내 버킷 페이지로 이동합니다. 아래와 같은
+            버튼 형식으로 표시됩니다.
+            <Button className="w-10/12 mt-2 mx-5">보기/관리</Button>
+          </>
+        ),
+        selector: "#onborda-step10",
+        side: "bottom",
+        showControls: true,
+        pointerPadding: 20,
+        pointerRadius: 24,
+      },
+      {
+        icon: <>⭐️</>,
+        title: "프로젝트 다운로드 버튼",
+        content: (
+          <>
+            프로젝트 다운로드 버튼을 클릭하여 다운로드 모드로 전환합니다.
+            다운로드 모드 전환시 다른 기능은 비활성화 됩니다.
+          </>
+        ),
+        selector: "#onborda-step11",
+        side: "bottom",
+        showControls: true,
+        pointerPadding: 20,
+        pointerRadius: 24,
       },
     ],
   },
@@ -574,99 +632,148 @@ export const steps: Tour[] = [
     steps: [
       {
         icon: <>👋</>,
-        title: "연구실록 가입을 환영합니다",
-        content: <>팀을 만들고 연구실록을 시작하세요!</>,
+        title: "탐색 경로",
+        content: (
+          <>
+            대시보드 탐색 경로 입니다. 클릭하여 해당 경로로 접근할 수 있습니다.
+          </>
+        ),
         selector: "#onborda-step1",
-        side: "right",
+        side: "bottom",
+        showControls: true,
+        pointerPadding: 20,
+        pointerRadius: 24,
+      },
+      {
+        icon: <>👋</>,
+        title: "내 버킷",
+        content: (
+          <>
+            버킷 목록 페이지입니다. 해당 프로젝트의 전체 버킷을 볼 수 있습니다.
+          </>
+        ),
+        selector: "#onborda-step2",
+        side: "bottom",
         showControls: true,
         pointerPadding: 20,
         pointerRadius: 24,
       },
       {
         icon: <>🪄</>,
-        title: "팀 생성 버튼",
+        title: "프로젝트 설정 버튼",
         content: (
           <>
-            팀 생성 버튼을 클릭하여 팀을 만들어보세요.
-            <br />
-            <i>* 지금은 다음 버튼을 눌러서 진행하세요.</i>
+            프로젝트 설정 버튼을 클릭하여 해당 프로젝트의 정보를 수정하세요. 팀
+            리더가 아닌 경우 해당 버튼은 비활성화 됩니다.
           </>
         ),
-        selector: "#onborda-step2",
-        side: "right",
+        selector: "#onborda-step3",
+        side: "bottom",
+        showControls: true,
+        pointerPadding: 20,
+        pointerRadius: 24,
+      },
+      {
+        icon: <>🪄</>,
+        title: "새 버킷 버튼",
+        content: <>새 버킷 버튼을 클릭하여 버킷을 만들어보세요.</>,
+        selector: "#onborda-step4",
+        side: "bottom",
         showControls: true,
         pointerPadding: 20,
         pointerRadius: 24,
       },
       {
         icon: <>🎩</>,
-        title: "팀 생성 화면",
-        content: <>팀 정보를 입력하고 팀을 생성하세요.</>,
-        selector: "#onborda-step3",
-        side: "right",
+        title: "버킷 목록",
+        content: (
+          <>
+            버킷들이 나열됩니다. 버킷 이름, 상태, 버킷 매니저, GitHub 연동, 관리
+            버튼이 표시됩니다.
+          </>
+        ),
+        selector: "#onborda-step5",
+        side: "bottom",
         showControls: true,
         pointerPadding: 20,
         pointerRadius: 24,
       },
       {
         icon: <>🌀</>,
-        title: "팀 이름",
-        content: (
-          <>
-            팀 이름을 입력하세요.
-            <br />
-            <i>* 팀 이름은 처음 설정하면 수정하기 어렵습니다.</i>
-          </>
-        ),
-        selector: "#onborda-step4",
-        side: "right",
-        showControls: true,
-        pointerPadding: 20,
-        pointerRadius: 24,
-      },
-      {
-        icon: <>👉</>,
-        title: "팀 생성 버튼",
-        content: <>버튼을 클릭하면 팀이 생성됩니다.</>,
-        selector: "#onborda-step5",
-        side: "right",
-        showControls: true,
-        pointerPadding: 20,
-        pointerRadius: 24,
-      },
-      {
-        icon: <>👉</>,
-        title: "팀 이름 확인",
-        content: (
-          <>
-            팀이 생성되었습니다.{" "}
-            <i>
-              <br />* 소속된 팀 없다면 처음부터 다시 해주세요.
-            </i>
-          </>
-        ),
+        title: "버킷 이름",
+        content: <> 버킷 생성시 입력한 이름이 표시됩니다.</>,
         selector: "#onborda-step6",
-        side: "right",
+        side: "bottom",
         showControls: true,
         pointerPadding: 20,
         pointerRadius: 24,
-        nextRoute: "/pricing",
+      },
+      {
+        icon: <>👉</>,
+        title: "상태",
+        content: <>버킷 상태입니다.</>,
+        selector: "#onborda-step7",
+        side: "bottom",
+        showControls: true,
+        pointerPadding: 20,
+        pointerRadius: 24,
+      },
+      {
+        icon: <>👉</>,
+        title: "버킷 매니저",
+        content: <>버킷 생성시 팀원 중에 선택할 수 있습니다.</>,
+        selector: "#onborda-step8",
+        side: "bottom",
+        showControls: true,
+        pointerPadding: 20,
+        pointerRadius: 24,
       },
       {
         icon: <>⭐️</>,
-        title: "팀 플랜",
+        title: "GitHub 연동",
         content: (
           <>
-            연구실록을 이용하기 위해서는 팀 플랜이 있어야 합니다. 팀 플랜에 대한
-            구체적인 사항은 문의하기를 통해 문의해주세요.
+            버킷의 GitHub Repository 연동 여부를 확인할 수 있습니다. 버킷 생성
+            이후 버킷 설정에서 설정할 수 있습니다.
           </>
         ),
-        selector: "#onborda-step7",
-        side: "right",
+        selector: "#onborda-step9",
+        side: "bottom",
         showControls: true,
         pointerPadding: 20,
         pointerRadius: 24,
-        prevRoute: "/setting/team",
+      },
+      {
+        icon: <>⭐️</>,
+        title: "관리 버튼",
+        content: (
+          <>
+            버킷 관리 버튼이 배치되는 칸입니다. 버킷 관리 버튼을 클릭하여 버킷
+            내부의 내 노트 페이지로 이동합니다. 아래와 같은 버튼 형식으로
+            표시됩니다.
+            <Button className="w-10/12 mt-2 mx-5">보기/관리</Button>
+          </>
+        ),
+        selector: "#onborda-step10",
+        side: "bottom",
+        showControls: true,
+        pointerPadding: 20,
+        pointerRadius: 24,
+      },
+      {
+        icon: <>⭐️</>,
+        title: "버킷 다운로드 버튼",
+        content: (
+          <>
+            버킷 다운로드 버튼을 클릭하여 다운로드 모드로 전환합니다. 다운로드
+            모드 전환시 다른 기능은 비활성화 됩니다.
+          </>
+        ),
+        selector: "#onborda-step11",
+        side: "bottom",
+        showControls: true,
+        pointerPadding: 20,
+        pointerRadius: 24,
       },
     ],
   },
@@ -675,34 +782,39 @@ export const steps: Tour[] = [
     steps: [
       {
         icon: <>👋</>,
-        title: "연구실록 가입을 환영합니다",
-        content: <>팀을 만들고 연구실록을 시작하세요!</>,
+        title: "탐색 경로",
+        content: (
+          <>
+            대시보드 탐색 경로 입니다. 클릭하여 해당 경로로 접근할 수 있습니다.
+          </>
+        ),
         selector: "#onborda-step1",
-        side: "right",
+        side: "bottom",
         showControls: true,
         pointerPadding: 20,
         pointerRadius: 24,
       },
       {
-        icon: <>🪄</>,
-        title: "팀 생성 버튼",
+        icon: <>👋</>,
+        title: "내 노트",
         content: (
-          <>
-            팀 생성 버튼을 클릭하여 팀을 만들어보세요.
-            <br />
-            <i>* 지금은 다음 버튼을 눌러서 진행하세요.</i>
-          </>
+          <>노트 목록 페이지입니다. 해당 버킷의 전체 노트를 볼 수 있습니다.</>
         ),
         selector: "#onborda-step2",
-        side: "right",
+        side: "bottom",
         showControls: true,
         pointerPadding: 20,
         pointerRadius: 24,
       },
       {
         icon: <>🎩</>,
-        title: "팀 생성 화면",
-        content: <>팀 정보를 입력하고 팀을 생성하세요.</>,
+        title: "노트 목록",
+        content: (
+          <>
+            노트들이 나열됩니다. 노트 이름, 생성일시, 작성자, 삭제 버튼, 보기
+            버튼이 표시됩니다. 팀 리더가 아닌 경우 삭제 버튼은 비활성화 됩니다.
+          </>
+        ),
         selector: "#onborda-step3",
         side: "right",
         showControls: true,
@@ -710,64 +822,61 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🌀</>,
-        title: "팀 이름",
+        icon: <>🪄</>,
+        title: "노트 생성 버튼",
+        content: <>노트 생성 버튼을 클릭하여 노트를 만들어보세요.</>,
+        selector: "#onborda-step4",
+        side: "left",
+        showControls: true,
+        pointerPadding: 20,
+        pointerRadius: 24,
+      },
+      {
+        icon: <>🪄</>,
+        title: "노트 다운로드 버튼",
         content: (
           <>
-            팀 이름을 입력하세요.
-            <br />
-            <i>* 팀 이름은 처음 설정하면 수정하기 어렵습니다.</i>
+            노트 다운로드 버튼을 클릭하여 다운로드 모드로 전환합니다. 다운로드
+            모드 전환시 다른 기능은 비활성화 됩니다.
           </>
         ),
-        selector: "#onborda-step4",
-        side: "right",
-        showControls: true,
-        pointerPadding: 20,
-        pointerRadius: 24,
-      },
-      {
-        icon: <>👉</>,
-        title: "팀 생성 버튼",
-        content: <>버튼을 클릭하면 팀이 생성됩니다.</>,
         selector: "#onborda-step5",
-        side: "right",
+        side: "left",
         showControls: true,
         pointerPadding: 20,
         pointerRadius: 24,
       },
       {
-        icon: <>👉</>,
-        title: "팀 이름 확인",
+        icon: <>🪄</>,
+        title: "버킷 설정 버튼",
         content: (
           <>
-            팀이 생성되었습니다.{" "}
-            <i>
-              <br />* 소속된 팀 없다면 처음부터 다시 해주세요.
-            </i>
+            버킷 설정 버튼을 클릭하여 해당 버킷의 정보를 수정하세요. GitHub
+            Repository 등록이 필요한 경우 이 버튼을 이용해주세요. 팀 리더가 아닌
+            경우 해당 버튼은 비활성화 됩니다.
           </>
         ),
         selector: "#onborda-step6",
-        side: "right",
+        side: "left",
         showControls: true,
         pointerPadding: 20,
         pointerRadius: 24,
-        nextRoute: "/pricing",
       },
       {
         icon: <>⭐️</>,
-        title: "팀 플랜",
+        title: "노트 조회 날짜",
         content: (
           <>
-            연구실록을 이용하기 위해서는 팀 플랜이 있어야 합니다. 팀 플랜에 대한
-            구체적인 사항은 문의하기를 통해 문의해주세요.
+            조회할 날짜의 범위를 선택해 노트를 조회할 수 있습니다. 기본값은 전체
+            범위입니다. 우측에 있는 리셋 버튼을 클릭하여 기본값으로 돌아갈 수
+            있습니다.
           </>
         ),
         selector: "#onborda-step7",
-        side: "right",
+        side: "left",
         showControls: true,
         pointerPadding: 20,
         pointerRadius: 24,
-        prevRoute: "/setting/team",
       },
     ],
   },
@@ -776,34 +885,42 @@ export const steps: Tour[] = [
     steps: [
       {
         icon: <>👋</>,
-        title: "연구실록 가입을 환영합니다",
-        content: <>팀을 만들고 연구실록을 시작하세요!</>,
-        selector: "#onborda-step1",
-        side: "right",
-        showControls: true,
-        pointerPadding: 20,
-        pointerRadius: 24,
-      },
-      {
-        icon: <>🪄</>,
-        title: "팀 생성 버튼",
+        title: "탐색 경로",
         content: (
           <>
-            팀 생성 버튼을 클릭하여 팀을 만들어보세요.
-            <br />
-            <i>* 지금은 다음 버튼을 눌러서 진행하세요.</i>
+            대시보드 탐색 경로 입니다. 클릭하여 해당 경로로 접근할 수 있습니다.
           </>
         ),
-        selector: "#onborda-step2",
-        side: "right",
+        selector: "#onborda-step1",
+        side: "bottom",
         showControls: true,
         pointerPadding: 20,
         pointerRadius: 24,
       },
+      // {
+      //   icon: <>👋</>,
+      //   title: "노트 상세보기",
+      //   content: (
+      //     <>
+      //       노트 상세보기 페이지입니다. 해당 노트의 상세한 정보를 볼 수
+      //       있습니다.
+      //     </>
+      //   ),
+      //   selector: "#onborda-step2",
+      //   side: "bottom",
+      //   showControls: true,
+      //   pointerPadding: 20,
+      //   pointerRadius: 24,
+      // },
       {
         icon: <>🎩</>,
-        title: "팀 생성 화면",
-        content: <>팀 정보를 입력하고 팀을 생성하세요.</>,
+        title: "노트 PDF 뷰어",
+        content: (
+          <>
+            PDF 파일인 노트를 뷰어로 확인할 수 있습니다. 뷰어에서는 페이지 이동,
+            확대, 전체화면, 인쇄 기능 등을 사용할 수 있습니다.
+          </>
+        ),
         selector: "#onborda-step3",
         side: "right",
         showControls: true,
@@ -811,64 +928,105 @@ export const steps: Tour[] = [
         pointerRadius: 24,
       },
       {
-        icon: <>🌀</>,
-        title: "팀 이름",
+        icon: <>🪄</>,
+        title: "노트 이름",
         content: (
           <>
-            팀 이름을 입력하세요.
-            <br />
-            <i>* 팀 이름은 처음 설정하면 수정하기 어렵습니다.</i>
+            노트 생성할 때 입력된 이름입니다. 사용자가 임의로 수정할 수
+            없습니다.
           </>
         ),
         selector: "#onborda-step4",
-        side: "right",
+        side: "left",
         showControls: true,
         pointerPadding: 20,
         pointerRadius: 24,
       },
       {
-        icon: <>👉</>,
-        title: "팀 생성 버튼",
-        content: <>버튼을 클릭하면 팀이 생성됩니다.</>,
-        selector: "#onborda-step5",
-        side: "right",
-        showControls: true,
-        pointerPadding: 20,
-        pointerRadius: 24,
-      },
-      {
-        icon: <>👉</>,
-        title: "팀 이름 확인",
+        icon: <>🪄</>,
+        title: "노트 작성자",
         content: (
-          <>
-            팀이 생성되었습니다.{" "}
-            <i>
-              <br />* 소속된 팀 없다면 처음부터 다시 해주세요.
-            </i>
-          </>
+          <>노트 작성자의 이름입니다. 사용자가 임의로 수정할 수 없습니다.</>
         ),
-        selector: "#onborda-step6",
-        side: "right",
+        selector: "#onborda-step5",
+        side: "left",
         showControls: true,
         pointerPadding: 20,
         pointerRadius: 24,
-        nextRoute: "/pricing",
+      },
+      {
+        icon: <>🪄</>,
+        title: "노트 프로젝트",
+        content: <>노트가 소속된 프로젝트 이름입니다.</>,
+        selector: "#onborda-step6",
+        side: "left",
+        showControls: true,
+        pointerPadding: 20,
+        pointerRadius: 24,
       },
       {
         icon: <>⭐️</>,
-        title: "팀 플랜",
-        content: (
-          <>
-            연구실록을 이용하기 위해서는 팀 플랜이 있어야 합니다. 팀 플랜에 대한
-            구체적인 사항은 문의하기를 통해 문의해주세요.
-          </>
-        ),
+        title: "노트 버킷",
+        content: <>노트가 소속된 버킷 이름입니다.</>,
         selector: "#onborda-step7",
-        side: "right",
+        side: "left",
         showControls: true,
         pointerPadding: 20,
         pointerRadius: 24,
-        prevRoute: "/setting/team",
+      },
+      {
+        icon: <>⭐️</>,
+        title: "노트 고유 ID",
+        content: (
+          <>
+            노트 생성시 자동으로 생성된 고유 ID입니다. UUID 형식으로 생성됩니다.
+          </>
+        ),
+        selector: "#onborda-step8",
+        side: "left",
+        showControls: true,
+        pointerPadding: 20,
+        pointerRadius: 24,
+      },
+      {
+        icon: <>⭐️</>,
+        title: "블록체인 기록 ID",
+        content: (
+          <>
+            노트가 생성될 때 작성되는 블록체인 기록 ID입니다. 블록체인 기록 ID는
+            시점인증에 이용됩니다.
+          </>
+        ),
+        selector: "#onborda-step9",
+        side: "left",
+        showControls: true,
+        pointerPadding: 20,
+        pointerRadius: 24,
+      },
+      {
+        icon: <>⭐️</>,
+        title: "노트 다운로드 버튼",
+        content: (
+          <>
+            노트 다운로드 버튼을 클릭하여 해당 노트를 다운로드할 수 있습니다.
+            &quot;Report_[노트 고유 ID].pdf&quot; 형식으로 다운로드됩니다.
+          </>
+        ),
+        selector: "#onborda-step10",
+        side: "left",
+        showControls: true,
+        pointerPadding: 20,
+        pointerRadius: 24,
+      },
+      {
+        icon: <>⭐️</>,
+        title: "노트 삭제 버튼",
+        content: <>노트 삭제 버튼을 클릭하여 해당 노트를 삭제합니다.</>,
+        selector: "#onborda-step11",
+        side: "left",
+        showControls: true,
+        pointerPadding: 20,
+        pointerRadius: 24,
       },
     ],
   },
