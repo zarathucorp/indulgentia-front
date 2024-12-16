@@ -153,7 +153,7 @@ export default function RemoveModal({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-red-500 hover:bg-red-700">
+        <Button id="onborda-step11" className="bg-red-500 hover:bg-red-700">
           {removeTypeDescription[removeType]} 삭제
         </Button>
       </DialogTrigger>

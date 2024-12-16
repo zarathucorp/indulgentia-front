@@ -8,30 +8,39 @@ import { ErrorPage } from "@/components/global/Error/Error";
 import { DashboardBreadCrumb } from "@/components/modules/dashboard/DashboardBreadCrumb";
 import { DashboardLoading } from "@/components/global/Loading/Dashboard";
 const projectListFetcher = async (url: string) => {
-	const result = await axios.get(url);
-	console.log(result.data.data);
-	if (result.status !== 200) {
-		const error = new Error("An error occurred while fetching the data.");
-		throw error;
-	}
-	return result.data.data;
+  const result = await axios.get(url);
+  console.log(result.data.data);
+  if (result.status !== 200) {
+    const error = new Error("An error occurred while fetching the data.");
+    throw error;
+  }
+  return result.data.data;
 };
 
 export default function Dashboard() {
-	const { data, isValidating, error, mutate, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + "/dashboard/project/list", projectListFetcher);
-	if (error) {
-		return (
-			<>
-				<ErrorPage error={error} reset={() => mutate()} />
-			</>
-		);
-	}
-	return (
-		<>
-			<div className="py-3 pl-4">
-				<DashboardBreadCrumb breadcrumbData={{ level: "Dashboard" }} />
-			</div>
-			<div className="flex max-w-screen-xl flex-col mx-auto">{isLoading ? <DashboardLoading /> : <>{data && <MyProjectList projectList={data} />}</>}</div>
-		</>
-	);
+  const { data, isValidating, error, mutate, isLoading } = useSWR(
+    process.env.NEXT_PUBLIC_API_URL + "/dashboard/project/list",
+    projectListFetcher
+  );
+  if (error) {
+    return (
+      <>
+        <ErrorPage error={error} reset={() => mutate()} />
+      </>
+    );
+  }
+  return (
+    <>
+      <div id="onborda-step1" className="py-3 pl-4">
+        <DashboardBreadCrumb breadcrumbData={{ level: "Dashboard" }} />
+      </div>
+      <div id="onborda-step2" className="flex max-w-screen-xl flex-col mx-auto">
+        {isLoading ? (
+          <DashboardLoading />
+        ) : (
+          <>{data && <MyProjectList projectList={data} />}</>
+        )}
+      </div>
+    </>
+  );
 }

@@ -21,43 +21,69 @@ import { ErrorPage } from "@/components/global/Error/Error";
 import { DashboardLoading } from "@/components/global/Loading/Dashboard";
 import { DashboardBreadCrumbLoading } from "@/components/global/Loading/BreadCrumb";
 const projectListFetcher = async (url: string) => {
-	const result = await axios.get(url);
-	// console.log(result.data.data);
-	if (result.status !== 200) {
-		const error = new Error("An error occurred while fetching the data.");
-		throw error;
-	}
-	return result.data.data;
+  const result = await axios.get(url);
+  // console.log(result.data.data);
+  if (result.status !== 200) {
+    const error = new Error("An error occurred while fetching the data.");
+    throw error;
+  }
+  return result.data.data;
 };
 export default function Project() {
-	const params = useParams<{ project_uuid: string }>();
-	const { data, isValidating, error, mutate, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + `/dashboard/bucket/list/${params.project_uuid}`, projectListFetcher);
-	const { data: breadcrumbData, isLoading: isBreadcrumbLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + `/dashboard/project/${params.project_uuid}`, async (url) => {
-		const result = await axios.get(url);
-		if (result.status !== 200) {
-			const error = new Error("An error occurred while fetching the data.");
-			throw error;
-		}
-		console.log(result.data.data);
-		return result.data.data;
-	});
-	if (error)
-		return (
-			<>
-				<ErrorPage error={error} reset={() => mutate()} />
-			</>
-		);
-	return (
-		<>
-			<div className="py-3 pl-4">
-				{isBreadcrumbLoading ? (
-					<DashboardBreadCrumbLoading type="Project" />
-				) : (
-					breadcrumbData && <DashboardBreadCrumb breadcrumbData={{ level: "Project", project_id: params.project_uuid, ...breadcrumbData }} />
-				)}
-			</div>
+  const params = useParams<{ project_uuid: string }>();
+  const { data, isValidating, error, mutate, isLoading } = useSWR(
+    process.env.NEXT_PUBLIC_API_URL +
+      `/dashboard/bucket/list/${params.project_uuid}`,
+    projectListFetcher
+  );
+  const { data: breadcrumbData, isLoading: isBreadcrumbLoading } = useSWR(
+    process.env.NEXT_PUBLIC_API_URL +
+      `/dashboard/project/${params.project_uuid}`,
+    async (url) => {
+      const result = await axios.get(url);
+      if (result.status !== 200) {
+        const error = new Error("An error occurred while fetching the data.");
+        throw error;
+      }
+      console.log(result.data.data);
+      return result.data.data;
+    }
+  );
+  if (error)
+    return (
+      <>
+        <ErrorPage error={error} reset={() => mutate()} />
+      </>
+    );
+  return (
+    <>
+      <div id="onborda-step1" className="py-3 pl-4">
+        {isBreadcrumbLoading ? (
+          <DashboardBreadCrumbLoading type="Project" />
+        ) : (
+          breadcrumbData && (
+            <DashboardBreadCrumb
+              breadcrumbData={{
+                level: "Project",
+                project_id: params.project_uuid,
+                ...breadcrumbData,
+              }}
+            />
+          )
+        )}
+      </div>
 
-			<div className="flex max-w-screen-xl flex-col mx-auto">{isLoading ? <DashboardLoading /> : <>{data && <MyBucketList bucketList={data} projectId={params.project_uuid} />}</>}</div>
-		</>
-	);
+      <div id="onborda-step2" className="flex max-w-screen-xl flex-col mx-auto">
+        {isLoading ? (
+          <DashboardLoading />
+        ) : (
+          <>
+            {data && (
+              <MyBucketList bucketList={data} projectId={params.project_uuid} />
+            )}
+          </>
+        )}
+      </div>
+    </>
+  );
 }
