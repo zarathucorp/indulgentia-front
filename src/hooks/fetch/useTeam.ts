@@ -2,8 +2,9 @@ import axios from "axios";
 import { UUID } from "crypto";
 import useSWRImmutable from "swr/immutable";
 import useSWR from "swr";
+import { z } from "zod";
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === "development") {
 	axios.defaults.withCredentials = true;
 }
 
@@ -25,7 +26,7 @@ const fetcher = (url: string) =>
 			}
 		});
 import { createClient } from "@/utils/supabase/client";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 type DateTimeString = string;
 
 type TeamInfoType = {
@@ -33,7 +34,7 @@ type TeamInfoType = {
 	created_at: DateTimeString;
 	updated_at: DateTimeString;
 	team_name: string;
-	// is_premium: boolean;
+	is_premium: boolean;
 	team_leader_id: UUID;
 	is_deleted: boolean;
 	team_leader_first_name: string | null;
@@ -42,16 +43,21 @@ type TeamInfoType = {
 	bucket_num: number;
 	note_num: number;
 	linked_repo_num: number;
+	last_note_created_at: Date;
 };
 
 const useTeamInfo = () => {
-	const { data, error, mutate, isLoading } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/team", fetcher, {
-		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-			if (retryCount >= 3) return;
-			if (error.status === 404) return;
-			setTimeout(() => revalidate({ retryCount }), 5000);
+	const { data, error, mutate, isLoading } = useSWRImmutable(
+		process.env.NEXT_PUBLIC_API_URL + "/user/team",
+		fetcher,
+		{
+			onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+				if (retryCount >= 3) return;
+				if (error.status === 404) return;
+				setTimeout(() => revalidate({ retryCount }), 5000);
+			},
 		},
-	});
+	);
 	const supabase = createClient();
 	const [isLeader, setIsLeader] = useState(false);
 	const teamInfo: TeamInfoType | null = data?.data ?? null;
@@ -75,7 +81,13 @@ const useTeamInfo = () => {
 	return {
 		teamInfo,
 		hasTeam,
-		error: error ? (error.response?.status === 404 ? "GitHub 로그인이 필요합니다." : error.response?.status === 500 ? "다시 로그인해주세요" : error.message) : null,
+		error: error
+			? (error.response?.status === 404
+				? "GitHub 로그인이 필요합니다."
+				: error.response?.status === 500
+				? "다시 로그인해주세요"
+				: error.message)
+			: null,
 		isLoading,
 		mutate,
 		isLeader,
@@ -83,13 +95,17 @@ const useTeamInfo = () => {
 };
 
 const useTeamName = () => {
-	const { data, error, mutate } = useSWRImmutable(process.env.NEXT_PUBLIC_API_URL + "/user/team", fetcher, {
-		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-			if (retryCount >= 3) return;
-			if (error.status === 404) return;
-			setTimeout(() => revalidate({ retryCount }), 5000);
+	const { data, error, mutate } = useSWRImmutable(
+		process.env.NEXT_PUBLIC_API_URL + "/user/team",
+		fetcher,
+		{
+			onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+				if (retryCount >= 3) return;
+				if (error.status === 404) return;
+				setTimeout(() => revalidate({ retryCount }), 5000);
+			},
 		},
-	});
+	);
 };
 
 type TeamMemberType = {
@@ -132,32 +148,35 @@ type InvitationSendType = {
 
 const useTeamMemberList = () => {
 	const { hasTeam } = useTeamInfo();
-	const { data, error, isLoading, mutate } = useSWR(hasTeam ? process.env.NEXT_PUBLIC_API_URL + "/user/team/list" : null, fetcher, {
-		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-			if (retryCount >= 3) return;
-			if (error.status === 404) return;
-			setTimeout(() => revalidate({ retryCount }), 2000);
+	const { data, error, isLoading, mutate } = useSWR(
+		hasTeam ? process.env.NEXT_PUBLIC_API_URL + "/user/team/list" : null,
+		fetcher,
+		{
+			onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+				if (retryCount >= 3) return;
+				if (error.status === 404) return;
+				setTimeout(() => revalidate({ retryCount }), 2000);
+			},
 		},
-	});
+	);
 
 	// Check if data is available and is an array before mapping
-	const memberList: TeamMemberType[] =
-		data?.data && Array.isArray(data.data)
-			? data.data.map((member: any) => {
-					const eachMember = {
-						id: member.id,
-						email: member.email,
-						first_name: member.first_name || "",
-						last_name: member.last_name || "",
-					};
+	const memberList: TeamMemberType[] = data?.data && Array.isArray(data.data)
+		? data.data.map((member: any) => {
+			const eachMember = {
+				id: member.id,
+				email: member.email,
+				first_name: member.first_name || "",
+				last_name: member.last_name || "",
+			};
 
-					if (member.first_name === null && member.last_name === null) {
-						eachMember.last_name = member.email.split("@")[0];
-					}
+			if (member.first_name === null && member.last_name === null) {
+				eachMember.last_name = member.email.split("@")[0];
+			}
 
-					return eachMember;
-			  })
-			: [];
+			return eachMember;
+		})
+		: [];
 
 	return {
 		memberList,
@@ -166,19 +185,36 @@ const useTeamMemberList = () => {
 		mutate,
 	};
 };
+
+const teamNameSchema = z.string().min(
+	1,
+	"팀 이름은 최소 1자 이상이어야 합니다.",
+);
+
 const createTeam = async (team_name: string) => {
-	await axios.post(
-		process.env.NEXT_PUBLIC_API_URL + "/user/team",
-		{
-			name: team_name,
-		},
-	);
+	try {
+		teamNameSchema.parse(team_name); // Validate team_name
+		await axios.post(
+			process.env.NEXT_PUBLIC_API_URL + "/user/team",
+			{
+				name: team_name,
+			},
+		);
+	} catch (error) {
+		if (error instanceof z.ZodError) {
+			throw new Error("팀 이름은 최소 1자 이상이어야 합니다.");
+		}
+		throw error;
+	}
 };
 
 const inviteUser = async (invitee_email: string): Promise<void> => {
-	const { data } = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/user/team/invite", {
-		user_email: invitee_email,
-	},);
+	const { data } = await axios.post(
+		process.env.NEXT_PUBLIC_API_URL + "/user/team/invite",
+		{
+			user_email: invitee_email,
+		},
+	);
 
 	if (data.status !== "succeed") {
 		throw new Error("유저 초대 실패");
@@ -186,13 +222,17 @@ const inviteUser = async (invitee_email: string): Promise<void> => {
 };
 
 const useInvitationReceiveList = () => {
-	const { data, error, mutate, isLoading } = useSWR(process.env.NEXT_PUBLIC_API_URL + "/user/team/invite/receive/list", fetcher, {
-		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-			if (retryCount >= 3) return;
-			if (error.status === 404) return;
-			setTimeout(() => revalidate({ retryCount }), 5000);
+	const { data, error, mutate, isLoading } = useSWR(
+		process.env.NEXT_PUBLIC_API_URL + "/user/team/invite/receive/list",
+		fetcher,
+		{
+			onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+				if (retryCount >= 3) return;
+				if (error.status === 404) return;
+				setTimeout(() => revalidate({ retryCount }), 5000);
+			},
 		},
-	});
+	);
 
 	return {
 		invitationList: data?.data,
@@ -203,13 +243,19 @@ const useInvitationReceiveList = () => {
 };
 const useInvitationSendList = () => {
 	const { hasTeam } = useTeamInfo();
-	const { data, error, mutate, isLoading } = useSWRImmutable(hasTeam ? process.env.NEXT_PUBLIC_API_URL + "/user/team/invite/send/list" : null, fetcher, {
-		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-			if (retryCount >= 3) return;
-			if (error.status === 404) return;
-			setTimeout(() => revalidate({ retryCount }), 5000);
+	const { data, error, mutate, isLoading } = useSWRImmutable(
+		hasTeam
+			? process.env.NEXT_PUBLIC_API_URL + "/user/team/invite/send/list"
+			: null,
+		fetcher,
+		{
+			onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+				if (retryCount >= 3) return;
+				if (error.status === 404) return;
+				setTimeout(() => revalidate({ retryCount }), 5000);
+			},
 		},
-	});
+	);
 
 	// console.log(data?.data);
 
@@ -222,11 +268,23 @@ const useInvitationSendList = () => {
 };
 
 const useCurrentUserWithPending = () => {
-	const { memberList, isLoading: memberListLoading, error: memberListError, mutate: memberListMutate } = useTeamMemberList();
-	const { invitationSendList, error: invitationSendListError, isLoading: invitationSendListLoading, mutate: invitationSendListMutate } = useInvitationSendList();
+	const {
+		memberList,
+		isLoading: memberListLoading,
+		error: memberListError,
+		mutate: memberListMutate,
+	} = useTeamMemberList();
+	const {
+		invitationSendList,
+		error: invitationSendListError,
+		isLoading: invitationSendListLoading,
+		mutate: invitationSendListMutate,
+	} = useInvitationSendList();
 
 	return {
-		numberCurrentUserWithPending: !memberListLoading && !invitationSendListLoading && memberList && invitationSendList && memberList.length + invitationSendList.length,
+		numberCurrentUserWithPending: !memberListLoading &&
+			!invitationSendListLoading && memberList && invitationSendList &&
+			memberList.length + invitationSendList.length,
 		isLoading: memberListLoading || invitationSendListLoading,
 		isError: memberListError || invitationSendListError,
 		mutate: () => {
@@ -236,5 +294,18 @@ const useCurrentUserWithPending = () => {
 	};
 };
 
-export type { TeamMemberType, InvitationReceiveType, InvitationSendType, TeamInfoType };
-export { useTeamInfo, useTeamMemberList, createTeam, inviteUser, useInvitationReceiveList as getInvitationReceiveList, useInvitationSendList as getInvitationSendList, useCurrentUserWithPending };
+export type {
+	InvitationReceiveType,
+	InvitationSendType,
+	TeamInfoType,
+	TeamMemberType,
+};
+export {
+	createTeam,
+	inviteUser,
+	useCurrentUserWithPending,
+	useInvitationReceiveList as getInvitationReceiveList,
+	useInvitationSendList as getInvitationSendList,
+	useTeamInfo,
+	useTeamMemberList,
+};

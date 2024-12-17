@@ -1,4 +1,6 @@
-import {withSentryConfig} from "@sentry/nextjs";
+import { withSentryConfig } from "@sentry/nextjs";
+import removeImports from 'next-remove-imports';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 				i18n: {
@@ -57,8 +59,13 @@ const sentryOptions = {
 	// https://docs.sentry.io/product/crons/
 	// https://vercel.com/docs/cron-jobs
 	automaticVercelMonitors: true,
+	sourcemaps: {
+		disable: true
+	},
 }
 
 const finalConfig = process.env.NODE_ENV === "production" ? withSentryConfig(nextConfig, sentryOptions) : nextConfig;
 
-export default finalConfig;
+// 메모리 누수로 인해 sentryOptions를 일시적으로 사용하지 않음
+// export default removeImports()(nextConfig);
+export default removeImports()(finalConfig);

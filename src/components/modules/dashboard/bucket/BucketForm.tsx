@@ -170,7 +170,7 @@ function BucketTitleField({ form }: { form: any }) {
 						<FormLabel>
 							버킷 이름&nbsp;{" "}
 							<Tooltip delayDuration={100}>
-								<TooltipTrigger>
+								<TooltipTrigger type="button">
 									<FaRegCircleQuestion />
 								</TooltipTrigger>
 								<TooltipContent>
@@ -210,7 +210,7 @@ function BucketManagerField({ form }: { form: any; }) {
 						<FormLabel>
 							버킷 매니저&nbsp;{" "}
 							<Tooltip delayDuration={100}>
-								<TooltipTrigger>
+								<TooltipTrigger type="button">
 									<FaRegCircleQuestion />
 								</TooltipTrigger>
 								<TooltipContent>
@@ -255,7 +255,7 @@ function ProjectUUIDField({ form }: { form: any }) {
 						<FormLabel hidden >
 							프로젝트 UUID&nbsp;{" "}
 							<Tooltip delayDuration={100}>
-								<TooltipTrigger>
+								<TooltipTrigger type="button">
 									<FaRegCircleQuestion />
 								</TooltipTrigger>
 								<TooltipContent>
