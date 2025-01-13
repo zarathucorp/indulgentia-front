@@ -3,7 +3,7 @@ import { UUID } from "crypto";
 import useSWR from "swr";
 import useSWRImmutable from "swr/immutable";
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === "development") {
 	axios.defaults.withCredentials = true;
 }
 
@@ -11,7 +11,6 @@ const fetcher = (url: string) =>
 	axios
 		.get(url)
 		.then((res) => {
-			console.log(res.data.data);
 			return res.data.data;
 		})
 		.catch(function (error) {
@@ -41,7 +40,10 @@ type currentPlanType = {
 };
 
 const useCurrentPlan = () => {
-	const { data, error, isLoading, mutate } = useSWR<currentPlanType>(process.env.NEXT_PUBLIC_API_URL + "/payment/order/subscription", fetcher);
+	const { data, error, isLoading, mutate } = useSWR<currentPlanType>(
+		process.env.NEXT_PUBLIC_API_URL + "/payment/order/subscription",
+		fetcher,
+	);
 
 	return {
 		currentPlan: data,
@@ -51,7 +53,9 @@ const useCurrentPlan = () => {
 	};
 };
 const getCurrentPlanAxios = async () => {
-	const { data } = await axios.get(process.env.NEXT_PUBLIC_API_URL + "/payment/order/subscription");
+	const { data } = await axios.get(
+		process.env.NEXT_PUBLIC_API_URL + "/payment/order/subscription",
+	);
 
 	return {
 		currentPlan: data.data as currentPlanType,
@@ -63,20 +67,39 @@ type PaymentHistoryType = {
 	updated_at: Date;
 	team_id: UUID;
 	order_no: string;
-	status: "READY" | "IN_PROGRESS" | "WAITING_FOR_DEPOSIT" | "DONE" | "CANCELED" | "PARTIAL_CANCELED" | "ABORTED" | "EXPIRED";
+	status:
+		| "READY"
+		| "IN_PROGRESS"
+		| "WAITING_FOR_DEPOSIT"
+		| "DONE"
+		| "CANCELED"
+		| "PARTIAL_CANCELED"
+		| "ABORTED"
+		| "EXPIRED";
 	payment_key: string;
 	purchase_datetime: Date;
 	is_canceled: boolean;
 	total_amount: number;
 	refund_amount: number;
 	purchase_user_id: UUID;
-	payment_method: "카드" | "가상계좌" | "간편결제" | "휴대폰" | "계좌이체" | "문화상품권" | "도서문화상품권" | "게임문화상품권";
+	payment_method:
+		| "카드"
+		| "가상계좌"
+		| "간편결제"
+		| "휴대폰"
+		| "계좌이체"
+		| "문화상품권"
+		| "도서문화상품권"
+		| "게임문화상품권";
 	currency: string;
 	notes: null | string;
 };
 
 const usePaymentHistory = () => {
-	const { data, error, isLoading } = useSWRImmutable<PaymentHistoryType[]>(process.env.NEXT_PUBLIC_API_URL + "/payment/order/list", fetcher);
+	const { data, error, isLoading } = useSWRImmutable<PaymentHistoryType[]>(
+		process.env.NEXT_PUBLIC_API_URL + "/payment/order/list",
+		fetcher,
+	);
 
 	return {
 		paymentHistory: data,
@@ -87,4 +110,4 @@ const usePaymentHistory = () => {
 
 export type { PaymentHistoryType };
 
-export { useCurrentPlan, getCurrentPlanAxios, usePaymentHistory };
+export { getCurrentPlanAxios, useCurrentPlan, usePaymentHistory };
