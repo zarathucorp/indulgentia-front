@@ -1,9 +1,14 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { updateSession } from "@/utils/supabase/middleware";
 import { createClient } from "@/utils/supabase/server";
+import { SupabaseClient } from "@supabase/supabase-js";
 
 // 사용자 정보를 가져오는 함수
-const fetchUserInfo = async (token: string, cookies: string) => {
+const fetchUserInfo = async (
+	token: string,
+	cookies: string,
+	client: SupabaseClient,
+) => {
 	try {
 		const response = await fetch(
 			process.env.NEXT_PUBLIC_API_URL + "/user/settings/info",
@@ -14,19 +19,28 @@ const fetchUserInfo = async (token: string, cookies: string) => {
 				},
 			},
 		);
+		if (response.status === 401) {
+			// 토큰 만료 시
+			await client.auth.signOut();
+			return null;
+		}
 		if (!response.ok) {
 			throw new Error("Network response was not ok");
 		}
 		const data = await response.json();
-		return data.data;
+		return data?.data || null; // null을 반환하는 경우: API 응답이 올바르지 않거나 데이터가 없는 경우
 	} catch (error) {
 		console.error("Error fetching user info:", error);
-		return null;
+		return null; // null을 반환하는 경우: 네트워크 오류 또는 예외 발생 시
 	}
 };
 
 // 팀 정보를 가져오는 함수
-const fetchTeamInfo = async (token: string, cookies: string) => {
+const fetchTeamInfo = async (
+	token: string,
+	cookies: string,
+	client: SupabaseClient,
+) => {
 	try {
 		const response = await fetch(
 			process.env.NEXT_PUBLIC_API_URL + "/user/team",
@@ -37,6 +51,11 @@ const fetchTeamInfo = async (token: string, cookies: string) => {
 				},
 			},
 		);
+		if (response.status === 401) {
+			// 토큰 만료 시
+			await client.auth.signOut();
+			return null;
+		}
 		if (!response.ok) {
 			throw new Error("Network response was not ok");
 		}
@@ -47,7 +66,6 @@ const fetchTeamInfo = async (token: string, cookies: string) => {
 		return null;
 	}
 };
-
 // 미들웨어 함수
 export default async function middleware(request: NextRequest) {
 	const supabase = createClient();
@@ -83,13 +101,14 @@ export default async function middleware(request: NextRequest) {
 			return NextResponse.redirect(new URL("/auth/login", request.url));
 		}
 
-		const userInfo = await fetchUserInfo(token, cookies);
+		const userInfo = await fetchUserInfo(token, cookies, supabase);
 		console.log(userInfo);
-		if (!userInfo.team_id) {
+		if (!userInfo || !userInfo.team_id) {
+			// userInfo가 null인 경우: 사용자 정보가 없거나 API 호출 실패 시
 			return NextResponse.redirect(new URL("/setting/team", request.url));
 		}
 
-		const teamInfo = await fetchTeamInfo(token, cookies);
+		const teamInfo = await fetchTeamInfo(token, cookies, supabase);
 		console.log(teamInfo);
 		if (!teamInfo.is_premium) {
 			return NextResponse.redirect(new URL("/setting/payment", request.url));
@@ -98,7 +117,7 @@ export default async function middleware(request: NextRequest) {
 
 	// /setting 페이지로 접근하는 경우
 	if (request.nextUrl.pathname.endsWith("/setting")) {
-		const userInfo = await fetchUserInfo(token, cookies);
+		const userInfo = await fetchUserInfo(token, cookies, supabase);
 		console.log(userInfo);
 		if (!userInfo || !userInfo.is_leader) {
 			const redirectPathname = request.nextUrl.pathname.replace("/setting", "");
@@ -108,7 +127,7 @@ export default async function middleware(request: NextRequest) {
 
 	// Admin 페이지로 접근하는 경우
 	if (request.nextUrl.pathname.startsWith("/admin")) {
-		const userInfo = await fetchUserInfo(token, cookies);
+		const userInfo = await fetchUserInfo(token, cookies, supabase);
 		console.log(userInfo);
 		if (!userInfo || !userInfo.is_admin) {
 			return NextResponse.redirect(new URL("/dashboard", request.url));
