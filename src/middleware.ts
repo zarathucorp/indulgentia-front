@@ -66,6 +66,7 @@ const fetchTeamInfo = async (
 		return null;
 	}
 };
+
 // 미들웨어 함수
 export default async function middleware(request: NextRequest) {
 	const supabase = createClient();
@@ -103,13 +104,19 @@ export default async function middleware(request: NextRequest) {
 
 		const userInfo = await fetchUserInfo(token, cookies, supabase);
 		console.log(userInfo);
-		if (!userInfo || !userInfo.team_id) {
+		if (!userInfo) {
+			return NextResponse.redirect(new URL("/auth/login", request.url));
+		}
+		if (!userInfo.team_id) {
 			// userInfo가 null인 경우: 사용자 정보가 없거나 API 호출 실패 시
 			return NextResponse.redirect(new URL("/setting/team", request.url));
 		}
 
 		const teamInfo = await fetchTeamInfo(token, cookies, supabase);
 		console.log(teamInfo);
+		if (!teamInfo) {
+			return NextResponse.redirect(new URL("/auth/login", request.url));
+		}
 		if (!teamInfo.is_premium) {
 			return NextResponse.redirect(new URL("/setting/payment", request.url));
 		}
@@ -119,7 +126,10 @@ export default async function middleware(request: NextRequest) {
 	if (request.nextUrl.pathname.endsWith("/setting")) {
 		const userInfo = await fetchUserInfo(token, cookies, supabase);
 		console.log(userInfo);
-		if (!userInfo || !userInfo.is_leader) {
+		if (!userInfo) {
+			return NextResponse.redirect(new URL("/auth/login", request.url));
+		}
+		if (!userInfo.is_leader) {
 			const redirectPathname = request.nextUrl.pathname.replace("/setting", "");
 			return NextResponse.redirect(new URL(redirectPathname, request.url));
 		}
@@ -129,7 +139,10 @@ export default async function middleware(request: NextRequest) {
 	if (request.nextUrl.pathname.startsWith("/admin")) {
 		const userInfo = await fetchUserInfo(token, cookies, supabase);
 		console.log(userInfo);
-		if (!userInfo || !userInfo.is_admin) {
+		if (!userInfo) {
+			return NextResponse.redirect(new URL("/auth/login", request.url));
+		}
+		if (!userInfo.is_admin) {
 			return NextResponse.redirect(new URL("/dashboard", request.url));
 		}
 	}
