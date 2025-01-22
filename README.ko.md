@@ -12,11 +12,11 @@
   - NEXT_PUBLIC_SUPABASE_ANON_KEY: Supabase anon key
   - SUPABASE_ADMIN_KEY: Supabase secret key
 3. Github App
-  - NEXT_PUBLIC_GITHUB_APP_INSTALL_URL: Github install URL for Github App [indulgentia-github](https://github.com/zarathucorp/indulgentia-github)
+  - NEXT_PUBLIC_GITHUB_APP_INSTALL_URL: Github install URL for Github App [open-rndsillog-githubapp](https://github.com/zarathucorp/open-rndsillog-githubapp)
   - GITHUB_APP_ID
   - GITHUB_CLIENT_ID
-  - GITHUB_CLIENT_SECRET: Github client secret for Github App [indulgentia-github](https://github.com/zarathucorp/indulgentia-github)
-  - GITHUB_PRIVATE_KEY: Github private key for Github App [indulgentia-github](https://github.com/zarathucorp/indulgentia-github)
+  - GITHUB_CLIENT_SECRET: Github client secret for Github App [open-rndsillog-githubapp](https://github.com/zarathucorp/open-rndsillog-githubapp)
+  - GITHUB_PRIVATE_KEY: Github private key for Github App [open-rndsillog-githubapp](https://github.com/zarathucorp/open-rndsillog-githubapp)
   - REDIRECT_URI: `REDIRECT_URI=<indulgentia-front-URL>/next-api/github/callback`
 4. 결제
   - ENABLE_PAYMENT: Payment 기능 사용 여부
