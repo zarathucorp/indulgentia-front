@@ -214,7 +214,10 @@ export default function WelcomePage() {
                   </a>
                 </Button>
                 <Button>
-                  <a href="/demo/dashboard" className="flex items-center">
+                  <a
+                    href="https://rndsillog.com/demo/dashboard"
+                    className="flex items-center"
+                  >
                     연구실록 데모 페이지&nbsp;
                     <ExternalLinkIcon className="w-4 h-4 inline-block ml-1" />
                   </a>

@@ -1,10 +1,10 @@
 # indulgentia-front
 
-> Web built with [NextJS](https://nextjs.org/)
+> [NextJS](https://nextjs.org/)으로 구축된 Web
 
-## Prerequisites
-You will need the following information:
-1. Basic Information
+## 설정 전 준비사항
+다음 정보가 필요합니다:
+1. 기본사항
   - NEXT_PUBLIC_FRONTEND_URL: `NEXT_PUBLIC_FRONTEND_URL=<indulgentia-front-URL>`
   - NEXT_PUBLIC_API_URL: `NEXT_PUBLIC_API_URL=<indulgentia-front-URL>/api`
 2. Supabase
@@ -18,24 +18,24 @@ You will need the following information:
   - GITHUB_CLIENT_SECRET: Github client secret for Github App [indulgentia-github](https://github.com/zarathucorp/indulgentia-github)
   - GITHUB_PRIVATE_KEY: Github private key for Github App [indulgentia-github](https://github.com/zarathucorp/indulgentia-github)
   - REDIRECT_URI: `REDIRECT_URI=<indulgentia-front-URL>/next-api/github/callback`
-4. Payment
-  - ENABLE_PAYMENT: Whether to use the Payment feature
-  - NEXT_PUBLIC_TOSS_PAYMENTS_CLIENT_KEY(optional): Toss payments client key
-  - TOSS_PAYMENTS_SECRET_KEY(optional): Toss payments secret key
-5. Inquiries(optional)
-  - NEXT_PUBLIC_INQUIRY_URL: URL for inquiries via POST request
-  - NEXT_PUBLIC_CHANNEL_TALK_PLUGIN_KEY: Plugin key for using Channel Talk library
+4. 결제
+  - ENABLE_PAYMENT: Payment 기능 사용 여부
+  - NEXT_PUBLIC_TOSS_PAYMENTS_CLIENT_KEY(선택): Toss payments client key
+  - TOSS_PAYMENTS_SECRET_KEY(선택): Toss payments secret key
+5. 문의사항(선택)
+  - NEXT_PUBLIC_INQUIRY_URL: POST 요청을 통한 문의사항 자체 URL
+  - NEXT_PUBLIC_CHANNEL_TALK_PLUGIN_KEY: 채널톡 라이브러리 사용을 위한 plugin key
 
-## Setup
+## 설정
 
 ```sh
 git clone https://github.com/zarathucorp/indulgentia-front.git
 
-# Set environment variables
+# 환경변수 설정
 cd indulgentia-front
-touch .env  # You can separate dev and prod environments. Refer to the NextJS documentation for more details.
+touch .env  # dev와 prod 환경 분리 가능합니다. 자세한 사항은 NextJS 문서를 참조해주세요.
 
-# Enter the environment variables from the prerequisites
+# 설정 전 준비사항 환경변수에 입력
 (...)
 
 ```
@@ -49,6 +49,6 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## License
+## 라이선스
 
 [MIT](LICENSE) (c) 2025 Zarathu Co.,Ltd

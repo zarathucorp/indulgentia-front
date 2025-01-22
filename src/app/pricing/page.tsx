@@ -20,16 +20,21 @@ import { createClient } from "@/utils/supabase/client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTeamInfo } from "@/hooks/fetch/useTeam";
+import useUser from "@/hooks/fetch/useUser";
 import { useToast } from "@/components/ui/use-toast";
+import axios, { isAxiosError } from "axios";
 export default function PricingPage() {
   const numbers = Array.from({ length: 41 }, (_, i) => i + 10);
   const [numUser, setNumUser] = useState<string>("10");
   const totalPrice = parseInt(numUser) * 100_000;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { hasTeam, isLoading, error, mutate } = useTeamInfo();
+  const { teamInfo, hasTeam, isLoading, error, mutate } = useTeamInfo();
+  const { userInfo } = useUser();
   const router = useRouter();
 
   const { toast } = useToast();
+
+  const [enablePayment, setEnablePayment] = useState(false);
 
   const getUser = async () => {
     const supabase = createClient();
@@ -43,29 +48,95 @@ export default function PricingPage() {
     }
   };
 
+  const fetchConfig = async () => {
+    try {
+      const response = await axios.get(`next-api/site-config`);
+      if (response.data.enablePayment) {
+        setEnablePayment(response.data.enablePayment);
+      }
+    } catch (error) {
+      console.error("Error fetching site config:", error);
+    }
+  };
+
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    if (isLoggedIn && hasTeam) {
-      router.push(`/payment?type=New&user=${numUser}`);
-    } else if (isLoggedIn && !hasTeam) {
-      toast({
-        title: "팀이 필요합니다.",
-        description: "팀을 생성하거나 초대를 받아야합니다.",
-      });
-      router.push("/setting/team");
+
+    if (enablePayment) {
+      // Toss Payment 기능
+      if (isLoggedIn && hasTeam) {
+        router.push(`/payment?type=New&user=${numUser}`);
+      } else if (isLoggedIn && !hasTeam) {
+        toast({
+          title: "팀이 필요합니다.",
+          description: "팀을 생성하거나 초대를 받아야합니다.",
+        });
+        router.push("/setting/team");
+      } else {
+        toast({
+          title: "로그인이 필요합니다.",
+          description: "결제는 로그인 후 가능합니다.",
+        });
+        router.push("/auth/login");
+      }
     } else {
-      toast({
-        title: "로그인이 필요합니다.",
-        description: "결제는 로그인 후 가능합니다.",
-      });
-      router.push("/auth/login");
+      // 어드민 계정1년 추가 기능
+      try {
+        if (
+          isLoggedIn &&
+          hasTeam &&
+          userInfo?.is_admin &&
+          !teamInfo?.is_premium
+        ) {
+          axios.post(
+            process.env.NEXT_PUBLIC_API_URL +
+              `/admin/team/${teamInfo?.id}/add-1year`,
+            {
+              max_members: parseInt(numUser),
+            }
+          );
+          toast({
+            title: "플랜이 추가되었습니다.",
+            description: "플랜이 1년 추가되었습니다.",
+          });
+          router.push("/setting/payment");
+        } else if (isLoggedIn && !hasTeam) {
+          toast({
+            title: "팀이 필요합니다.",
+            description: "팀을 생성하거나 초대를 받아야합니다.",
+          });
+          router.push("/setting/team");
+        } else if (isLoggedIn && !userInfo?.is_admin) {
+          toast({
+            title: "권한이 필요합니다.",
+            description: "관리자 계정으로 로그인해주세요.",
+          });
+        } else if (teamInfo?.is_premium) {
+          toast({
+            title: "이미 프리미엄 플랜입니다.",
+            description: "프리미엄 플랜이 종료된 후 다시 시도해주세요.",
+          });
+        } else {
+          toast({
+            title: "로그인이 필요합니다.",
+            description: "결제는 로그인 후 가능합니다.",
+          });
+          router.push("/auth/login");
+        }
+      } catch (error) {
+        if (isAxiosError(error)) {
+          console.log(error.response?.data);
+        }
+      }
     }
   };
 
   useEffect(() => {
+    fetchConfig();
     getUser();
-    console.log(hasTeam);
-  }, []);
+    console.log("hasTeam", hasTeam);
+    console.log("enbalePayment", enablePayment);
+  }, [hasTeam, enablePayment]);
 
   return (
     <>
