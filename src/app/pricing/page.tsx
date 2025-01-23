@@ -50,7 +50,7 @@ export default function PricingPage() {
 
   const fetchConfig = async () => {
     try {
-      const response = await axios.get(`next-api/site-config`);
+      const response = await axios.get(`/next-api/site-config`);
       if (response.data.enablePayment) {
         setEnablePayment(response.data.enablePayment);
       }
