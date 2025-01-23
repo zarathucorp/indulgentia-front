@@ -69,6 +69,7 @@ const fetchTeamInfo = async (
 
 // 미들웨어 함수
 export default async function middleware(request: NextRequest) {
+	console.log("Middleware request for: ", request.nextUrl.pathname);
 	const supabase = createClient();
 	const {
 		data: { user },
@@ -103,42 +104,44 @@ export default async function middleware(request: NextRequest) {
 		}
 
 		const userInfo = await fetchUserInfo(token, cookies, supabase);
-		console.log(userInfo);
 		if (!userInfo) {
 			return NextResponse.redirect(new URL("/auth/login", request.url));
 		}
 		if (!userInfo.team_id) {
-			// userInfo가 null인 경우: 사용자 정보가 없거나 API 호출 실패 시
 			return NextResponse.redirect(new URL("/setting/team", request.url));
 		}
 
 		const teamInfo = await fetchTeamInfo(token, cookies, supabase);
-		console.log(teamInfo);
 		if (!teamInfo) {
 			return NextResponse.redirect(new URL("/auth/login", request.url));
 		}
 		if (!teamInfo.is_premium) {
 			return NextResponse.redirect(new URL("/setting/payment", request.url));
 		}
+
+		// /dashboard/.../setting 페이지로 접근하는 경우
+		if (request.nextUrl.pathname.endsWith("/setting")) {
+			if (!userInfo.is_leader) {
+				const redirectPathname = request.nextUrl.pathname.replace(
+					"/setting",
+					"",
+				);
+				return NextResponse.redirect(new URL(redirectPathname, request.url));
+			}
+		}
 	}
 
 	// /setting 페이지로 접근하는 경우
 	if (request.nextUrl.pathname.endsWith("/setting")) {
 		const userInfo = await fetchUserInfo(token, cookies, supabase);
-		console.log(userInfo);
 		if (!userInfo) {
 			return NextResponse.redirect(new URL("/auth/login", request.url));
-		}
-		if (!userInfo.is_leader) {
-			const redirectPathname = request.nextUrl.pathname.replace("/setting", "");
-			return NextResponse.redirect(new URL(redirectPathname, request.url));
 		}
 	}
 
 	// Admin 페이지로 접근하는 경우
 	if (request.nextUrl.pathname.startsWith("/admin")) {
 		const userInfo = await fetchUserInfo(token, cookies, supabase);
-		console.log(userInfo);
 		if (!userInfo) {
 			return NextResponse.redirect(new URL("/auth/login", request.url));
 		}
@@ -159,6 +162,7 @@ export const config = {
 		 * - _next/image (이미지 최적화 파일)
 		 * - favicon.ico (파비콘 파일)
 		 * - 이미지 파일 - .svg, .png, .jpg, .jpeg, .gif, .webp
+		 * - next-api/* (API 경로)
 		 * 더 많은 경로를 포함하도록 이 패턴을 수정할 수 있습니다.
 		 */
 		"/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
