@@ -1,13 +1,12 @@
-import { Separator } from "@/components/ui/separator";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 
-export default async function Settings() {
+export default async function Auth() {
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.getUser();
-  if (error || !data?.user) {
-    redirect("/auth/login");
+  if (data?.user) {
+    redirect("/dashboard");
   }
-  redirect("/setting/account");
+  redirect("/auth/login");
 }

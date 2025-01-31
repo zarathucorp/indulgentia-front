@@ -1,11 +1,20 @@
-export default function DashboardLayout({
-	children,
+import { redirect } from "next/navigation";
+import { createClient } from "@/utils/supabase/server";
+
+export default async function DashboardLayout({
+  children,
 }: Readonly<{
-	children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-	return (
-		<>
-			<div>{children}</div>
-		</>
-	);
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.auth.getUser();
+  if (!data?.user) {
+    redirect("/auth/login");
+  }
+  return (
+    <>
+      <div>{children}</div>
+    </>
+  );
 }
