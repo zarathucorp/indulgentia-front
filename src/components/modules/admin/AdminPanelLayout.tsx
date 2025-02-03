@@ -12,7 +12,9 @@ export default function AdminPanelLayout({
   children: React.ReactNode;
 }) {
   const [isOpen, setIsOpen] = useState(true);
-  const { userInfo } = useUser();
+  const { userInfo, isLoading: isUserLoading, error: teamError } = useUser();
+  if (isUserLoading) return null;
+  if (teamError) return <p>Error</p>;
   if (!userInfo?.is_admin) redirect("/dashboard");
 
   return (
