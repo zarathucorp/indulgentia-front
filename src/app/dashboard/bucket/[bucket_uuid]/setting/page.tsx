@@ -63,10 +63,12 @@ const InstallationRepoSelector: React.FC<{
   const [selectedInstallation, setSelectedInstallation] = useState<
     number | null
   >(null);
-  const params = useParams<{ bucket_uuid: UUID }>();
   const [repos, setRepos] = useState<Repo[]>([]);
   const [installations, setInstallations] = useState<Installation[]>([]);
   const [isGetRepoLoading, setIsGetRepoLoading] = useState<boolean>(false);
+
+  const params = useParams<{ bucket_uuid: UUID }>();
+  const { userInfo } = useUser();
 
   useEffect(() => {
     if (token) {
@@ -97,7 +99,6 @@ const InstallationRepoSelector: React.FC<{
       .login || "";
   const getGitHubRepoById = (targetId: number) =>
     repos.find((repo) => repo.id === targetId)?.name || "";
-  const { userInfo } = useUser();
 
   if (isTokenLoading) return <p>Loading token...</p>;
   if (tokenError) return <p>No github account is connected to this account</p>;
