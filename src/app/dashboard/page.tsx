@@ -26,10 +26,22 @@ export default function Dashboard() {
     process.env.NEXT_PUBLIC_API_URL + "/dashboard/project/list",
     projectListFetcher
   );
-  const { hasTeam, teamInfo } = useTeamInfo();
+  const {
+    hasTeam,
+    teamInfo,
+    isLoading: isTeamLoading,
+    error: teamError,
+  } = useTeamInfo();
+  if (isTeamLoading) return <DashboardLoading />;
   if (!hasTeam) {
+    console.log("no team");
+    console.log(teamInfo);
+    console.log(hasTeam);
     redirect("/setting/team");
   } else if (!teamInfo?.is_premium) {
+    console.log("no premium");
+    console.log(teamInfo);
+    console.log(hasTeam);
     redirect("/setting/payment");
   }
 
@@ -37,6 +49,13 @@ export default function Dashboard() {
     return (
       <>
         <ErrorPage error={error} reset={() => mutate()} />
+      </>
+    );
+  }
+  if (teamError) {
+    return (
+      <>
+        <ErrorPage error={teamError} reset={() => mutate()} />
       </>
     );
   }

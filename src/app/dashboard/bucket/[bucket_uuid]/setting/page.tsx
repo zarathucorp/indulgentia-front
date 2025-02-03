@@ -68,7 +68,7 @@ const InstallationRepoSelector: React.FC<{
   const [isGetRepoLoading, setIsGetRepoLoading] = useState<boolean>(false);
 
   const params = useParams<{ bucket_uuid: UUID }>();
-  const { userInfo } = useUser();
+  const { userInfo, isLoading: isUserLoading, error: userError } = useUser();
 
   useEffect(() => {
     if (token) {
@@ -101,7 +101,9 @@ const InstallationRepoSelector: React.FC<{
     repos.find((repo) => repo.id === targetId)?.name || "";
 
   if (isTokenLoading) return <p>Loading token...</p>;
+  if (isUserLoading) return <p>Loading user...</p>;
   if (tokenError) return <p>No github account is connected to this account</p>;
+  if (userError) return <p>Error fetching user data</p>;
   if (!userInfo?.is_leader) redirect(`/dashboard/bucket/${params.bucket_uuid}`);
 
   return (

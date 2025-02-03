@@ -28,9 +28,7 @@ export default function ProjectSetting() {
 
   if (!params.project_uuid) redirect("/dashboard");
 
-  const { userInfo } = useUser();
-  if (!userInfo?.is_leader)
-    redirect(`/dashboard/project/${params.project_uuid}`);
+  const { userInfo, isLoading: isUserLoading, error: userError } = useUser();
 
   const {
     data: projectData,
@@ -47,6 +45,10 @@ export default function ProjectSetting() {
       // return { id: params.project_uuid, ...data.data };
     }
   );
+  if (isUserLoading) return <p>Loading</p>;
+  if (userError) return <p>Error</p>;
+  if (!userInfo?.is_leader)
+    redirect(`/dashboard/project/${params.project_uuid}`);
 
   return (
     <>
