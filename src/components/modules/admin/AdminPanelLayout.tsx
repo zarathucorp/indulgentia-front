@@ -4,28 +4,16 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Sidebar } from "@/components/modules/admin/Sidebar";
 import useUser from "@/hooks/fetch/useUser";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
 export default function AdminPanelLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
   const [isOpen, setIsOpen] = useState(true);
   const { userInfo } = useUser();
-
-  useEffect(() => {
-    console.log(userInfo);
-    if (userInfo?.is_admin === false) {
-      router.push("/dashboard");
-    }
-  }, [router, userInfo]);
-
-  if (userInfo === undefined) {
-    return null;
-  }
+  if (!userInfo?.is_admin) redirect("/dashboard");
 
   return (
     <>

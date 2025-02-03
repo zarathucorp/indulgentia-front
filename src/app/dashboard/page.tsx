@@ -9,7 +9,7 @@ import { ErrorPage } from "@/components/global/Error/Error";
 import { DashboardBreadCrumb } from "@/components/modules/dashboard/DashboardBreadCrumb";
 import { DashboardLoading } from "@/components/global/Loading/Dashboard";
 import { useTeamInfo } from "@/hooks/fetch/useTeam";
-import { useEffect } from "react";
+import { redirect } from "next/navigation";
 
 const projectListFetcher = async (url: string) => {
   const result = await axios.get(url);
@@ -22,34 +22,15 @@ const projectListFetcher = async (url: string) => {
 };
 
 export default function Dashboard() {
-  const router = useRouter();
   const { data, isValidating, error, mutate, isLoading } = useSWR(
     process.env.NEXT_PUBLIC_API_URL + "/dashboard/project/list",
     projectListFetcher
   );
-  const {
-    hasTeam,
-    teamInfo,
-    error: teamError,
-    isLoading: isTeamLoading,
-  } = useTeamInfo();
-
-  useEffect(() => {
-    // console.log(hasTeam, teamInfo);
-    if (hasTeam === false) {
-      router.push("/setting/team");
-    } else if (teamInfo?.is_premium === false) {
-      router.push("/setting/payment");
-    }
-  }, [hasTeam, router, teamInfo]);
-
-  if (
-    isTeamLoading ||
-    !hasTeam === true ||
-    !teamInfo === true ||
-    !teamInfo?.is_premium === true
-  ) {
-    return <DashboardLoading />;
+  const { hasTeam, teamInfo } = useTeamInfo();
+  if (!hasTeam) {
+    redirect("/setting/team");
+  } else if (!teamInfo?.is_premium) {
+    redirect("/setting/payment");
   }
 
   if (error) {
