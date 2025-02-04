@@ -1,12 +1,16 @@
 "use client";
 import useSWR from "swr";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 import MyProjectList from "@/components/modules/dashboard/MyProjectList";
 import ProjectType from "@/types/ProjectType";
 import { ErrorPage } from "@/components/global/Error/Error";
 import { DashboardBreadCrumb } from "@/components/modules/dashboard/DashboardBreadCrumb";
 import { DashboardLoading } from "@/components/global/Loading/Dashboard";
+import { useTeamInfo } from "@/hooks/fetch/useTeam";
+import { redirect } from "next/navigation";
+
 const projectListFetcher = async (url: string) => {
   const result = await axios.get(url);
   console.log(result.data.data);
@@ -22,6 +26,25 @@ export default function Dashboard() {
     process.env.NEXT_PUBLIC_API_URL + "/dashboard/project/list",
     projectListFetcher
   );
+  const {
+    hasTeam,
+    teamInfo,
+    isLoading: isTeamLoading,
+    error: teamError,
+  } = useTeamInfo();
+  if (isTeamLoading) return <DashboardLoading />;
+  if (!hasTeam) {
+    console.log("no team");
+    console.log(teamInfo);
+    console.log(hasTeam);
+    redirect("/setting/team");
+  } else if (!teamInfo?.is_premium) {
+    console.log("no premium");
+    console.log(teamInfo);
+    console.log(hasTeam);
+    redirect("/setting/payment");
+  }
+
   if (error) {
     return (
       <>
@@ -29,6 +52,14 @@ export default function Dashboard() {
       </>
     );
   }
+  if (teamError) {
+    return (
+      <>
+        <ErrorPage error={teamError} reset={() => mutate()} />
+      </>
+    );
+  }
+
   return (
     <>
       <div id="onborda-step1" className="py-3 pl-4">

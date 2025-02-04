@@ -7,8 +7,16 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
 } from "@/components/ui/breadcrumb";
+import { redirect } from "next/navigation";
+import { createClient } from "@/utils/supabase/server";
 
-export default function AdminDashboardPage() {
+export default async function AdminDashboardPage() {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.auth.getUser();
+  if (!data?.user) {
+    redirect("/auth/login");
+  }
   return (
     <ContentLayout title="Admin Dashboard">
       <Breadcrumb>

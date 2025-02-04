@@ -44,6 +44,7 @@ jobs:
       - name: Set env before build
         run: |
           touch .env.local
+          touch .env
           echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" >> .env.local
           echo "NEXT_PUBLIC_FRONTEND_URL=${{ secrets.NEXT_PUBLIC_FRONTEND_URL }}" >> .env.local
           echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> .env.local
@@ -57,9 +58,8 @@ jobs:
           echo "GITHUB_PRIVATE_KEY=${{ secrets.PRIVATE_KEY }}" >> .env.local
           echo "GITHUB_WEBHOOK_SECRET=${{ secrets.WEBHOOK_SECRET }}" >> .env.local
           echo "REDIRECT_URI=${{ secrets.REDIRECT_URI }}" >> .env.local
-          echo "ENABLE_PAYMENT=${{ secrets.ENABLE_PAYMENT }}" >> .env.local
+          echo "ENABLE_PAYMENT=${{ secrets.ENABLE_PAYMENT }}" >> .env
           echo "NEXT_PUBLIC_CHANNEL_TALK_PLUGIN_KEY=${{ secrets.NEXT_PUBLIC_CHANNEL_TALK_PLUGIN_KEY }}" >> .env.local
-          echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> .env.sentry-build-plugin
           ls -a
 
       - name: Build and push
